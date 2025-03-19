@@ -1,0 +1,11 @@
+import { Usuario } from "../interfaces/usuario.interface";
+import {model, Schema} from 'mongoose';
+
+const usuarioSchema = new Schema({
+    nombre: {type: String, required: true},
+    apellido: {type: String, required: true},
+    email: {type: String, required: true},
+    password: {type: String, required: true}
+});
+
+export const modelUsuario =  model<Usuario>('Usuario', usuarioSchema);
