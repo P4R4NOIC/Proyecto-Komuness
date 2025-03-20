@@ -2,13 +2,12 @@ import express,{Request,Response,Express} from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectBD } from './utils/mongodb';
-import { IUsuario as Usuario } from './interfaces/usuario.interface';
-import { modelUsuario } from './models/usuario.model';
-import { IPublicacion as Publicacion } from './interfaces/publicacion.interface';
-import { modelPublicacion } from './models/publicacion.model';
+import usuarioRoutes from './routes/usuario.routes'; 
+import publicacionRoutes from './routes/publicaciones.routes'; 
 
 const app: Express = express();
 dotenv.config();
+
 app.disable('x-powered-by');
 app.use(express.json());
 app.use(cors(
@@ -19,36 +18,13 @@ app.use(cors(
     }
 ));
 
+//routes
+app.use('/usuario',usuarioRoutes);
+app.use('/publicaciones',publicacionRoutes);
+
 app.get('/',(req:Request,res:Response)=>{
     res.send('Hello World');
 });
-
-/**
- * inicio para crear las colecciones de la base de datos
- */
-app.post('/usuario',async (req:Request,res:Response)=>{
-    try {
-        const usuario: Usuario = req.body;
-        const user = new modelUsuario(usuario);
-        const saveuser = await user.save();
-        res.status(201).json(saveuser);
-    } catch (error) {
-        const err = error as Error;
-    }
-});
-
-app.post('/publicacion',async (req:Request,res:Response)=>{
-    try {
-        const usuario: Publicacion = req.body;
-        const post = new modelPublicacion(usuario);
-        const savepost = await post.save();
-        res.status(201).json(savepost);
-    } catch (error) {
-        const err = error as Error;
-    }
-});
-
-
 
 const port = process.env.PORT || 5000;
 
