@@ -1,9 +1,17 @@
 import { Document } from "mongoose";
 
-export interface Publicacion extends Document {
+export interface IPublicacion extends Document {
     titulo: string;
     contenido: string;
     autor: string;
     fecha: Date;
     adjunto: string[];
+    comentarios: IComentario[]; // Array de comentarios
+    tag: string;
+}
+
+export interface IComentario {
+    autor: string;
+    contenido: string;
+    fecha: Date;
 }
