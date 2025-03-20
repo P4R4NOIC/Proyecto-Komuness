@@ -5,6 +5,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
    
 }
 
@@ -20,20 +21,25 @@
 
 .menu li{
     padding: 1rem;
+    
 }
 
-.navbar a{
-   
+.navbar span{
+   cursor: pointer;
     font-size: 0.8rem;
 }
 
 
-
+.menu li svg{
+    cursor: pointer;
+}
 
 .logo{
     width: 200px;
     height: auto;
 }
+
+
 
 @media screen and (max-width: 720px){
     .botonMovil{
@@ -65,8 +71,9 @@
     left: 0;
    }
 
-   .navbar a{
+   .navbar span{
     font-size: 2rem;
     
    }
+   
 }

@@ -1,8 +1,13 @@
 import React from 'react'
 import {Navbar} from './navbar'
 import { AiOutlineUser } from 'react-icons/ai'
+import {Publicaciones} from './publicaciones'
+
 import '../CSS/perfilUsuario.css'
+
 export const PerfilUsuario = () => {
+
+
   return (
     <div>
       <Navbar />
@@ -22,6 +27,8 @@ export const PerfilUsuario = () => {
         
       </div>
 
+    
+      <Publicaciones />
      
       
     </div>

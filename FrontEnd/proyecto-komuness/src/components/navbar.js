@@ -1,33 +1,37 @@
 import React, {useState} from 'react'
 import '../CSS/navbar.css'
 import {AiOutlineMenu, AiOutlineClose, AiOutlineSearch, AiOutlineUser} from 'react-icons/ai'
-import logo from '../imagenes/logo.png'
+import logo from '../images/logo.png'
 import { useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
     const [nav, setNav] = useState(false)
     const navigate = useNavigate();
+   
+
+  
+
 
   return (
     <headder className = "navbar">
         <img src ={logo} className = "logo"  alt = "/"></img>
         <nav>
             <ul className = {nav ? ["menu", "activo"].join(' ') : ["menu"]}>
-                <li>
-                    <a href = "/">Eventos</a>
+                <li onClick={() => navigate('/eventos')}>
+                    <span  >Eventos</span>
                 </li>
-                <li>
-                    <a href = "/">Emprendimientos</a>
+                <li onClick={() => navigate('/emprendimientos')}>
+                    <span >Emprendimientos</span>
                 </li>
-                <li>
-                    <a href = "/" >Publicaciones</a>
+                <li onClick={() => navigate('/publicaciones')}>
+                    <span  >Publicaciones</span>
                 </li>
-                <li>
-                    <a href = "/">Biblioteca</a>
+                <li onClick={() => navigate('/vacioPrueba')}>
+                    <span >Biblioteca</span>
                 </li>
                
-                <li>
-                    <a href = "/" >Crear</a>
+                <li onClick={() => navigate('/vacioPrueba')}>
+                    <span>Crear</span>
                 </li>
                 <li>
                     <AiOutlineSearch size={25} style = {{marginTop: '6px'}}/>

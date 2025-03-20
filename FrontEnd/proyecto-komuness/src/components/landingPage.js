@@ -1,6 +1,6 @@
 import React from 'react'
-
 import {Navbar} from './navbar'
+import {Publicaciones} from './publicaciones'
 
 export const LandingPage = () => {
 
@@ -10,7 +10,7 @@ export const LandingPage = () => {
     
     <div>
         <Navbar />
-        Hola Mundo
+        <Publicaciones />
     </div>
   )
 }
