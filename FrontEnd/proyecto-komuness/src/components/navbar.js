@@ -20,10 +20,14 @@ export const Navbar = () => {
                     <a href = "/">Emprendimientos</a>
                 </li>
                 <li>
-                    <a href = "/">Biblioteca</a>
+                    <a href = "/" >Publicaciones</a>
                 </li>
                 <li>
-                    <a href = "https://youtu.be/rQiHzcdUPAU?si=h2gncAez28vtIyip" >Crear</a>
+                    <a href = "/">Biblioteca</a>
+                </li>
+               
+                <li>
+                    <a href = "/" >Crear</a>
                 </li>
                 <li>
                     <AiOutlineSearch size={25} style = {{marginTop: '6px'}}/>
