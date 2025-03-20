@@ -2,9 +2,9 @@ import express,{Request,Response,Express} from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectBD } from './utils/mongodb';
-import { Usuario } from './interfaces/usuario.interface';
+import { IUsuario as Usuario } from './interfaces/usuario.interface';
 import { modelUsuario } from './models/usuario.model';
-import { Publicacion } from './interfaces/publicacion.interface';
+import { IPublicacion as Publicacion } from './interfaces/publicacion.interface';
 import { modelPublicacion } from './models/publicacion.model';
 
 const app: Express = express();
