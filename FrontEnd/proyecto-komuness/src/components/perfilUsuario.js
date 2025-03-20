@@ -1,5 +1,4 @@
 import React from 'react'
-import {Navbar} from './navbar'
 import { AiOutlineUser } from 'react-icons/ai'
 import {Publicaciones} from './publicaciones'
 
@@ -10,7 +9,6 @@ export const PerfilUsuario = () => {
 
   return (
     <div>
-      <Navbar />
 
       <div className = "paginaUsuario">
         <AiOutlineUser size = {300}/>
