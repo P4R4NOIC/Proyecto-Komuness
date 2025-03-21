@@ -13,7 +13,7 @@ export const Navbar = () => {
 
 
   return (
-    <headder className = "navbar">
+    <header className = "navbar">
         <img src ={logo} className = "logo"  alt = "/"></img>
         <nav>
             <ul className = {nav ? ["menu", "activo"].join(' ') : ["menu"]}>
@@ -47,7 +47,7 @@ export const Navbar = () => {
             
            
         </div>
-    </headder>
+    </header>
   )
 }
 

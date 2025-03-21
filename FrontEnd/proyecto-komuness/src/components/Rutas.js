@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
 import {LandingPage} from './landingPage' 
 import {PerfilUsuario} from './perfilUsuario'
@@ -19,6 +19,7 @@ export const Rutas = () =>{
                 <Route path = "/vacioPrueba" element = {<VacioPrueba/>}/>
                 <Route path = "/perfilUsuario" element= {<PerfilUsuario/>}/>
                 
+                <Route path="*" element={<Navigate to="/landing" />} />
             </Routes>
         </Router>
     )

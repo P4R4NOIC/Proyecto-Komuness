@@ -13,7 +13,7 @@ const publicaciones = [
     { id: 7, title: 'Fiesta Patronal', image: '/imagenEjemplo.jpg', date: '20/3/2025', tag: 'evento' },
     { id: 8, title: 'Fiesta Patronal', image: '/imagenEjemplo.jpg', date: '20/3/2025', tag: 'evento' },
 
-    { id: 9, usuario: 'Juan Perez', post: "Lorem ipsum dolor sit amet", date: '20/3/2025', tag: 'post' },
+    { id: 9, usuario: 'River Okay', post: "Lorem ipsum dolor sit amet", date: '20/3/2025', tag: 'post' },
     { id: 10, usuario: 'Juan Perez', post: "Lorem ipsum dolor sit amet", date: '20/3/2025', tag: 'post' },
     { id: 11, usuario: 'Juan Perez', post: "Lorem ipsum dolor sit amet", date: '20/3/2025', tag: 'post' },
     { id: 12, usuario: 'Juan Perez', post: "Lorem ipsum dolor sit amet", date: '20/3/2025', tag: 'post' },
