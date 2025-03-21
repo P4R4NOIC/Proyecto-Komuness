@@ -1,3 +1,4 @@
+import { IoMdArrowRoundBack  } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export const PublicacionDetalle = () => {
@@ -12,9 +13,28 @@ export const PublicacionDetalle = () => {
 
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-6">
+            <div className="md:hidden flex justify-between w-full  mb-4">
+                <button
+                type="button"
+                onClick={() => navigate(-1)}
+                className="text-gray-600 text-2xl font-bold"
+                >
+                <IoMdArrowRoundBack  color={"white"} size={35}/>
+                </button>
+            </div>
             {publicacion.tag !== "post" ? (
                 <>
-                    <h1 className="text-3xl font-bold text-white">{publicacion.title}</h1>
+                    
+                    <h1 className="text-3xl font-bold text-white">
+                        <button
+                        type="button"
+                        onClick={() => navigate(-1)}
+                        className="hidden md:inline px-1 py-1 bg-white rounded-full mr-2"
+                        >
+                            <IoMdArrowRoundBack  color={"black"} size={25}/>
+                        </button>
+                        {publicacion.title}
+                    </h1>
                     <img 
                         src={publicacion.image} 
                         alt={publicacion.title} 
@@ -27,19 +47,20 @@ export const PublicacionDetalle = () => {
                 </>
             ) : (
                 <>
-                    <h2 className="text-2xl font-semibold text-white-800">{publicacion.usuario}</h2>
+                    <h2 className="text-2xl font-semibold text-white-800">
+                        <button
+                        type="button"
+                        onClick={() => navigate(-1)}
+                        className="hidden md:inline px-1 py-1 bg-white rounded-full mr-2"
+                        >
+                            <IoMdArrowRoundBack  color={"black"} size={25}/>
+                        </button>
+                        {publicacion.usuario}
+                    </h2>
                     <p className="mt-4 text-white">{publicacion.post}</p>
                     <p className="mt-2 text-white"><strong>Fecha:</strong> {publicacion.date}</p>
                 </>
             )}
-            <div className="mt-6">
-                <button 
-                    onClick={() => navigate(-1)} 
-                    className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
-                >
-                    Volver
-                </button>
-            </div>
         </div>
     );
 };

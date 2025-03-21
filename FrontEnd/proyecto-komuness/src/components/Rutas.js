@@ -5,6 +5,7 @@ import {PerfilUsuario} from './perfilUsuario'
 import {VacioPrueba} from './vacioPrueba'
 import {PublicacionDetalle} from './publicacionDetalle'
 import {Navbar} from './navbar'
+import FormularioPublicacion from "../pages/formulario";
 export const Rutas = () =>{
     return(
         <Router>
@@ -18,6 +19,7 @@ export const Rutas = () =>{
                 <Route path = "/emprendimientos" element = {<LandingPage/>}/>
                 <Route path = "/vacioPrueba" element = {<VacioPrueba/>}/>
                 <Route path = "/perfilUsuario" element= {<PerfilUsuario/>}/>
+                <Route path = "/formulario" element= {<FormularioPublicacion/>}/>
                 
                 <Route path="*" element={<Navigate to="/landing" />} />
             </Routes>
