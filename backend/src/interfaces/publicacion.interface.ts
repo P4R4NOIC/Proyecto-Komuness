@@ -8,6 +8,7 @@ export interface IPublicacion extends Document {
     adjunto: string[];
     comentarios: IComentario[]; // Array de comentarios
     tag: string;
+    publicado: boolean;
 }
 
 export interface IComentario {

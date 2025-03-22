@@ -18,7 +18,8 @@ const publicacionSchema = new Schema({
     fecha: { type: Date, required: true },
     adjunto: { type: [String], required: false },
     comentarios: { type: [comentarioSchema], required: false },
-    tag: { type: String, required: true }
+    tag: { type: String, required: true },
+    publicado: { type: Boolean, required: true }
 });
 
 export const modelPublicacion = model<IPublicacion>('Publicacion', publicacionSchema);
