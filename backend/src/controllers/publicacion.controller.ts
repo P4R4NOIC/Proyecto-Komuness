@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { IPublicacion } from '../interfaces/publicacion.interface';
+import { IComentario, IPublicacion } from '../interfaces/publicacion.interface';
 import { modelPublicacion } from '../models/publicacion.model';
 
 // Crear una publicación
@@ -74,3 +74,39 @@ export const deletePublicacion = async (req: Request, res: Response): Promise<vo
         res.status(500).json({ message: err.message });
     }
 };
+
+/**
+ * Agrega comentarios a una publicación
+ * @param req : Request de la petición
+ * @param res : Response de la petición
+ * @returns Código de estado de la petición
+ */
+export const addComentario = async (req: Request, res: Response): Promise<void> => {
+    const { id } = req.params; //identificador de la publicación
+    const { autor, contenido } = req.body; //autor y contenido del comentario
+    const fecha: Date = new Date();  //fecha del comentario
+    //creado el comentario
+    const nuevoComentario: IComentario = {
+        autor,
+        contenido,
+        fecha
+    }
+
+    try {
+        const publicacionActualizada = await modelPublicacion.findByIdAndUpdate(
+            id,
+            { $push: { comentarios: nuevoComentario } },
+            { new: true }); //agrega el comentario a la publicación
+
+        if (!publicacionActualizada) {
+            res.status(404).json({ message: 'Publicación no encontrada' });
+            return;
+        }
+        res.status(201).json(publicacionActualizada);
+
+    } catch (error) {
+        console.log('Error al agregar comentario:', error);
+        const err = error as Error;
+        res.status(500).json({ message: err.message });
+    }
+}

@@ -32,7 +32,9 @@ const port = process.env.PORT || 5000;
 connectBD(process.env.BD_URL || '').then(() => {
     console.log('Connected to MongoDB');
     app.listen(port, () => {
-        sendEmail('eduardo10vm@gmail.com', 'Prueba', 'Prueba de correo');
+        //sendEmail('eduardo10vm@gmail.com', 'Prueba', 'Prueba de correo');
         console.log('Server is running on http://localhost:3000');
     });
 });
+
+export default app;
