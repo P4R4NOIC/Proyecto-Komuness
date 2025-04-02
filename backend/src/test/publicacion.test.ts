@@ -2,9 +2,12 @@ import { describe, expect, test } from '@jest/globals';
 import request from 'supertest';
 import app from '../index';
 import mongoose from 'mongoose';
+import { connectBD } from '../utils/mongodb';
 
 describe('Publicacion Endpoints', () => {
-
+    beforeAll(async () => {
+        await connectBD(process.env.BD_URL || 'mongodb://localhost:27017/testdb'); // Conectar a la BD
+    });
 
 
     const testPublicacion = {
