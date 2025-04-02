@@ -18,7 +18,14 @@ export const createPublicacion = async (req: Request, res: Response): Promise<vo
 // Obtener todas las publicaciones
 export const getPublicaciones = async (req: Request, res: Response): Promise<void> => {
     try {
-        const publicaciones = await modelPublicacion.find();
+        /**
+         * Query params:
+         */
+        //Paginación
+        const offset = parseInt(req.query.offset as string) || 0;
+        const limit = parseInt(req.query.limit as string) || 10;
+
+        const publicaciones: IPublicacion[] = await modelPublicacion.find();
         res.status(200).json(publicaciones);
     } catch (error) {
         const err = error as Error;
@@ -30,7 +37,7 @@ export const getPublicaciones = async (req: Request, res: Response): Promise<voi
 export const getPublicacionById = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
-        const publicacion = await modelPublicacion.findById(id);
+        const publicacion: IPublicacion | null = await modelPublicacion.findById(id);
         if (!publicacion) {
             res.status(404).json({ message: 'Publicación no encontrada' });
             return;
@@ -46,7 +53,7 @@ export const getPublicacionById = async (req: Request, res: Response): Promise<v
 export const updatePublicacion = async (req: Request, res: Response): Promise<void> => {
     try {
         const { id } = req.params;
-        const updatedData = req.body;
+        const updatedData: Partial<IPublicacion> = req.body;
         const publicacion = await modelPublicacion.findByIdAndUpdate(id, updatedData, { new: true });
         if (!publicacion) {
             res.status(404).json({ message: 'Publicación no encontrada' });
@@ -84,12 +91,11 @@ export const deletePublicacion = async (req: Request, res: Response): Promise<vo
 export const addComentario = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params; //identificador de la publicación
     const { autor, contenido } = req.body; //autor y contenido del comentario
-    const fecha: Date = new Date();  //fecha del comentario
     //creado el comentario
     const nuevoComentario: IComentario = {
         autor,
         contenido,
-        fecha
+        fecha: new Date(),
     }
 
     try {

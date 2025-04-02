@@ -9,6 +9,8 @@ export interface IPublicacion extends Document {
     comentarios: IComentario[]; // Array de comentarios
     tag: string;
     publicado: boolean;
+    fechaEvento?: Date;
+    Precio?: number;
 }
 
 export interface IComentario {
