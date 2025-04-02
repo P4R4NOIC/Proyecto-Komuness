@@ -16,8 +16,17 @@ export const PublicacionDetalle = () => {
     }
 
     const agregarComentario = () => {
-        if (nuevoComentario.trim() === "") return;
-        setComentarios([...comentarios, nuevoComentario]);
+        if (!nuevoComentario.trim()) return;
+
+        const comentario = {
+            id: Date.now(),
+            usuario: "Usuario Anónimo",
+            avatar: "https://i.pravatar.cc/40", // Avatar aleatorio
+            texto: nuevoComentario,
+            fecha: new Date().toLocaleDateString(),
+        };
+
+        setComentarios([comentario, ...comentarios]);
         setNuevoComentario("");
     };
 
@@ -75,35 +84,35 @@ export const PublicacionDetalle = () => {
             {/* SECCION DE COMENTARIOS */}
             <div className="mt-6 p-4 bg-gray-800 rounded-lg shadow-md">
                 <h3 className="text-xl font-semibold text-white">Comentarios</h3>
-                <div className="mt-4 flex flex-col space-y-2">
-                    <div className="flex">
-                        <input
-                            type="text"
-                            value={nuevoComentario}
-                            onChange={(e) => setNuevoComentario(e.target.value)}
-                            placeholder="Escribe un comentario..."
-                            className="flex-1 p-2 rounded-l-lg bg-gray-900 text-white border border-gray-600"
-                        />
-                        <button
-                            onClick={agregarComentario}
-                            className="px-4 py-2 bg-blue-600 text-white rounded-r-lg hover:bg-blue-700"
-                        >
-                            Comentar
-                        </button>
-                    </div>
-                    <div className="mt-2 space-y-2">
-                        {comentarios.length === 0 ? (
-                            <p className="text-gray-400">No hay comentarios aún. Sé el primero en comentar.</p>
-                        ) : (
-                            comentarios.map((comentario, index) => (
-                                <div key={index} className="p-2 bg-gray-700 rounded-lg text-white">
-                                    {comentario}
+                <div className="mt-4 flex w-full">
+                    <img src="https://i.pravatar.cc/40" alt="avatar" className="rounded-full mr-2" />
+                    <input
+                        type="text"
+                        value={nuevoComentario}
+                        onChange={(e) => setNuevoComentario(e.target.value)}
+                        placeholder="Escribe un comentario..."
+                        className="flex-1 p-2 rounded-lg bg-gray-900 text-white border border-gray-600"
+                    />
+                    
+                </div>
+
+                <div className="mt-4 space-y-4 w-full">
+                    {comentarios.length === 0 ? (
+                        <p className="text-gray-400">No hay comentarios aún. Sé el primero en comentar.</p>
+                    ) : (
+                        comentarios.map((comentario) => (
+                            <div key={comentario.id} className="flex items-start space-x-2 bg-gray-700 p-3 rounded-lg">
+                                <img src={comentario.avatar} alt="avatar" className="rounded-full w-10 h-10 flex-shrink-0" />
+                                <div className="w-full">
+                                    <p className="text-sm text-gray-300 font-semibold">{comentario.usuario} <span className="text-xs text-gray-400">• {comentario.fecha}</span></p>
+                                    <p className="text-white break-words">{comentario.texto}</p>
                                 </div>
-                            ))
-                        )}
-                    </div>
+                            </div>
+                        ))
+                    )}
                 </div>
             </div>
+
         </div>
     );
 };
