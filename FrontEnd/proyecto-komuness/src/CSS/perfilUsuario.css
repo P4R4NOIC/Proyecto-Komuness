@@ -1,0 +1,26 @@
+.paginaUsuario{
+    margin-top: 20px;
+    display: flex;
+     
+}
+
+.paginaUsuario a{
+    color: white;
+}
+
+
+
+@media screen and (max-width: 720px) {
+    .paginaUsuario{
+        display: flex;
+        flex-direction: column;
+ 
+        align-items: center;  /* Horizontally center the items */
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      
+      
+    }
+}
