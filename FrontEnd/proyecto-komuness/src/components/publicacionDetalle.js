@@ -93,7 +93,12 @@ export const PublicacionDetalle = () => {
                         placeholder="Escribe un comentario..."
                         className="flex-1 p-2 rounded-lg bg-gray-900 text-white border border-gray-600"
                     />
-                    
+                    <button
+                        onClick={agregarComentario}
+                        className="ml-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    >
+                        Comentar
+                    </button>
                 </div>
 
                 <div className="mt-4 space-y-4 w-full">

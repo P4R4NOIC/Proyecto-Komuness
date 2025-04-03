@@ -99,6 +99,9 @@ const FormularioPublicacion = () => {
             value={formData.descripcion}
             onChange={handleChange}
             className="w-full p-2 border rounded"
+            placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            Numero de telefono:
+            Enlace de contacto:"
             rows="4"
             required
           ></textarea>
