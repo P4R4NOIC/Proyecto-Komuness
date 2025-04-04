@@ -4,14 +4,31 @@ import { IoMdClose } from "react-icons/io";
 const FormularioPublicacion = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    categoria: "",
     titulo: "",
-    descripcion: "",
-    precio: "",
-    enlace: "",
-    imagenes: [],
+    descripcion: "", //   contenido: "",
+    //   autor: "",
+    //   fecha: new Date().toISOString(), // Se inicializa con la fecha actual en formato ISO
+    imagenes: [], //   adjunto: [],
+    //   comentarios: [], // Se asume que inicialmente no hay comentarios
+    categoria: "", //   tag: "",
+    //   publicado: false,
     fechaEvento: "",
+    precio: "",
+    
   });
+
+  // const [formData, setFormData] = useState({
+  //   titulo: "",
+  //   contenido: "",
+  //   autor: "",
+  //   fecha: new Date().toISOString(), // Se inicializa con la fecha actual en formato ISO
+  //   adjunto: [],
+  //   comentarios: [], // Se asume que inicialmente no hay comentarios
+  //   tag: "",
+  //   publicado: false,
+  //   fechaEvento: "", // Opcional
+  //   Precio: "", // Opcional, lo dejamos como string para evitar problemas con inputs de texto
+  // });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,10 +50,30 @@ const FormularioPublicacion = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Publicación enviada:", formData);
+  
+    try {
+      const response = await fetch("http://0.0.0.0:3000/publicaciones", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        console.log("Publicación enviada con éxito:", data);
+      } else {
+        console.error("Error al enviar publicación:", data);
+      }
+    } catch (error) {
+      console.error("Error de red:", error);
+    }
   };
+  
 
   return (
     <div className="max-w-3xl mx-auto mt-5 p-4 md:p-6 bg-white text-zinc-950 shadow-md rounded-lg">
