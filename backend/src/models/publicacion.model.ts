@@ -5,7 +5,7 @@ import { model, Schema } from 'mongoose';
 const comentarioSchema = new Schema({
     autor: { type: String, required: true },
     contenido: { type: String, required: true },
-    fecha: { type: Date, required: true }
+    fecha: { type: String, required: true }
 });
 
 

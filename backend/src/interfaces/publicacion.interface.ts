@@ -16,5 +16,5 @@ export interface IPublicacion extends Document {
 export interface IComentario {
     autor: string;
     contenido: string;
-    fecha: Date;
+    fecha: string;
 }
