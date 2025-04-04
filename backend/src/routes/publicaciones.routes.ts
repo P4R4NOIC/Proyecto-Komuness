@@ -1,11 +1,13 @@
 import { Router } from 'express';
-import { createPublicacion, getPublicaciones, getPublicacionById, updatePublicacion, deletePublicacion, addComentario } from '../controllers/publicacion.controller';
+import { createPublicacion, getPublicaciones, getPublicacionById, updatePublicacion, deletePublicacion, addComentario, getPublicacionesByTag } from '../controllers/publicacion.controller';
 
 const router = Router();
 
 router.post('/', createPublicacion); // create
 
-router.get('/', getPublicaciones); // read
+// router.get('/', getPublicaciones); // read
+
+router.get('/', getPublicacionesByTag); // read
 
 router.get('/:id', getPublicacionById); // read by id
 

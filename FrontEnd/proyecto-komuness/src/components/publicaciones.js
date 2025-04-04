@@ -43,19 +43,32 @@ export const Publicaciones = () => {
 
    
       
-     
-
+    const [publicaciones2, setPublicaciones] = useState([]);
 
       useEffect(() => {
+        const obtenerPublicaciones = async (tag, offset = 0, limit = 10) => {
+          try {
+            const response = await fetch(`http://localhost:3000/publicaciones/?tag=${tag}&offset=${offset}&limit=${limit}`);
+            const data = await response.json();
+            const jsonString = JSON.stringify(data);
+            setPublicaciones(jsonString); // Guardamos las publicaciones en el estado
+            console.log("Publicaciones obtenidas:", data);
+          } catch (error) {
+            console.error("Error al obtener publicaciones:", error);
+          }
+        };
         // Check the current path and set 'mostrar' accordingly
         if (location.pathname === '/eventos') {
           setMostrar(0); 
+          obtenerPublicaciones('evento',0,10);
        
         } else if (location.pathname === '/emprendimientos') {
           setMostrar(1); 
+          obtenerPublicaciones('emprendimiento',0,10);
           
         }else if(location.pathname === '/publicaciones'){
             setMostrar(2); 
+            obtenerPublicaciones('publicacion',0,10);
         }else if (location.pathname === '/perfilUsuario'){
              setMostrar(3);
         }
@@ -74,36 +87,7 @@ export const Publicaciones = () => {
                     if (mostrar === 1) return publicacion.tag === 'empr';
                     return publicacion.tag === 'post';
                 });
-                // .map(publicacion => (
-                //     <div key={publicacion.id} className="card">
-                //         {publicacion.tag !== 'post' && (
-                //             <div className="imagen">
-                //                 <img src={publicacion.image} alt={publicacion.title} className="thumbnail" />
-                //             </div>
-                //         )}
-                //         {publicacion.tag !== 'post' && (
-                //             <div className="card-details">
-                //                 <h3 className="title">{publicacion.title}</h3>
-                //                 <p className="date">Publicado el {publicacion.date}</p>
-                //             </div>
-                //         )}
-                //         {publicacion.tag === 'post' && (
-                //             <div className="tweet">
-                //                 <div className="tweet-header">
-                //                     <div className="tweet-user">
-                //                         <h4 className="user-name">{publicacion.usuario}</h4>
-                //                     </div>
-                //                 </div>
-                //                 <div className="tweet-content">
-                //                     <p>{publicacion.post}</p>
-                //                 </div>
-                //                 <div className="tweet-footer">
-                //                     <p className="tweet-date">Publicado el {publicacion.date}</p>
-                //                 </div>
-                //             </div>
-                //         )}
-                //     </div>
-                // ));
+                
                 setCards(newCards);
             }
         }, [mostrar]);

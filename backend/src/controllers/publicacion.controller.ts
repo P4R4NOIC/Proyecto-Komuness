@@ -33,6 +33,31 @@ export const getPublicaciones = async (req: Request, res: Response): Promise<voi
     }
 };
 
+//obtener publicaciones por tag
+export const getPublicacionesByTag = async (req: Request, res: Response): Promise<void> => {
+    try {
+
+        //paginación
+        const offset = parseInt(req.query.offset as string) || 0;
+        const limit = parseInt(req.query.limit as string) || 10;
+        
+        const { tag } = req.query;
+        console.log("Tag recibido:", tag); 
+        const publicaciones: IPublicacion[] = await modelPublicacion.find({ tag: tag })
+                                                                    .skip(offset)
+                                                                    .limit(limit);
+        if (publicaciones.length === 0) {
+            res.status(404).json({ message: 'No se encontraron publicaciones con ese tag' });
+            return;
+        }
+        res.status(200).json(publicaciones);
+    } catch (error) {
+        const err = error as Error;
+        res.status(500).json({ message: err.message });
+    }
+};
+
+
 // Obtener una publicación por su ID
 export const getPublicacionById = async (req: Request, res: Response): Promise<void> => {
     try {
