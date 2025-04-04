@@ -15,12 +15,12 @@ const publicacionSchema = new Schema({
     contenido: { type: String, required: true },
     //id del autor
     autor: { type: Schema.Types.ObjectId, ref: 'Usuario', required: true },
-    fecha: { type: Date, required: true },
+    fecha: { type: String, required: true },
     adjunto: { type: [String], required: false },
     comentarios: { type: [comentarioSchema], required: false },
     tag: { type: String, required: true },
     publicado: { type: Boolean, required: true },
-    fechaEvento: { type: Date, required: false },
+    fechaEvento: { type: String, required: false },
     Precio: { type: Number, required: false }
 });
 
