@@ -3,15 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 const FormularioPublicacion = () => {
   const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     titulo: "",
-    descripcion: "", //   contenido: "",
-    //   autor: "",
-    //   fecha: new Date().toISOString(), // Se inicializa con la fecha actual en formato ISO
-    imagenes: [], //   adjunto: [],
-    //   comentarios: [], // Se asume que inicialmente no hay comentarios
-    categoria: "", //   tag: "",
-    //   publicado: false,
+    contenido: "", 
+    autor: "67da43f3651480413241b344",    // TODO AGREGAR
+    fecha: new Date().toLocaleDateString(),
+    adjunto: [], 
+    comentarios: [], 
+    tag: "", 
+    publicado: true,  // TODO: CAMBIAR A FALSE
     fechaEvento: "",
     precio: "",
     
@@ -39,22 +40,22 @@ const FormularioPublicacion = () => {
     const files = Array.from(e.target.files);
     setFormData((prev) => ({
       ...prev,
-      imagenes: [...prev.imagenes, ...files],
+      adjunto: [...prev.adjunto, ...files],
     }));
   };
 
   const handleRemoveImage = (index) => {
     setFormData((prev) => ({
       ...prev,
-      imagenes: prev.imagenes.filter((_, i) => i !== index),
+      adjunto: prev.adjunto.filter((_, i) => i !== index),
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+    
     try {
-      const response = await fetch("http://0.0.0.0:3000/publicaciones", {
+      const response = await fetch("http://localhost:3000/publicaciones", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -115,8 +116,8 @@ const FormularioPublicacion = () => {
         <div>
           <label className="block font-semibold">Categoría:</label>
           <select
-            name="categoria"
-            value={formData.categoria}
+            name="tag"
+            value={formData.tag}
             onChange={handleChange}
             className="w-full p-2 border rounded"
             required
@@ -132,8 +133,8 @@ const FormularioPublicacion = () => {
         <div>
           <label className="block font-semibold">Descripción:</label>
           <textarea
-            name="descripcion"
-            value={formData.descripcion}
+            name="contenido"
+            value={formData.contenido}
             onChange={handleChange}
             className="w-full p-2 border rounded"
             placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
@@ -144,53 +145,42 @@ const FormularioPublicacion = () => {
           ></textarea>
         </div>
 
-        {/* Precio y Enlace de contacto en la misma línea en pantallas grandes */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Precio */}
+        {/* Precio */}
+        {(formData.tag === "evento" || formData.tag === "emprendimiento") && (
           <div>
-            <label className="block font-semibold">Precio:</label>
-            <input
-              type="number"
-              name="precio"
-              value={formData.precio}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-            />
+            {/* Precio */}
+            <div>
+              <label className="block font-semibold">Precio:</label>
+              <input
+                type="number"
+                name="precio"
+                value={formData.precio}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                />
+            </div>
+            <div>
+              <label className="block font-semibold">Imágenes:</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageChange}
+                  className="w-full p-2 border rounded"
+                />
+            </div>
           </div>
-
-          {/* Enlace de contacto */}
-          <div>
-            <label className="block font-semibold">Enlace de contacto:</label>
-            <input
-              type="url"
-              name="enlace"
-              value={formData.enlace}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              placeholder="Ej: https://wa.me/123456789"
-              required
-            />
-          </div>
-        </div>
+        )}
 
         {/* Subir imágenes */}
-        <div>
-          <label className="block font-semibold">Imágenes:</label>
-          <input
-            type="file"
-            accept="image/*"
-            multiple
-            onChange={handleImageChange}
-            className="w-full p-2 border rounded"
-          />
-        </div>
+        
 
         {/* Vista previa de imágenes */}
-        {formData.imagenes.length > 0 && (
+        {formData.adjunto.length > 0 && (
           <div className="mt-3">
             <h3 className="font-semibold mb-2">Vista previa:</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              {formData.imagenes.map((img, index) => (
+              {formData.adjunto.map((img, index) => (
                 <div key={index} className="relative">
                   <img
                     src={URL.createObjectURL(img)}
@@ -209,9 +199,8 @@ const FormularioPublicacion = () => {
             </div>
           </div>
         )}
-
         {/* Date picker (solo si es evento) */}
-        {formData.categoria === "evento" && (
+        {formData.tag === "evento" && (
           <div>
             <label className="block font-semibold">Fecha del evento:</label>
             <input

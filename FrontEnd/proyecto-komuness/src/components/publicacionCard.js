@@ -4,38 +4,40 @@ export const PublicacionCard = ({ publicacion }) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate(`/publicaciones/${publicacion.id}`, {state: {publicacion}}); 
+        navigate(`/publicaciones/${publicacion._id}`, {state: {publicacion}}); 
     };
     
     return (
         <div 
-            key={publicacion.id} 
+            key={publicacion._id} 
             className="card"
             onClick={handleClick}
         >
-            {publicacion.tag !== 'post' && (
+            {publicacion.tag !== 'publicacion' && (
                 <div className="imagen">
-                    <img src={publicacion.image} alt={publicacion.title} className="thumbnail" />
+                    <img src={publicacion.adjunto[0] ?? "notFound.jpg"} 
+                        alt={publicacion.titulo} 
+                        className="thumbnail" />
                 </div>
             )}
-            {publicacion.tag !== 'post' && (
+            {publicacion.tag !== 'publicacion' && (
                 <div className="card-details">
-                    <h3 className="title">{publicacion.title}</h3>
-                    <p className="date">Publicado el {publicacion.date}</p>
+                    <h3 className="titulo">{publicacion.titulo}</h3>
+                    <p className="fecha">Publicado el {publicacion.fecha}</p>
                 </div>
             )}
-            {publicacion.tag === 'post' && (
+            {publicacion.tag === 'publicacion' && (
                 <div className="tweet">
                     <div className="tweet-header">
                         <div className="tweet-user">
-                            <h4 className="user-name">{publicacion.usuario}</h4>
+                            <h4 className="user-name">{publicacion.autor}</h4>
                         </div>
                     </div>
                     <div className="tweet-content">
-                        <p>{publicacion.post}</p>
+                        <p>{publicacion.titulo}</p>
                     </div>
                     <div className="tweet-footer">
-                        <p className="tweet-date">Publicado el {publicacion.date}</p>
+                        <p className="tweet-date">Publicado el {publicacion.fecha}</p>
                     </div>
                 </div>
             )}

@@ -41,7 +41,7 @@ export const PublicacionDetalle = () => {
                 <IoMdArrowRoundBack  color={"white"} size={35}/>
                 </button>
             </div>
-            {publicacion.tag !== "post" ? (
+            {publicacion.tag !== "publicacion" ? (
                 <>
                     
                     <h1 className="text-3xl font-bold text-white">
@@ -52,15 +52,15 @@ export const PublicacionDetalle = () => {
                         >
                             <IoMdArrowRoundBack  color={"black"} size={25}/>
                         </button>
-                        {publicacion.title}
+                        {publicacion.titulo}
                     </h1>
                     <img 
-                        src={publicacion.image} 
-                        alt={publicacion.title} 
+                        src={publicacion.adjunto[0] ?? "notFound.jpg"} 
+                        alt={publicacion.titulo} 
                         className="w-full h-auto rounded-lg shadow-lg" 
                     />
                     <div className="text-white-600">
-                        <p className="mt-2"><strong>Fecha:</strong> {publicacion.date}</p>
+                        <p className="mt-2"><strong>Fecha:</strong> {publicacion.fecha}</p>
                         <p><strong>Categoría:</strong> {publicacion.tag}</p>
                     </div>
                 </>
@@ -74,10 +74,10 @@ export const PublicacionDetalle = () => {
                         >
                             <IoMdArrowRoundBack  color={"black"} size={25}/>
                         </button>
-                        {publicacion.usuario}
+                        {publicacion.autor}
                     </h2>
-                    <p className="mt-4 text-white">{publicacion.post}</p>
-                    <p className="mt-2 text-white"><strong>Fecha:</strong> {publicacion.date}</p>
+                    <p className="mt-4 text-white">{publicacion.contenido}</p>
+                    <p className="mt-2 text-white"><strong>Fecha:</strong> {publicacion.fecha}</p>
                 </>
             )}
 

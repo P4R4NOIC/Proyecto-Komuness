@@ -120,7 +120,8 @@ export const addComentario = async (req: Request, res: Response): Promise<void> 
     const nuevoComentario: IComentario = {
         autor,
         contenido,
-        fecha: new Date().toLocaleDateString()
+        fecha: "",
+        // fecha: new Date().toLocaleDateString()
     }
 
     try {
