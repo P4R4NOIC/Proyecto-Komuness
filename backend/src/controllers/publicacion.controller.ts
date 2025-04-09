@@ -44,6 +44,7 @@ export const getPublicacionesByTag = async (req: Request, res: Response): Promis
         const { tag } = req.query;
         console.log("Tag recibido:", tag); 
         const publicaciones: IPublicacion[] = await modelPublicacion.find({ tag: tag })
+                                                                    .sort({ createdAt: -1 })
                                                                     .skip(offset)
                                                                     .limit(limit);
         if (publicaciones.length === 0) {

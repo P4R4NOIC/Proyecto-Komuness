@@ -22,6 +22,6 @@ const publicacionSchema = new Schema({
     publicado: { type: Boolean, required: true },
     fechaEvento: { type: String, required: false },
     Precio: { type: Number, required: false }
-});
+}, { timestamps: true });
 
 export const modelPublicacion = model<IPublicacion>('Publicacion', publicacionSchema);
