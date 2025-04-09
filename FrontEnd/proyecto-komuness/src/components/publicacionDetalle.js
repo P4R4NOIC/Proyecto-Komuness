@@ -30,6 +30,35 @@ export const PublicacionDetalle = () => {
         setNuevoComentario("");
     };
 
+    // QUIZA LE SIRVA
+    // const [comentario, setComentario] = useState({
+    //     autor: "6612abcd1234567890fedcba", // TODO: SE SACA DEL USUARIO LOGGEADO
+    //     contenido: ""
+    // });
+      
+    // -----------CODIGO POST PARA ENVIAR UN COMENTARIO --------------------------
+    // const enviarComentario = async () => {
+    //     try {
+    //       const res = await fetch(`http://localhost:3000/publicaciones/${publicacion._id}/comentarios`, {
+    //         method: "POST",
+    //         headers: {
+    //           "Content-Type": "application/json"
+    //         },
+    //         body: JSON.stringify(comentario)
+    //       });
+      
+    //       if (res.ok) {
+    //         const data = await res.json();
+    //         console.log("Comentario agregado:", data);
+    //       } else {
+    //         console.error("Error al agregar comentario");
+    //       }
+    //     } catch (err) {
+    //       console.error("Error en la solicitud:", err);
+    //     }
+    // };
+      
+
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-6">
             <div className="md:hidden flex justify-between w-full  mb-4">
@@ -54,11 +83,9 @@ export const PublicacionDetalle = () => {
                         </button>
                         {publicacion.titulo}
                     </h1>
-                    <img 
-                        src={publicacion.adjunto[0] ?? "notFound.jpg"} 
+                    <img src={publicacion.adjunto[0] ?? '/notFound.jpg'} 
                         alt={publicacion.titulo} 
-                        className="w-full h-auto rounded-lg shadow-lg" 
-                    />
+                        className="w-full h-auto rounded-lg shadow-lg" />
                     <div className="text-white-600">
                         <p className="mt-2"><strong>Fecha:</strong> {publicacion.fecha}</p>
                         <p><strong>Categoría:</strong> {publicacion.tag}</p>

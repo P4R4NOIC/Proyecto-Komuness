@@ -15,7 +15,7 @@ export const PublicacionCard = ({ publicacion }) => {
         >
             {publicacion.tag !== 'publicacion' && (
                 <div className="imagen">
-                    <img src={publicacion.adjunto[0] ?? "notFound.jpg"} 
+                    <img src={publicacion.adjunto[0] ?? "/notFound.jpg"} 
                         alt={publicacion.titulo} 
                         className="thumbnail" />
                 </div>

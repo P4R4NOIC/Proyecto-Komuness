@@ -78,7 +78,7 @@ export const Publicaciones = () => {
           obtenerPublicaciones('emprendimiento', paginaActual * limite, limite);
         } else if (location.pathname === '/publicaciones') {
           setMostrar(2);
-          obtenerPublicaciones('publicacion', paginaActual * limite, limite);
+          obtenerPublicaciones('publicacion', paginaActual * limite, 20);
         } else if (location.pathname === '/perfilUsuario') {
           setMostrar(3);
         }
@@ -115,7 +115,7 @@ export const Publicaciones = () => {
             <PublicacionCard key={publicacion._id} publicacion={publicacion} />
           ))
         )}
-        <div className="paginacion mt-4 flex justify-center gap-4">
+        {/* <div className="paginacion mt-4 flex justify-center gap-4">
           <button
             onClick={() => paginacion(-1)} // Reduce la página en 1
             disabled={paginaActual === 0} // Deshabilita el botón si estamos en la página 0
@@ -124,7 +124,7 @@ export const Publicaciones = () => {
             Anterior
           </button>
 
-          <span>Página {paginaActual + 1}</span> {/* Para mostrar la página en formato 1-based */}
+          <span>Página {paginaActual + 1}</span> 
 
           <button
             onClick={() => paginacion(1)} // Aumenta la página en 1
@@ -132,7 +132,7 @@ export const Publicaciones = () => {
           >
             Siguiente
           </button>
-        </div>
+        </div> */}
     </div>
 
     
