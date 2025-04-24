@@ -1,0 +1,59 @@
+import React from 'react'
+
+import {
+    AiFillFilePdf,
+    AiFillFileExcel,
+    AiFillFileWord,
+    AiFillFilePpt,
+    AiFillFileText,
+    AiFillFileImage,
+    AiFillFileZip,
+    AiFillFile,
+
+} from 'react-icons/ai'
+
+
+export const DocumentCard = ({ name, author, type = 'defiault', size, onClick }) => {
+   
+
+    const iconMap = {
+        pdf: <AiFillFilePdf className="text-[#ed1c22] text-2xl min-w-[32px]" />,
+        excel: <AiFillFileExcel className="text-green-500 text-2xl min-w-[32px]" />,
+        word: <AiFillFileWord className="text-blue-500 text-2xl min-w-[32px]" />,
+        ppt: <AiFillFilePpt className="text-orange-500 text-2xl min-w-[32px]" />,
+        text: <AiFillFileText className="text-[#fb544a] text-2xl min-w-[32px]" />,
+        img: <AiFillFileImage className="text-[#fea190] text-2xl min-w-[32px]" />,
+        zip: <AiFillFileZip className="text-[#f8bd3a] text-2xl min-w-[32px]" />,
+        default: <AiFillFile className="text-gray-400 text-2xl min-w-[32px]" />,
+      };
+
+
+   
+
+      const icon = iconMap[type.toLowerCase()] || iconMap.default;
+
+     
+
+  return (
+    <div
+      onClick={onClick}
+      className="flex items-center gap-3 px-4 py-3 rounded-lg shadow bg-[#2A2A35] hover:bg-[#333344] cursor-pointer transition-all w-[90%] max-w-full"
+    >
+      {/* Icono de documento */}
+   
+    {icon}
+
+      {/* Info del documento */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full gap-1 sm:gap-2">
+        <div className="text-sm font-la text-white-900 truncate">{name}</div>
+        <div className="text-xs font-medium text-white-600 truncate">Autor: {author}</div>
+        <div className="text-xs font-medium text-white-600 truncate">{size}</div>
+      </div>
+    </div>
+
+
+    
+  )
+}
+
+export default DocumentCard

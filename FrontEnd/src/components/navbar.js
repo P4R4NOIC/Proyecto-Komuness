@@ -32,7 +32,7 @@ export const Navbar = () => {
           <li onClick={() => handleNavigation("/publicaciones")}>
             <span>Publicaciones</span>
           </li>
-          <li onClick={() => handleNavigation("/vacioPrueba")}>
+          <li onClick={() => handleNavigation("/biblioteca")}>
             <span>Biblioteca</span>
           </li>
           <li onClick={() => handleNavigation("/formulario")}>
