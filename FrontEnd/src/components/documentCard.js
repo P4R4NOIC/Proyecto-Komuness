@@ -33,27 +33,38 @@ export const DocumentCard = ({ name, author, type = 'defiault', size, onClick })
       const icon = iconMap[type.toLowerCase()] || iconMap.default;
 
      
-
-  return (
-    <div
-      onClick={onClick}
-      className="flex items-center gap-3 px-4 py-3 rounded-lg shadow bg-[#2A2A35] hover:bg-[#333344] cursor-pointer transition-all w-[90%] max-w-full"
-    >
-      {/* Icono de documento */}
-   
+      return (
+  <div
+    onClick={onClick}
+    className="flex items-center gap-3 px-4 py-3 rounded-lg shadow bg-[#2A2A35] hover:bg-[#333344] cursor-pointer transition-all w-[90%] max-w-full"
+  >
+    {/* Icono de documento */}
     {icon}
 
-      {/* Info del documento */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between w-full gap-1 sm:gap-2">
-        <div className="text-sm font-la text-white-900 truncate">{name}</div>
-        <div className="text-xs font-medium text-white-600 truncate">Autor: {author}</div>
-        <div className="text-xs font-medium text-white-600 truncate">{size}</div>
+    {/* Info del documento */}
+    <div className="flex flex-col sm:flex-row w-full sm:gap-8 gap-1 sm:items-center min-w-0">
+      {/* Nombre */}
+      <div className="text-sm font-la text-white-900 truncate min-w-0 sm:w-1/3">
+        {name}
+      </div>
+
+      {/* Autor (alineado + movido ligeramente a la derecha) */}
+      <div className="text-xs font-medium text-white-600 truncate min-w-0 sm:w-1/3 sm:text-left sm:pl-4">
+        Autor: {author}
+      </div>
+
+      {/* Tamaño */}
+      <div className="text-xs font-medium text-white-600 truncate min-w-0 sm:w-1/3 sm:text-right">
+        {size}
       </div>
     </div>
+  </div>
+);
 
+      
+      
 
-    
-  )
+      
 }
 
 export default DocumentCard

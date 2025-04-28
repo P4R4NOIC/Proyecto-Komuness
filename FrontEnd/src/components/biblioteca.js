@@ -25,7 +25,7 @@ export const Biblioteca = () => {
     
 //Json prueba
     const documentos = [
-        {nombre: "Informe Anual 2024", autor: "Juan Pérez", size: "1.2 MB", tag: "pdf", },
+        {nombre: "Nombre largo de archivo para prueba de espacio en la caja de archivos en la seccion de biblioteca del proyecto ", autor: "Juan Pérez", size: "1.2 MB", tag: "pdf", },
         {nombre: "Presupuesto Q1", autor: "Ana Gómez",size: "850 KB",tag: "excel",},
         {nombre: "Acta Reunión",autor: "Luis Martínez",size: "620 KB",tag: "word", },
         {nombre: "Presentación Ventas",autor: "Camila Torres",size: "4.1 MB",tag: "ppt",},
@@ -70,6 +70,7 @@ export const Biblioteca = () => {
         isOpen={!!selectedDoc}
         name={selectedDoc?.nombre}
         size={selectedDoc?.size}
+        author = {selectedDoc?.autor}
         icon={modalIconMap[selectedDoc?.tag] || modalIconMap.default}
         onClose={handleCloseModal}
         onDownload={handleDownload}

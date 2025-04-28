@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const DocumentModal = ({ isOpen, onClose, onDownload, name, size, icon }) => {
+export const DocumentModal = ({ isOpen, onClose, onDownload, name, size, icon, author }) => {
   
     if (!isOpen) return null;
     return (
@@ -12,7 +12,9 @@ export const DocumentModal = ({ isOpen, onClose, onDownload, name, size, icon })
             <div className="text-6xl">{icon}</div>
   
             {/* Info */}
+
             <h2 className="text-xl font-semibold">{name}</h2>
+            <p className="text-sm text-gray-300">{author}</p> 
             <p className="text-sm text-gray-300">{size}</p>
   
             {/* Botones */}
