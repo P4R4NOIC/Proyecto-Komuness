@@ -39,3 +39,28 @@ export const uploadFile = async (file: Express.Multer.File, folder?: string): Pr
         return null;
     }
 }
+
+/**
+ * deleteFile: delete file from digitalOcean spaces
+ * 
+ * @param key : string Key del archivo a eliminar
+ * @returns boolean true si se elimino correctamente, false si ocurre un error
+ */
+export const deleteFile = async (key: string): Promise<boolean> => {
+    const params = {
+        Bucket: 'archivos', // Reemplaza con el nombre de tu bucket  process.env.DO_SPACES_BUCKET!,
+        Key: key,
+    };
+    try {
+        const result = await s3.deleteObject(params).promise();
+        if (!result.$response.error) {
+            return true;
+        } else {
+            console.log('Error deleting file:', result.$response.error);
+            return false;
+        }
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}

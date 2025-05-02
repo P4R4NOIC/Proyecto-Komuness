@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Archivo } from '@/models/archivo.model';
 import { Folder } from '@/models/folder.model';
 import { uploadFile } from '@/utils/digitalOceanSpace';
+import { IArchivo } from '@/interfaces/archivo.interface';
 
 class BibliotecaController {
     /**
@@ -121,8 +122,8 @@ class BibliotecaController {
 
             return res.status(200).json({
                 success: true,
-                archivos,
-                folders
+                contentFile: archivos,
+                contentFolder: folders
             })
         } catch (error) {
             console.error('Error general:', error);
@@ -142,12 +143,12 @@ class BibliotecaController {
      * @returns: Response
      */
     static async createFolder(req: Request, res: Response) {
-        const { nombre, parent, userId } = req.body;
+        const { nombre, parent, userId = undefined } = req.body;
 
-        if (!nombre || !parent || !userId) {
+        if (!nombre || !parent) {
             return res.status(400).json({
                 success: false,
-                message: 'nombre, parent y userId son requeridos',
+                message: 'nombre and parent son requeridos',
                 errors: []
             });
         }
@@ -165,6 +166,122 @@ class BibliotecaController {
                 message: 'Carpeta creada correctamente',
                 content: folder
             })
+        } catch (error) {
+            console.error('Error general:', error);
+            return res.status(500).json({
+                success: false,
+                message: 'Error interno del servidor',
+                error: error instanceof Error ? error.message : 'An unknown error occurred'
+            });
+        }
+    }
+    /**
+     * Función para eliminar un archivo de la biblioteca (modular, debido a que hay 2 funciones que la llaman)
+     * @param id
+     * @returns boolean
+     */
+    static async deleteFileById(id: string) {
+        try {
+            const archivo = await Archivo.findById(id);
+
+            if (!archivo)
+                return false;
+            // Eliminar el archivo de la biblioteca
+            await Archivo.findByIdAndDelete(id);
+
+            return true;
+        } catch (error) {
+            console.error(`Error en la función: ${this.constructor.name}\n Error general:${error}`);
+            return false;
+        }
+    }
+
+    /**
+     * @description: Elimina un archivo de la biblioteca
+     * @route: DELETE /api/biblioteca/deleteFile/:id
+     * @param req: Request
+     * @param res: Response
+     * @returns: Response
+     */
+    static async deleteFile(req: Request, res: Response) {
+        const { id } = req.params;
+
+        if (!id) {
+            return res.status(400).json({
+                success: false,
+                message: 'id es requerido',
+                errors: []
+            });
+        }
+
+        try {
+            const archivo = await Archivo.findById(id);
+
+            if (!archivo) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Archivo no encontrado',
+                    errors: []
+                })
+            }
+            // Eliminar el archivo de la biblioteca
+            BibliotecaController.deleteFileById(id);
+            return res.status(200).json({
+                success: true,
+                message: 'Archivo eliminado correctamente',
+                content: archivo
+            });
+        } catch (error) {
+            console.error('Error general:', error);
+            return res.status(500).json({
+                success: false,
+                message: 'Error interno del servidor',
+                error: error instanceof Error ? error.message : 'An unknown error occurred'
+            });
+        }
+    }
+
+    /**
+     * @description: Elimina una carpeta de la biblioteca
+     * @route: DELETE /api/biblioteca/deleteFolder/:id
+     * @param req: Request
+     * @param res: Response
+     * @returns: Response
+     */
+    static async deleteFolder(req: Request, res: Response) {
+        const { id } = req.params;
+
+        if (!id) {
+            return res.status(400).json({
+                success: false,
+                message: 'id es requerido',
+                errors: []
+            });
+        }
+
+        try {
+            const folder = await Folder.findById(id);
+            const archivos: IArchivo[] = await Archivo.find({ folder: id });
+
+            if (!folder) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Carpeta no encontrada',
+                    errors: []
+                })
+            }
+            // Eliminar la carpeta de la biblioteca
+            await Folder.findByIdAndDelete(id);
+            //luego, eliminar todos los archivos que esten dentro de la carpeta
+            for (const archivo of archivos) {
+                await BibliotecaController.deleteFileById(archivo._id?.toString() || '');
+            }
+            return res.status(200).json({
+                success: true,
+                message: 'Carpeta y archivos eliminados correctamente',
+                content: folder
+            })
+
         } catch (error) {
             console.error('Error general:', error);
             return res.status(500).json({
