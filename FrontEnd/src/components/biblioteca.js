@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{useState, useCallback} from 'react'
 import DocumentCard from './documentCard'
 import DocumentModal from './documentModal'
 import {
@@ -12,6 +12,7 @@ import {
     AiFillFile,
 
 } from 'react-icons/ai'
+import {useDropzone} from 'react-dropzone'
 
 export const Biblioteca = () => {
 
@@ -46,6 +47,36 @@ export const Biblioteca = () => {
         default: <AiFillFile className="text-gray-400 text-7xl" />,
       };
 
+      // const onDrop = useCallback(acceptedFiles => {
+        // const file = new FileReader;
+        // file.onload = function(){
+        //   setPreview(file.result);
+        // }
+        // file.readAsDataURL(acceptedFiles[0])
+      // }, [])
+      
+      const {acceptedFiles, getRootProps, getInputProps, isDragActive} = useDropzone()
+      
+      const files = acceptedFiles.map(file => (
+        // <li key={file.name}>
+        //   {file.name} - {file.size} bytes
+        // </li>
+        // console.log(file)
+        <DocumentCard
+          key={file.name}
+          name={file.name}
+          author={'Desconocido'}
+          size={file.size}
+          type={file.type}
+        />
+      ));
+
+      async function handleOnSubmit(params) {
+        params.preventDefault();
+        if ( typeof acceptedFiles[0] === 'undefined' ) return;
+        console.log(acceptedFiles)
+        
+      }
 
   return (
     
@@ -54,6 +85,22 @@ export const Biblioteca = () => {
     <h1 className="text-4xl sm:text-5xl font-bold text-white drop-shadow-[0_2px_6px_rgba(0,0,0,1)]">
         <span className="text-gray-200">Biblioteca</span>
     </h1>
+
+    <div {...getRootProps()}>
+      <input {...getInputProps()} />
+      {
+        isDragActive ?
+          <p>Drop the files here ...</p> :
+          <p>Drag 'n' drop some files here, or click to select files</p>
+      }
+    </div>
+    
+    {acceptedFiles.length!=0 && (
+      <div>
+        <button onClick={handleOnSubmit}> Subir </button>
+        <ul>{files}</ul>
+      </div>
+    )}
     
     {documentos.map((doc, index) => (
         <DocumentCard
@@ -66,7 +113,7 @@ export const Biblioteca = () => {
         />
       ))}
 
-<DocumentModal
+      <DocumentModal
         isOpen={!!selectedDoc}
         name={selectedDoc?.nombre}
         size={selectedDoc?.size}
