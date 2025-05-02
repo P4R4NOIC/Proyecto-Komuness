@@ -12,8 +12,7 @@ export const Rutas = () =>{
         <Router>
             <Navbar />
             <Routes>
-                <Route path = "/" element= {<LandingPage/>}/>
-                <Route path = "/landing" element= {<LandingPage/>}/>
+                <Route path = "/" element= {<Navigate to="/publicaciones" />}/>
                 <Route path = "/eventos" element = {<LandingPage/>}/>
                 <Route path = "/publicaciones" element = {<LandingPage/>}/>
                 <Route path = "/publicaciones/:id" element = {<PublicacionDetalle/>}/>
@@ -22,7 +21,7 @@ export const Rutas = () =>{
                 <Route path = "/perfilUsuario" element= {<PerfilUsuario/>}/>
                 <Route path = "/formulario" element= {<FormularioPublicacion/>}/>
                 
-                <Route path="*" element={<Navigate to="/landing" />} />
+                <Route path="*" element={<Navigate to="/publicaciones" />} />
             </Routes>
         </Router>
     )
