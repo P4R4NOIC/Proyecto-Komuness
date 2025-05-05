@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { IComentario, IPublicacion } from '../interfaces/publicacion.interface';
 import { modelPublicacion } from '../models/publicacion.model';
+import mongoose from 'mongoose';
 
 // Crear una publicación
 export const createPublicacion = async (req: Request, res: Response): Promise<void> => {
@@ -143,3 +144,49 @@ export const addComentario = async (req: Request, res: Response): Promise<void> 
         res.status(500).json({ message: err.message });
     }
 }
+
+
+// filtros de busqueda
+// Obtener publicaciones por titulo, autor o tag (barra de búsqueda)
+export const filterPublicaciones = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { texto, tag, autor } = req.query;
+
+        const filtro: any = {};
+
+        //filtro por texto (titulo o contenido)
+        if (texto) {
+            filtro.$or = [
+                { titulo: { $regex: texto, $options: 'i' } },
+                { contenido: { $regex: texto, $options: 'i' } }
+            ];
+        }
+        //filtro por tag
+        if (tag) filtro.tag = { $regex: tag, $options: 'i' };
+        //filtro por autor
+        if (autor) {
+            if (!mongoose.Types.ObjectId.isValid(autor as string)) {
+                res.status(400).json({ message: 'ID de autor inválido' });
+                return;
+            }
+            filtro.autor = autor; // o: new mongoose.Types.ObjectId(autor as string)
+        }
+
+        if (Object.keys(filtro).length === 0) {
+            res.status(400).json({ message: 'Debe proporcionar al menos un parámetro de búsqueda (titulo, tag o autor)' });
+            return;
+        }
+
+        const publicaciones: IPublicacion[] = await modelPublicacion.find(filtro);
+
+        if (publicaciones.length === 0) {
+            res.status(404).json({ message: 'No se encontraron publicaciones con esos criterios' });
+            return;
+        }
+
+        res.status(200).json(publicaciones);
+    } catch (error) {
+        const err = error as Error;
+        res.status(500).json({ message: err.message });
+    }
+};
