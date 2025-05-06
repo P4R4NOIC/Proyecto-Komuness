@@ -5,7 +5,7 @@ export interface IPublicacion extends Document {
     contenido: string;
     autor: string;
     fecha: string;
-    adjunto: string[];
+    adjunto: IAdjunto[];
     comentarios: IComentario[]; // Array de comentarios
     tag: string;
     publicado: boolean;
@@ -17,4 +17,8 @@ export interface IComentario {
     autor: string;
     contenido: string;
     fecha: string;
+}
+export interface IAdjunto {
+    url: string;
+    key: string;
 }

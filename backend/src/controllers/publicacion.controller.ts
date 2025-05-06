@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
-import { IComentario, IPublicacion } from '../interfaces/publicacion.interface';
+import { IAdjunto, IComentario, IPublicacion } from '../interfaces/publicacion.interface';
 import { modelPublicacion } from '../models/publicacion.model';
 import mongoose from 'mongoose';
+import { uploadFile } from '@/utils/digitalOceanSpace';
 
 // Crear una publicación
 export const createPublicacion = async (req: Request, res: Response): Promise<void> => {
@@ -15,6 +16,40 @@ export const createPublicacion = async (req: Request, res: Response): Promise<vo
         res.status(500).json({ message: err.message });
     }
 };
+
+//Crear publicación con adjunto v2
+export const createPublicacionA = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const publicacion: IPublicacion = req.body;
+        if (!req.files) {
+            res.status(400).json({ message: 'No se ha proporcionado un archivo' });
+            return;
+        }
+        //subimos la imagen o imagenes
+        let datos: IAdjunto[] = [];
+
+        for (let image of req.files as Express.Multer.File[]) {
+            const result = await uploadFile(image, 'publicaciones');
+            if (!result) {
+                res.status(500).json({ message: 'Error al subir el archivo' });
+                return;
+            }
+            datos.push({
+                url: result.location,
+                key: result.key
+            })
+        }
+        const nuevaPublicacion = new modelPublicacion({
+            ...publicacion,
+            adjunto: datos
+        });
+        const savePost = await nuevaPublicacion.save();
+        res.status(201).json(savePost);
+    } catch (error) {
+        const err = error as Error;
+        res.status(500).json({ message: err.message });
+    }
+}
 
 // Obtener todas las publicaciones
 export const getPublicaciones = async (req: Request, res: Response): Promise<void> => {
@@ -41,13 +76,13 @@ export const getPublicacionesByTag = async (req: Request, res: Response): Promis
         //paginación
         const offset = parseInt(req.query.offset as string) || 0;
         const limit = parseInt(req.query.limit as string) || 10;
-        
+
         const { tag } = req.query;
-        console.log("Tag recibido:", tag); 
+        console.log("Tag recibido:", tag);
         const publicaciones: IPublicacion[] = await modelPublicacion.find({ tag: tag })
-                                                                    .sort({ createdAt: -1 })
-                                                                    .skip(offset)
-                                                                    .limit(limit);
+            .sort({ createdAt: -1 })
+            .skip(offset)
+            .limit(limit);
         if (publicaciones.length === 0) {
             res.status(404).json({ message: 'No se encontraron publicaciones con ese tag' });
             return;

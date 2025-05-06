@@ -120,7 +120,7 @@ router.post("/folder", BibliotecaController.createFolder as any);
  * Posibles respuestas del endpoint:
  * HTTP 200:
  * {
- *      succests: rue,
+ *      success: rue,
  *      message:'Carpeta eliminada correctamente',
  *      content: folder,
  * }
