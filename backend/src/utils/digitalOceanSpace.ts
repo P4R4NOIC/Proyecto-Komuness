@@ -1,13 +1,13 @@
 import * as AWS from 'aws-sdk';
-;
-const spacesEndpoint = new AWS.Endpoint('nyc3.digitaloceanspaces.com');
-
+import dotenv from 'dotenv';
+dotenv.config();
+const spacesEndpoint = new AWS.Endpoint(process.env.S3_ENDPOINT!);
 
 const s3 = new AWS.S3({
     endpoint: spacesEndpoint,
     //!TODO: IMPLEMENTAR ESTO QUE HACE FALTA, PARA CUANDO INTEGRE LO DE DIGITAL OCEAN SPACES
-    // accessKeyId: process.env.DO_SPACES_KEY,
-    // secretAccessKey: process.env.DO_SPACES_SECRET,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 })
 /**
  * upload file to digitalOcean spaces, a modular function that can be used in any file in this project
@@ -18,7 +18,7 @@ const s3 = new AWS.S3({
  */
 export const uploadFile = async (file: Express.Multer.File, folder?: string): Promise<{ location: string, key: string } | null> => {
     const params = {
-        Bucket: 'archivos', // Reemplaza con el nombre de tu bucket  process.env.DO_SPACES_BUCKET!,
+        Bucket: process.env.BUCKET_NAME!, // Reemplaza con el nombre de tu bucket  process.env.DO_SPACES_BUCKET!,
         Key: `${folder || 'any'}/${file.originalname}`,
         Body: file.buffer,
         ACL: 'public-read',
@@ -48,7 +48,7 @@ export const uploadFile = async (file: Express.Multer.File, folder?: string): Pr
  */
 export const deleteFile = async (key: string): Promise<boolean> => {
     const params = {
-        Bucket: 'archivos', // Reemplaza con el nombre de tu bucket  process.env.DO_SPACES_BUCKET!,
+        Bucket: process.env.BUCKET_NAME!, // Reemplaza con el nombre de tu bucket  process.env.DO_SPACES_BUCKET!,
         Key: key,
     };
     try {

@@ -12,7 +12,7 @@ const archivoSchema = new Schema<IArchivo>({
     esPublico: { type: Boolean, required: true },
     url: { type: String, required: true }, // URL de descarga del archivo en digitalOcean Spaces
     key: { type: String, required: true }, // Nombre del archivo en digitalOcean Spaces
-    folder: { type: Schema.Types.ObjectId, ref: 'Folder', required: true },
+    folder: { type: Schema.Types.ObjectId, ref: 'Folder', default: null },
 })
 
 export const Archivo = model<IArchivo>('Archivo', archivoSchema);

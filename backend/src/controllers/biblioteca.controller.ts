@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { Archivo } from '@/models/archivo.model';
-import { Folder } from '@/models/folder.model';
-import { uploadFile } from '@/utils/digitalOceanSpace';
-import { IArchivo } from '@/interfaces/archivo.interface';
+import { Archivo } from '../models/archivo.model';
+import { Folder } from '../models/folder.model';
+import { uploadFile } from '../utils/digitalOceanSpace';
+import { IArchivo } from '../interfaces/archivo.interface';
 
 class BibliotecaController {
     /**
@@ -15,10 +15,11 @@ class BibliotecaController {
     static async uploadFiles(req: Request, res: Response) {
 
         const { folderId, userId } = req.body;
-        if (!folderId || !userId) {
+        console.log(folderId, userId);
+        if (!userId) {
             return res.status(400).json({
                 success: false,
-                message: 'folderId y userId son requeridos',
+                message: 'userId es requerido',
                 errors: []
             });
         }
@@ -56,7 +57,7 @@ class BibliotecaController {
                         tipoArchivo: file.mimetype,
                         tamano: file.size,
                         autor: userId,
-                        esPublico: false,
+                        esPublico: true,
                         url: result.location, // Asignar la URL devuelta
                         key: result.key, // Asignar la key devuelta
                         folder: folderId
@@ -71,10 +72,11 @@ class BibliotecaController {
                         content: archivo
                     };
                 } catch (error) {
+                    console.error('Error detallado:', error); // Mejor logging
                     return {
                         success: false,
                         nombre: file.originalname,
-                        message: 'Error interno al procesar el archivo',
+                        message: error instanceof Error ? error.message : 'Error interno al procesar el archivo',
                         content: null
                     };
                 }
@@ -101,13 +103,15 @@ class BibliotecaController {
     /**
      * @description: Lista el contenido de una carpeta de la biblioteca (archivos y carpetas) 
      * @route: GET /api/biblioteca/list/:id
+     * si su id es 0, entonces se listan los archivos y carpetas de la raiz
+     * de lo contrario, se listan los archivos y carpetas de la carpeta con el id especificado
      * @param req: Request
      * @param res: Response
      * @returns: Response
      */
     static async list(req: Request, res: Response) {
         const { id } = req.params;
-
+        console.log(id);
         if (!id) {
             return res.status(400).json({
                 success: false,
@@ -117,8 +121,8 @@ class BibliotecaController {
         }
 
         try {
-            const archivos = await Archivo.find({ folder: id });
-            const folders = await Folder.find({ parent: id });
+            const archivos = await Archivo.find({ folder: (id !== '0') ? id : null });
+            const folders = await Folder.find({ directorioPadre: (id !== '0') ? id : null });
 
             return res.status(200).json({
                 success: true,
@@ -137,18 +141,18 @@ class BibliotecaController {
 
     /**
      * @description: Crea una carpeta en la biblioteca
-     * @route: POST /api/biblioteca/createFolder
+     * @route: POST /api/biblioteca/folder
      * @param req: Request
      * @param res: Response
      * @returns: Response
      */
     static async createFolder(req: Request, res: Response) {
-        const { nombre, parent, userId = undefined } = req.body;
+        const { nombre, parent } = req.body;
 
-        if (!nombre || !parent) {
+        if (!nombre) {
             return res.status(400).json({
                 success: false,
-                message: 'nombre and parent son requeridos',
+                message: 'nombre es requerido',
                 errors: []
             });
         }
@@ -156,8 +160,8 @@ class BibliotecaController {
         try {
             const folder = new Folder({
                 nombre,
-                parent,
-                autor: userId
+                fechaCreacion: new Date(),
+                parent
             });
             await folder.save();
 

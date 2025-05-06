@@ -1,6 +1,6 @@
 import multer from "multer";
 import { Router } from "express";
-import BibliotecaController from "@/controllers/biblioteca.controller";
+import BibliotecaController from "../controllers/biblioteca.controller";
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -10,7 +10,7 @@ const router = Router();
 /* FRONTEND LEA ESTO Y NO SEA VAGO XD */
 
 //**************** Rutas de los archivos ************************ */
-/**
+/**FUNCIONA
  * Posibles respuestas del endpoint:
  * HTTP 200 (todos los archivos subidos exitosamente) o 207 (algunos archivos subidos exitosamente) :
  * {
@@ -69,6 +69,7 @@ router.delete("/delete/:id", BibliotecaController.deleteFile as any);
 
 //**************************** Rutas de las carpetas ****************************** */
 /**
+ * FUNCIONA
  * Posibles respuestas del endpoint:
  * HTTP 200:
  * {
@@ -94,7 +95,7 @@ router.delete("/delete/:id", BibliotecaController.deleteFile as any);
  *  }
  */
 router.get("/list/:id", BibliotecaController.list as any);
-/**
+/**FUNCIONA
  * Posibles respuestas del endpoint:
  * HTTP 200:
  * {

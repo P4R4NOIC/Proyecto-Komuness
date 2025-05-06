@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { connectBD } from './utils/mongodb';
 import usuarioRoutes from './routes/usuario.routes';
 import publicacionRoutes from './routes/publicaciones.routes';
+import bibliotecaRoutes from './routes/biblioteca.routes';
 import { sendEmail } from './utils/mail';
 
 const app: Express = express();
@@ -22,6 +23,7 @@ app.use(cors(
 //routes
 app.use('/usuario', usuarioRoutes);
 app.use('/publicaciones', publicacionRoutes);
+app.use('/biblioteca', bibliotecaRoutes);
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello World');
@@ -34,6 +36,7 @@ export default app;
 
 // esto es para que no se ejecute el server al importarlo en otro archivo
 if (require.main === module) {
+    console.log(process.env.AWS_ACCESS_KEY_ID, process.env.S3_ENDPOINT);
     connectBD(process.env.BD_URL || '').then(() => {
         console.log('Connected to MongoDB');
         app.listen(port, () => {
