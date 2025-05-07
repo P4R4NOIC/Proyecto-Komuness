@@ -75,7 +75,14 @@ export const Biblioteca = () => {
         params.preventDefault();
         if ( typeof acceptedFiles[0] === 'undefined' ) return;
         console.log(acceptedFiles)
-        
+        // multipart form data
+      }
+
+      const [nombre, setNombre] = useState('');
+      const [etiqueta, setEtiqueta] = useState('');
+      const handleSearch = (e) => {
+        e.preventDefault();
+        console.log("Buscando: ", {nombre, etiqueta})
       }
 
   return (
@@ -102,6 +109,43 @@ export const Biblioteca = () => {
       </div>
     )}
     
+    <div className="w-full px-4 py-2 text-black">
+      <form className="flex flex-col md:flex-row gap-2 md:items-center w-full">
+        
+        {/* <!-- Input de búsqueda --> */}
+        <input 
+          type="text" 
+          placeholder="Buscar por nombre..." 
+          className="w-full md:w-auto flex-1 px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={nombre}
+          onChange={(e) => setNombre(e.target.value)}
+        />
+
+        {/* <!-- Select de etiquetas --> */}
+        <select 
+          value={etiqueta}
+          onChange={(e) => setEtiqueta(e.target.value)}
+          className="w-full md:w-48 px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">Todas las etiquetas</option>
+          <option value="educación">Educación</option>
+          <option value="salud">Salud</option>
+          <option value="cultura">Cultura</option>
+          {/* <!-- Agrega más opciones según tus etiquetas --> */}
+        </select>
+
+        {/* <!-- Botón de búsqueda --> */}
+        <button 
+          className="w-full md:w-auto px-6 py-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
+          onClick={handleSearch}
+        >
+          Buscar
+        </button>
+
+      </form>
+    </div>
+
+
     {documentos.map((doc, index) => (
         <DocumentCard
           key={index}
