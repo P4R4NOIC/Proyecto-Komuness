@@ -6,7 +6,7 @@ const upload = multer({ storage });
 const router = Router();
 
 router.post('/', createPublicacion); // create
-router.post("v2/", upload.array('archivos'), createPublicacionA); //crear con la imagen adjunto
+router.post("/v2", upload.array('archivos'), createPublicacionA); //crear con la imagen adjunto
 
 // router.get('/', getPublicaciones); // read
 

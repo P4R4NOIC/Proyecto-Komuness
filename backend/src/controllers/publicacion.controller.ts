@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { IAdjunto, IComentario, IPublicacion } from '../interfaces/publicacion.interface';
 import { modelPublicacion } from '../models/publicacion.model';
 import mongoose from 'mongoose';
-import { uploadFile } from '@/utils/digitalOceanSpace';
+import { uploadFile } from '../utils/digitalOceanSpace';
 
 // Crear una publicación
 export const createPublicacion = async (req: Request, res: Response): Promise<void> => {

@@ -1,4 +1,4 @@
-import React,{useState, useCallback} from 'react'
+import React,{useState, useCallback, useEffect} from 'react'
 import DocumentCard from './documentCard'
 import DocumentModal from './documentModal'
 import {
@@ -25,7 +25,7 @@ export const Biblioteca = () => {
     };
     
 //Json prueba
-    const documentos = [
+    const [documentos, setDocumentos] = useState([
         {nombre: "Nombre largo de archivo para prueba de espacio en la caja de archivos en la seccion de biblioteca del proyecto ", autor: "Juan Pérez", size: "1.2 MB", tag: "pdf", },
         {nombre: "Presupuesto Q1", autor: "Ana Gómez",size: "850 KB",tag: "excel",},
         {nombre: "Acta Reunión",autor: "Luis Martínez",size: "620 KB",tag: "word", },
@@ -34,7 +34,7 @@ export const Biblioteca = () => {
         {nombre: "Diseño Logo",autor: "Laura Gómez",size: "3.3 MB",tag: "img",},
         {nombre: "Archivos Comprimidos",autor: "Equipo TI",size: "5.4 MB",tag: "zip",},
         {nombre: "Documento sin tipo",autor: "Desconocido",size: "100 KB",tag: "otro",},
-      ];
+      ]);
 
     const modalIconMap = {
         pdf: <AiFillFilePdf className="text-[#ed1c22] text-7xl" />,
@@ -70,20 +70,78 @@ export const Biblioteca = () => {
           type={file.type}
         />
       ));
-
+      
+      const idCarpeta = 0;
+      const idUser = "Animo";
       async function handleOnSubmit(params) {
         params.preventDefault();
-        if ( typeof acceptedFiles[0] === 'undefined' ) return;
-        console.log(acceptedFiles)
-        // multipart form data
-      }
+        // console.log("Buscando: ", {nombre, etiqueta})
+        
+        const data = new FormData();
+        acceptedFiles.forEach((archivo) => {
+          data.append("archivos", archivo); // O "archivos[]", según espera tu backend
+        });
+        // data.append("folderId",idCarpeta.toString()) Si le envío id, es porque hay una carpeta
+        data.append("userId", idUser.toString())
 
+        try {
+          const response = await fetch('http://localhost:3000/biblioteca/upload/',{
+            method: 'POST',
+            body: data,
+          });
+          
+          const result = await response.json();  // Si el servidor responde en JSON
+          if (response.ok) {
+            console.log("Archivos subidos con éxito:", result);
+          } else {
+            console.error("Error al subir archivos:", result);
+          }
+          
+        } catch (error) {
+          console.error("Error de red:", error);
+        }
+      }
+      
+      // SEARCH
       const [nombre, setNombre] = useState('');
       const [etiqueta, setEtiqueta] = useState('');
-      const handleSearch = (e) => {
+      const handleSearch = async (e) => {
         e.preventDefault();
         console.log("Buscando: ", {nombre, etiqueta})
+
+        try{
+          // const respuesta = await fetch("https://api.ejemplo.com/documentos");
+          // const datos = await respuesta.json();
+          const datos = [{
+            nombre: "Informe Final",
+            autor: "Anonimo",
+            size: "2.0 MB",
+            tag: "pdf"
+          },
+          {nombre: "Nombre largo de archivo para prueba de espacio en la caja de archivos en la seccion de biblioteca del proyecto ", autor: "Juan Pérez", size: "1.2 MB", tag: "pdf", },
+          {nombre: "Presupuesto Q1", autor: "Ana Gómez",size: "850 KB",tag: "excel",},
+          ];
+          setDocumentos(datos);
+        } catch (error) {
+          console.log("Error al buscar documentos:", error);
+        }
       }
+
+      // OBTENER TODOS LOS ARCHIVOS
+      const [ubicacion, setUbicacion] = useState(0);
+      useEffect(() => {
+        const obtenerArchivos = async () => {
+          try {
+            const response = await fetch(`http://localhost:3000/biblioteca/list/${ubicacion}`);
+            const data = await response.json();
+            // setPublicaciones(data); // Guardamos las publicaciones en el estado
+            console.log("Archivos obtenidos:", data);
+          } catch (error) {
+            console.error("Error al obtener archivos:", error);
+          }
+        };
+        obtenerArchivos();
+      }, [ubicacion]);
 
   return (
     

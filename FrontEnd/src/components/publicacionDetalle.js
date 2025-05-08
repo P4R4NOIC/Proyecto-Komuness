@@ -83,7 +83,7 @@ export const PublicacionDetalle = () => {
                         </button>
                         {publicacion.titulo}
                     </h1>
-                    <img src={publicacion.adjunto[0] ?? '/notFound.jpg'} 
+                    <img src={publicacion.adjunto[0]?.url ?? '/notFound.jpg'} 
                         alt={publicacion.titulo} 
                         className="w-full h-auto rounded-lg shadow-lg" />
                     <div className="text-white-600">

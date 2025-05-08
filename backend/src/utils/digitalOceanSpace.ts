@@ -17,16 +17,17 @@ const s3 = new AWS.S3({
  * @returns : Promise<string | null> URL del archivo subido de manera publica  o null si ocurre un error
  */
 export const uploadFile = async (file: Express.Multer.File, folder?: string): Promise<{ location: string, key: string } | null> => {
+    // Generar nombre único con timestamp y nombre original
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const originalName = file.originalname.replace(/\s+/g, '-'); // Reemplazar espacios por guiones
+    const uniqueFileName = `${uniqueSuffix}-${originalName}`;
+
     const params = {
-        Bucket: process.env.BUCKET_NAME!, // Reemplaza con el nombre de tu bucket  process.env.DO_SPACES_BUCKET!,
-        Key: `${folder || 'any'}/${file.originalname}`,
+        Bucket: process.env.BUCKET_NAME!,
+        Key: `${folder || 'any'}/${uniqueFileName}`,
         Body: file.buffer,
         ACL: 'public-read',
         ContentType: file.mimetype,
-        // ContentDisposition: 'inline',
-        // CreateBucketConfiguration: {
-        //     LocationConstraint: 'nyc3',
-        // }
     };
     try {
         const data = await s3.upload(params).promise();

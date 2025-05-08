@@ -9,7 +9,7 @@ const FormularioPublicacion = () => {
     contenido: "", 
     autor: "67da43f3651480413241b344",    // TODO AGREGAR
     fecha: new Date().toLocaleDateString(),
-    adjunto: [], 
+    archivos: [], 
     comentarios: [], 
     tag: "", 
     publicado: true,  // TODO: CAMBIAR A FALSE
@@ -23,7 +23,7 @@ const FormularioPublicacion = () => {
   //   contenido: "",
   //   autor: "",
   //   fecha: new Date().toISOString(), // Se inicializa con la fecha actual en formato ISO
-  //   adjunto: [],
+  //   archivos: [],
   //   comentarios: [], // Se asume que inicialmente no hay comentarios
   //   tag: "",
   //   publicado: false,
@@ -40,35 +40,59 @@ const FormularioPublicacion = () => {
     const files = Array.from(e.target.files);
     setFormData((prev) => ({
       ...prev,
-      adjunto: [...prev.adjunto, ...files],
+      archivos: [...prev.archivos, ...files],
     }));
   };
 
   const handleRemoveImage = (index) => {
     setFormData((prev) => ({
       ...prev,
-      adjunto: prev.adjunto.filter((_, i) => i !== index),
+      archivos: prev.archivos.filter((_, i) => i !== index),
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(formData)
+
+    const data = new FormData();
     
+    data.append("titulo", formData.titulo);
+    data.append("contenido", formData.contenido);
+    data.append("autor", formData.autor);
+    data.append("fecha", formData.fecha);
+    data.append("tag", formData.tag);
+    data.append("publicado", formData.publicado.toString());
+    data.append("fechaEvento", formData.fechaEvento);
+    data.append("precio", formData.precio);
+    // data.append("comentarios", formData.comentarios);
+    // archivos:
+    formData.archivos.forEach((archivo) => {
+      data.append("archivos", archivo); // O "archivos[]", según espera tu backend
+    });
+    
+
     try {
-      const response = await fetch("http://localhost:3000/publicaciones", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+      // const response = await fetch("http://localhost:3000/publicaciones", {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body: JSON.stringify(formData),
+      // });
+  
+      // const data = await response.json();
+
+      const response = await fetch('http://localhost:3000/publicaciones/v2/',{
+        method: 'POST',
+        body: data,
       });
-  
-      const data = await response.json();
-  
+      
+      const result = await response.json();  // Si el servidor responde en JSON
       if (response.ok) {
-        console.log("Publicación enviada con éxito:", data);
+        console.log("Publicación enviada con éxito:", result);
       } else {
-        console.error("Error al enviar publicación:", data);
+        console.error("Error al enviar publicación:", result);
       }
     } catch (error) {
       console.error("Error de red:", error);
@@ -176,11 +200,11 @@ const FormularioPublicacion = () => {
         
 
         {/* Vista previa de imágenes */}
-        {formData.adjunto.length > 0 && (
+        {formData.archivos.length > 0 && (
           <div className="mt-3">
             <h3 className="font-semibold mb-2">Vista previa:</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-              {formData.adjunto.map((img, index) => (
+              {formData.archivos.map((img, index) => (
                 <div key={index} className="relative">
                   <img
                     src={URL.createObjectURL(img)}
