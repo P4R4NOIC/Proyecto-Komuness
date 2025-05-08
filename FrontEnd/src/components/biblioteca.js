@@ -85,7 +85,7 @@ export const Biblioteca = () => {
         data.append("userId", idUser.toString())
 
         try {
-          const response = await fetch('http://localhost:3000/biblioteca/upload/',{
+          const response = await fetch('https://proyecto-komuness-backend.vercel.app/biblioteca/upload/',{
             method: 'POST',
             body: data,
           });
@@ -132,7 +132,7 @@ export const Biblioteca = () => {
       useEffect(() => {
         const obtenerArchivos = async () => {
           try {
-            const response = await fetch(`http://localhost:3000/biblioteca/list/${ubicacion}`);
+            const response = await fetch(`https://proyecto-komuness-backend.vercel.app/biblioteca/list/${ubicacion}`);
             const data = await response.json();
             // setPublicaciones(data); // Guardamos las publicaciones en el estado
             console.log("Archivos obtenidos:", data);

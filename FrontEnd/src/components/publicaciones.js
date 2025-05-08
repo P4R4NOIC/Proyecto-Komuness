@@ -61,7 +61,7 @@ export const Publicaciones = () => {
       useEffect(() => {
         const obtenerPublicaciones = async (tag, offset = 0, limit = 10) => {
           try {
-            const response = await fetch(`http://localhost:3000/publicaciones/?tag=${tag}&offset=${offset}&limit=${limit}`);
+            const response = await fetch(`https://proyecto-komuness-backend.vercel.app/publicaciones/?tag=${tag}&offset=${offset}&limit=${limit}`);
             const data = await response.json();
             setPublicaciones(data); // Guardamos las publicaciones en el estado
             console.log("Publicaciones obtenidas:", data);
