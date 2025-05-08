@@ -1,6 +1,8 @@
 import React,{useState, useCallback, useEffect} from 'react'
 import DocumentCard from './documentCard'
 import DocumentModal from './documentModal'
+
+import { useNavigate } from "react-router-dom";
 import {
     AiFillFilePdf,
     AiFillFileExcel,
@@ -15,6 +17,7 @@ import {
 import {useDropzone} from 'react-dropzone'
 
 export const Biblioteca = () => {
+  const navigate = useNavigate();
 
     const [selectedDoc, setSelectedDoc] = useState(null);
     const handleOpenModal = (doc) => setSelectedDoc(doc);
@@ -26,6 +29,7 @@ export const Biblioteca = () => {
     
 //Json prueba
     const [documentos, setDocumentos] = useState([
+        /*{nombre: "Carpeta office", autor: "",size: "",tag: "carpeta",},
         {nombre: "Nombre largo de archivo para prueba de espacio en la caja de archivos en la seccion de biblioteca del proyecto ", autor: "Juan Pérez", size: "1.2 MB", tag: "pdf", },
         {nombre: "Presupuesto Q1", autor: "Ana Gómez",size: "850 KB",tag: "excel",},
         {nombre: "Acta Reunión",autor: "Luis Martínez",size: "620 KB",tag: "word", },
@@ -33,7 +37,7 @@ export const Biblioteca = () => {
         {nombre: "Notas de Proyecto",autor: "Pedro Sánchez",size: "150 KB",tag: "text",},
         {nombre: "Diseño Logo",autor: "Laura Gómez",size: "3.3 MB",tag: "img",},
         {nombre: "Archivos Comprimidos",autor: "Equipo TI",size: "5.4 MB",tag: "zip",},
-        {nombre: "Documento sin tipo",autor: "Desconocido",size: "100 KB",tag: "otro",},
+        {nombre: "Documento sin tipo",autor: "Desconocido",size: "100 KB",tag: "otro",},*/
       ]);
 
     const modalIconMap = {
@@ -71,6 +75,14 @@ export const Biblioteca = () => {
         />
       ));
       
+      
+      const handleNavigation = (folderId, folderName) => {
+        navigate(`/biblioteca/${folderId}`, {
+          state: { folderName }, // pasa el nombre aquí
+        });
+      };
+      
+
       const idCarpeta = 0;
       const idUser = "Animo";
       async function handleOnSubmit(params) {
@@ -134,7 +146,23 @@ export const Biblioteca = () => {
           try {
             const response = await fetch(`https://proyecto-komuness-backend.vercel.app/biblioteca/list/${ubicacion}`);
             const data = await response.json();
-            // setPublicaciones(data); // Guardamos las publicaciones en el estado
+            const archivos = data.contentFile.map(file => ({
+              nombre: file.nombre,
+              autor: file.autor,
+              size: `${(file.tamano / (1024 * 1024)).toFixed(2)} MB`,
+              tag: mapTipoArchivo(file.tipoArchivo), // Te lo muestro abajo
+              url: file.url
+            }));
+
+            const carpetas = data.contentFolder.map(folder => ({
+              nombre: folder.nombre,
+              autor: "",
+              size: "",
+              tag: "carpeta",
+              id: folder._id
+            }));
+
+            setDocumentos([...carpetas, ...archivos]);
             console.log("Archivos obtenidos:", data);
           } catch (error) {
             console.error("Error al obtener archivos:", error);
@@ -142,6 +170,19 @@ export const Biblioteca = () => {
         };
         obtenerArchivos();
       }, [ubicacion]);
+
+
+
+      const mapTipoArchivo = (mime) => {
+  if (mime.includes("pdf")) return "pdf";
+  if (mime.includes("word")) return "word";
+  if (mime.includes("excel")) return "excel";
+  if (mime.includes("presentation")) return "ppt";
+  if (mime.includes("text")) return "text";
+  if (mime.includes("zip") || mime.includes("rar")) return "zip";
+  if (mime.includes("image")) return "img";
+  return "otro";
+};
 
   return (
     
@@ -211,7 +252,13 @@ export const Biblioteca = () => {
           author={doc.autor}
           size={doc.size}
           type={doc.tag}
-          onClick={() => handleOpenModal(doc)}
+          onClick={() => {
+            if (doc.tag === 'carpeta') {
+              handleNavigation(doc.id, doc.nombre);
+            } else {
+              handleOpenModal(doc);
+            }
+          }}
         />
       ))}
 

@@ -6,6 +6,7 @@ import {VacioPrueba} from './vacioPrueba'
 import {PublicacionDetalle} from './publicacionDetalle'
 import {Navbar} from './navbar'
 import {Biblioteca} from './biblioteca'
+import {BibliotecaFolder} from './bibliotecaFolder'
 import FormularioPublicacion from "../pages/formulario";
 export const Rutas = () =>{
     return(
@@ -18,6 +19,7 @@ export const Rutas = () =>{
                 <Route path = "/publicaciones/:id" element = {<PublicacionDetalle/>}/>
                 <Route path = "/emprendimientos" element = {<LandingPage/>}/>
                 <Route path = "/biblioteca" element = {<Biblioteca/>}/>
+                <Route path = "/biblioteca/:id" element = {<BibliotecaFolder/>}/>
                 <Route path = "/perfilUsuario" element= {<PerfilUsuario/>}/>
                 <Route path = "/formulario" element= {<FormularioPublicacion/>}/>
                 

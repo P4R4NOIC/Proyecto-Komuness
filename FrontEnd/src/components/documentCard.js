@@ -9,12 +9,14 @@ import {
     AiFillFileImage,
     AiFillFileZip,
     AiFillFile,
+    AiFillFolder,
 
 } from 'react-icons/ai'
 
 
 export const DocumentCard = ({ name, author, type = 'defiault', size, onClick }) => {
    
+  
 
     const iconMap = {
         pdf: <AiFillFilePdf className="text-[#ed1c22] text-2xl min-w-[32px]" />,
@@ -24,6 +26,7 @@ export const DocumentCard = ({ name, author, type = 'defiault', size, onClick })
         text: <AiFillFileText className="text-[#fb544a] text-2xl min-w-[32px]" />,
         img: <AiFillFileImage className="text-[#fea190] text-2xl min-w-[32px]" />,
         zip: <AiFillFileZip className="text-[#f8bd3a] text-2xl min-w-[32px]" />,
+        carpeta: <AiFillFolder className="text-[#ffd04c] text-2x1 min-w-[32px]"/>,
         default: <AiFillFile className="text-gray-400 text-2xl min-w-[32px]" />,
       };
 
@@ -49,9 +52,12 @@ export const DocumentCard = ({ name, author, type = 'defiault', size, onClick })
       </div>
 
       {/* Autor (alineado + movido ligeramente a la derecha) */}
-      <div className="text-xs font-medium text-white-600 truncate min-w-0 sm:w-1/3 sm:text-left sm:pl-4">
+      
+      {type !== 'carpeta' && (
+        <div className="text-xs font-medium text-white-600 truncate min-w-0 sm:w-1/3 sm:text-left sm:pl-4">
         Autor: {author}
-      </div>
+        </div>
+      )}
 
       {/* Tamaño */}
       <div className="text-xs font-medium text-white-600 truncate min-w-0 sm:w-1/3 sm:text-right">
