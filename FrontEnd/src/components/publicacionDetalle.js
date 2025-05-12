@@ -1,4 +1,4 @@
-import { IoMdArrowRoundBack  } from "react-icons/io";
+import { IoMdArrowRoundBack } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
@@ -35,7 +35,7 @@ export const PublicacionDetalle = () => {
     //     autor: "6612abcd1234567890fedcba", // TODO: SE SACA DEL USUARIO LOGGEADO
     //     contenido: ""
     // });
-      
+
     // -----------CODIGO POST PARA ENVIAR UN COMENTARIO --------------------------
     // const enviarComentario = async () => {
     //     try {
@@ -46,7 +46,7 @@ export const PublicacionDetalle = () => {
     //         },
     //         body: JSON.stringify(comentario)
     //       });
-      
+
     //       if (res.ok) {
     //         const data = await res.json();
     //         console.log("Comentario agregado:", data);
@@ -57,34 +57,34 @@ export const PublicacionDetalle = () => {
     //       console.error("Error en la solicitud:", err);
     //     }
     // };
-      
+
 
     return (
         <div className="max-w-4xl mx-auto p-4 space-y-6">
             <div className="md:hidden flex justify-between w-full  mb-4">
                 <button
-                type="button"
-                onClick={() => navigate(-1)}
-                className="text-gray-600 text-2xl font-bold"
+                    type="button"
+                    onClick={() => navigate(-1)}
+                    className="text-gray-600 text-2xl font-bold"
                 >
-                <IoMdArrowRoundBack  color={"white"} size={35}/>
+                    <IoMdArrowRoundBack color={"white"} size={35} />
                 </button>
             </div>
             {publicacion.tag !== "publicacion" ? (
                 <>
-                    
+
                     <h1 className="text-3xl font-bold text-white">
                         <button
-                        type="button"
-                        onClick={() => navigate(-1)}
-                        className="hidden md:inline px-1 py-1 bg-white rounded-full mr-2"
+                            type="button"
+                            onClick={() => navigate(-1)}
+                            className="hidden md:inline px-1 py-1 bg-white rounded-full mr-2"
                         >
-                            <IoMdArrowRoundBack  color={"black"} size={25}/>
+                            <IoMdArrowRoundBack color={"black"} size={25} />
                         </button>
                         {publicacion.titulo}
                     </h1>
-                    <img src={publicacion.adjunto[0]?.url ?? '/notFound.jpg'} 
-                        alt={publicacion.titulo} 
+                    <img src={publicacion.adjunto[0]?.url ?? '/notFound.jpg'}
+                        alt={publicacion.titulo}
                         className="w-full h-auto rounded-lg shadow-lg" />
                     <div className="text-white-600">
                         <p className="mt-2"><strong>Fecha:</strong> {publicacion.fecha}</p>
@@ -95,13 +95,13 @@ export const PublicacionDetalle = () => {
                 <>
                     <h2 className="text-2xl font-semibold text-white-800">
                         <button
-                        type="button"
-                        onClick={() => navigate(-1)}
-                        className="hidden md:inline px-1 py-1 bg-white rounded-full mr-2"
+                            type="button"
+                            onClick={() => navigate(-1)}
+                            className="hidden md:inline px-1 py-1 bg-white rounded-full mr-2"
                         >
-                            <IoMdArrowRoundBack  color={"black"} size={25}/>
+                            <IoMdArrowRoundBack color={"black"} size={25} />
                         </button>
-                        {publicacion.autor}
+                        {publicacion.autor?.nombre || 'Desconocido '}
                     </h2>
                     <p className="mt-4 text-white">{publicacion.contenido}</p>
                     <p className="mt-2 text-white"><strong>Fecha:</strong> {publicacion.fecha}</p>

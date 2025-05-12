@@ -4,19 +4,19 @@ export const PublicacionCard = ({ publicacion }) => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate(`/publicaciones/${publicacion._id}`, {state: {publicacion}}); 
+        navigate(`/publicaciones/${publicacion._id}`, { state: { publicacion } });
     };
-    
+
     return (
-        <div 
-            key={publicacion._id} 
+        <div
+            key={publicacion._id}
             className="card"
             onClick={handleClick}
         >
             {publicacion.tag !== 'publicacion' && (
                 <div className="imagen">
-                    <img src={publicacion.adjunto[0]?.url ?? "/notFound.jpg"} 
-                        alt={publicacion.titulo} 
+                    <img src={publicacion.adjunto[0]?.url ?? "/notFound.jpg"}
+                        alt={publicacion.titulo}
                         className="thumbnail" />
                 </div>
             )}
@@ -30,7 +30,7 @@ export const PublicacionCard = ({ publicacion }) => {
                 <div className="tweet">
                     <div className="tweet-header">
                         <div className="tweet-user">
-                            <h4 className="user-name">{publicacion.autor}</h4>
+                            <h4 className="user-name">{publicacion.autor?.nombre || 'Desconocido'}</h4>
                         </div>
                     </div>
                     <div className="tweet-content">
@@ -43,7 +43,6 @@ export const PublicacionCard = ({ publicacion }) => {
             )}
         </div>
     );
-  };
-  
+};
+
 export default PublicacionCard;
-  

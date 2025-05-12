@@ -3,19 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { IoMdClose } from "react-icons/io";
 const FormularioPublicacion = () => {
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
     titulo: "",
-    contenido: "", 
-    autor: "67da43f3651480413241b344",    // TODO AGREGAR
+    contenido: "",
+    autor: "67da43f3651480413241b33c",    // TODO AGREGAR
     fecha: new Date().toLocaleDateString(),
-    archivos: [], 
-    comentarios: [], 
-    tag: "", 
+    archivos: [],
+    comentarios: [],
+    tag: "",
     publicado: true,  // TODO: CAMBIAR A FALSE
     fechaEvento: "",
     precio: "",
-    
+
   });
 
   // const [formData, setFormData] = useState({
@@ -56,7 +56,7 @@ const FormularioPublicacion = () => {
     console.log(formData)
 
     const data = new FormData();
-    
+
     data.append("titulo", formData.titulo);
     data.append("contenido", formData.contenido);
     data.append("autor", formData.autor);
@@ -70,7 +70,7 @@ const FormularioPublicacion = () => {
     formData.archivos.forEach((archivo) => {
       data.append("archivos", archivo); // O "archivos[]", según espera tu backend
     });
-    
+
 
     try {
       // const response = await fetch("http://localhost:3000/publicaciones", {
@@ -80,14 +80,14 @@ const FormularioPublicacion = () => {
       //   },
       //   body: JSON.stringify(formData),
       // });
-  
+
       // const data = await response.json();
 
-      const response = await fetch('http://localhost:3000/publicaciones/v2/',{
+      const response = await fetch('http://localhost:3000/publicaciones/v2/', {
         method: 'POST',
         body: data,
       });
-      
+
       const result = await response.json();  // Si el servidor responde en JSON
       if (response.ok) {
         console.log("Publicación enviada con éxito:", result);
@@ -98,11 +98,11 @@ const FormularioPublicacion = () => {
       console.error("Error de red:", error);
     }
   };
-  
+
 
   return (
     <div className="max-w-3xl mx-auto mt-5 p-4 md:p-6 bg-white text-zinc-950 shadow-md rounded-lg">
-      
+
       {/* Formulario */}
       <form onSubmit={handleSubmit} className="grid gap-4">
         {/* Botones flotantes SOLO en móviles, dentro del formulario */}
@@ -112,7 +112,7 @@ const FormularioPublicacion = () => {
             onClick={() => navigate(-1)}
             className="text-gray-600 text-2xl font-bold"
           >
-            <IoMdClose size={35}/>
+            <IoMdClose size={35} />
           </button>
           <button
             type="submit"
@@ -181,23 +181,23 @@ const FormularioPublicacion = () => {
                 value={formData.precio}
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
-                />
+              />
             </div>
             <div>
               <label className="block font-semibold">Imágenes:</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handleImageChange}
-                  className="w-full p-2 border rounded"
-                />
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleImageChange}
+                className="w-full p-2 border rounded"
+              />
             </div>
           </div>
         )}
 
         {/* Subir imágenes */}
-        
+
 
         {/* Vista previa de imágenes */}
         {formData.archivos.length > 0 && (
@@ -216,7 +216,7 @@ const FormularioPublicacion = () => {
                     onClick={() => handleRemoveImage(index)}
                     className="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 py-1 rounded-full"
                   >
-                    <IoMdClose/>
+                    <IoMdClose />
                   </button>
                 </div>
               ))}
