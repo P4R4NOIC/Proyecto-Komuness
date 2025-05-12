@@ -174,7 +174,7 @@ export const Biblioteca = () => {
           nombre: file.nombre,
           autor: file.autor,
           size: `${(file.tamano / (1024 * 1024)).toFixed(2)} MB`,
-          tag: mapTipoArchivo(file.tipoArchivo), // Te lo muestro abajo
+          tag: mapTipoArchivo(file.tipoArchivo),
           url: file.url
         }));
 
