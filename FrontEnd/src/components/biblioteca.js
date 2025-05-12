@@ -168,7 +168,7 @@ export const Biblioteca = () => {
   useEffect(() => {
     const obtenerArchivos = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/biblioteca/list/${ubicacion}`);
+        const response = await fetch(`https://proyecto-komuness-backend.vercel.app/biblioteca/list/${ubicacion}`);
         const data = await response.json();
         const archivos = data.contentFile.map(file => ({
           nombre: file.nombre,
