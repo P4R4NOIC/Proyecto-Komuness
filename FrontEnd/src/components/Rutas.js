@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 
 import {LandingPage} from './landingPage' 
 import {PerfilUsuario} from './perfilUsuario'
-import {VacioPrueba} from './vacioPrueba'
 import {PublicacionDetalle} from './publicacionDetalle'
 import {Navbar} from './navbar'
 import {Biblioteca} from './biblioteca'

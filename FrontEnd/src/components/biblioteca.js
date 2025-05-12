@@ -150,7 +150,7 @@ export const Biblioteca = () => {
               nombre: file.nombre,
               autor: file.autor,
               size: `${(file.tamano / (1024 * 1024)).toFixed(2)} MB`,
-              tag: mapTipoArchivo(file.tipoArchivo), // Te lo muestro abajo
+              tag: mapTipoArchivo(file.tipoArchivo), 
               url: file.url
             }));
 
@@ -174,15 +174,15 @@ export const Biblioteca = () => {
 
 
       const mapTipoArchivo = (mime) => {
-  if (mime.includes("pdf")) return "pdf";
-  if (mime.includes("word")) return "word";
-  if (mime.includes("excel")) return "excel";
-  if (mime.includes("presentation")) return "ppt";
-  if (mime.includes("text")) return "text";
-  if (mime.includes("zip") || mime.includes("rar")) return "zip";
-  if (mime.includes("image")) return "img";
-  return "otro";
-};
+        if (mime.includes("pdf")) return "pdf";
+        if (mime.includes("word")) return "word";
+        if (mime.includes("excel")) return "excel";
+        if (mime.includes("presentation")) return "ppt";
+        if (mime.includes("text")) return "text";
+        if (mime.includes("zip") || mime.includes("rar")) return "zip";
+        if (mime.includes("image")) return "img";
+        return "otro";
+      };
 
   return (
     
