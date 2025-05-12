@@ -111,7 +111,8 @@ class BibliotecaController {
      */
     static async list(req: Request, res: Response) {
         const { id } = req.params;
-        console.log(id);
+        const { nombre, global } = req.query;
+
         if (!id) {
             return res.status(400).json({
                 success: false,
@@ -119,10 +120,20 @@ class BibliotecaController {
                 errors: []
             });
         }
+        
+        const queryArchivos = {
+            ...(global !== 'true' && { folder: id !== '0' ? id : null }),
+            ...(nombre && { nombre: { $regex: nombre, $options: 'i' } }),
+        };
+    
+        const queryFolders = {
+            ...(global !== 'true' && { directorioPadre: id !== '0' ? id : null }),
+            ...(nombre && { nombre: { $regex: nombre, $options: 'i' } }),
+        };
 
         try {
-            const archivos = await Archivo.find({ folder: (id !== '0') ? id : null });
-            const folders = await Folder.find({ directorioPadre: (id !== '0') ? id : null });
+            const archivos = await Archivo.find(queryArchivos);
+            const folders = await Folder.find(queryFolders);
 
             return res.status(200).json({
                 success: true,
@@ -229,7 +240,7 @@ class BibliotecaController {
                 })
             }
             // Eliminar el archivo de la biblioteca
-            BibliotecaController.deleteFileById(id);
+            await BibliotecaController.deleteFileById(id);
             return res.status(200).json({
                 success: true,
                 message: 'Archivo eliminado correctamente',

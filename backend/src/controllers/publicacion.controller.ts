@@ -51,23 +51,6 @@ export const createPublicacionA = async (req: Request, res: Response): Promise<v
     }
 }
 
-// Obtener todas las publicaciones
-export const getPublicaciones = async (req: Request, res: Response): Promise<void> => {
-    try {
-        /**
-         * Query params:
-         */
-        //Paginación
-        const offset = parseInt(req.query.offset as string) || 0;
-        const limit = parseInt(req.query.limit as string) || 10;
-
-        const publicaciones: IPublicacion[] = await modelPublicacion.find();
-        res.status(200).json(publicaciones);
-    } catch (error) {
-        const err = error as Error;
-        res.status(500).json({ message: err.message });
-    }
-};
 
 //obtener publicaciones por tag
 export const getPublicacionesByTag = async (req: Request, res: Response): Promise<void> => {
