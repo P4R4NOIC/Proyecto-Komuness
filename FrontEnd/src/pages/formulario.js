@@ -83,7 +83,7 @@ const FormularioPublicacion = () => {
 
       // const data = await response.json();
 
-      const response = await fetch('http://localhost:3000/publicaciones/v2/', {
+      const response = await fetch('https://proyecto-komuness-backend.vercel.app/publicaciones/v2/', {
         method: 'POST',
         body: data,
       });

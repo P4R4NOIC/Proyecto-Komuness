@@ -2,6 +2,8 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
+import Slider from "./slider";
+
 export const PublicacionDetalle = () => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -71,8 +73,8 @@ export const PublicacionDetalle = () => {
                 </button>
             </div>
             {publicacion.tag !== "publicacion" ? (
-                <>
-
+                // EVENTO - EMPRENDIMIENTO
+                <div>
                     <h1 className="text-3xl font-bold text-white">
                         <button
                             type="button"
@@ -83,16 +85,18 @@ export const PublicacionDetalle = () => {
                         </button>
                         {publicacion.titulo}
                     </h1>
-                    <img src={publicacion.adjunto[0]?.url ?? '/notFound.jpg'}
+                    {/* <img src={publicacion.adjunto[0]?.url ?? '/notFound.jpg'}
                         alt={publicacion.titulo}
-                        className="w-full h-auto rounded-lg shadow-lg" />
+                        className="w-full h-auto rounded-lg shadow-lg" /> */}
+                    <Slider key={publicacion._id} publicacion={publicacion}></Slider>
                     <div className="text-white-600">
                         <p className="mt-2"><strong>Fecha:</strong> {publicacion.fecha}</p>
                         <p><strong>Categoría:</strong> {publicacion.tag}</p>
                     </div>
-                </>
+                </div>
             ) : (
-                <>
+                // PUBLICACIÓN
+                <div>
                     <h2 className="text-2xl font-semibold text-white-800">
                         <button
                             type="button"
@@ -105,7 +109,7 @@ export const PublicacionDetalle = () => {
                     </h2>
                     <p className="mt-4 text-white">{publicacion.contenido}</p>
                     <p className="mt-2 text-white"><strong>Fecha:</strong> {publicacion.fecha}</p>
-                </>
+                </div>
             )}
 
             {/* SECCION DE COMENTARIOS */}
@@ -120,13 +124,13 @@ export const PublicacionDetalle = () => {
                         placeholder="Escribe un comentario..."
                         className="flex-1 p-2 rounded-lg bg-gray-900 text-white border border-gray-600"
                     />
+                </div>
                     <button
                         onClick={agregarComentario}
-                        className="ml-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                        className="left-0 ml-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
                     >
                         Comentar
                     </button>
-                </div>
 
                 <div className="mt-4 space-y-4 w-full">
                     {comentarios.length === 0 ? (
