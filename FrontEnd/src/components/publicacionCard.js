@@ -1,7 +1,13 @@
 import { useNavigate } from "react-router-dom";
+let cardColorCounter = 0;
 
 export const PublicacionCard = ({ publicacion }) => {
     const navigate = useNavigate();
+    const colores = ["#FFBF30", "#404270", "#12143D"];
+
+  // Obtenemos el color actual y luego avanzamos el contador
+  const backgroundColor = colores[cardColorCounter % colores.length];
+  cardColorCounter++;
 
     const handleClick = () => {
         navigate(`/publicaciones/${publicacion._id}`, { state: { publicacion } });
@@ -11,6 +17,7 @@ export const PublicacionCard = ({ publicacion }) => {
         <div
             key={publicacion._id}
             className="card"
+            style={{ backgroundColor }}
             onClick={handleClick}
         >
             {publicacion.tag !== 'publicacion' && (

@@ -5,7 +5,7 @@
     padding: 20px;
     justify-items: center;
     
-
+  
   }
 
 .card:hover{
@@ -42,7 +42,7 @@
   
   .user-handle {
     font-size: 0.9rem;
-    color: #657786;
+    color: #9fbdd6;
     margin: 0;
   }
   
@@ -58,7 +58,7 @@
   
   .tweet-date {
     font-size: 0.9rem;
-    color: #657786;
+    color: #c0e3ff;
     margin: 0;
   }
   
@@ -75,6 +75,7 @@
     overflow: hidden;
     width: 100%;
     max-width: 350px;
+    background-color: #5445FF;
   }
   
   .thumbnail {
@@ -94,7 +95,7 @@
   }
   
   .date {
-    color: #888;
+    color: #d9d7d7;
     font-size: 14px;
     margin-top: 5px;
   }

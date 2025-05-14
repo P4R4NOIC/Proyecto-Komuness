@@ -107,7 +107,7 @@ export const Publicaciones = () => {
         {hasMore && (
           <button
             onClick={handleLoadMore}
-            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm sm:text-base"
+            className="px-6 py-2 bg-[#404270] hover:bg-[#2e2f50] text-white rounded-lg  transition-colors duration-200 text-sm sm:text-base"
           >
             Cargar más
           </button>
