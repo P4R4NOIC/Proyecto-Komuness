@@ -45,5 +45,7 @@ body{
   font-family: 'Gotham', sans-serif;
   color: white;
   background-color: #5445ff;
+  background-image: url("../../public/background.png");
+  background-size: cover;
 
 }
