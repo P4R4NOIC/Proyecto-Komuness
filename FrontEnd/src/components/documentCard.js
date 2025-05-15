@@ -39,7 +39,7 @@ export const DocumentCard = ({ name, author, type = 'defiault', size, onClick })
       return (
   <div
     onClick={onClick}
-    className="flex items-center gap-3 px-4 py-3 rounded-lg shadow bg-[#404270] hover:bg-[#2e2f50] cursor-pointer transition-all w-[90%] max-w-full"
+    className="flex items-center gap-3 px-4 py-3 rounded-lg shadow bg-[#5445ff] hover:bg-[#3f35cc] cursor-pointer transition-all w-[90%] max-w-full"
   >
     {/* Icono de documento */}
     {icon}

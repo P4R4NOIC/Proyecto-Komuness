@@ -38,9 +38,7 @@ export const Navbar = () => {
           <li onClick={() => handleNavigation("/formulario")}>
             <span>Crear</span>
           </li>
-          <li>
-            <AiOutlineSearch size={25} style={{ marginTop: "6px" }} />
-          </li>
+         
           <li onClick={() => handleNavigation("/perfilUsuario")}>
             <AiOutlineUser size={25} style={{ marginTop: "6px" }} />
           </li>
