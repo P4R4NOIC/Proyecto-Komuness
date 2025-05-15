@@ -210,7 +210,7 @@ export const Biblioteca = () => {
 
   return (
 
-    <div className="flex flex-col items-center gap-4 pt-16 min-h-screen ">
+    <div className="flex flex-col items-center gap-4  bg-gray-800/80 pt-16 min-h-screen  ">
 
       <h1 className="text-4xl sm:text-5xl font-bold text-white drop-shadow-[0_2px_6px_rgba(0,0,0,1)]">
         <span className="text-gray-200">Biblioteca</span>
