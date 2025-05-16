@@ -311,19 +311,19 @@ class BibliotecaController {
     /**
      * @description: Busca un archivo de la biblioteca
      * @route: GET /biblioteca/search?params=values
-     *   @param texto: Texto a buscar en el nombre del archivo o tipoArchivo
+     *   @param texto: Texto a buscar en el nombre del archivo o tipoArchivo (o folder)
      *   @param tipoArchivo: Tipo de archivo a buscar
      *   @param autor: ID del autor del archivo
-     *   @param folder: ID de la carpeta del archivo
      * @param req: Request
      * @param res: Response
      * @returns: Response
      */
     static async filterArchivo(req: Request, res: Response) {
         try {
-            const { texto, tipoArchivo, autor, folder } = req.query;
+            const { texto, tipoArchivo, autor } = req.query;
 
             const filtro: any = {};
+            let carpetasCoincidentes: string | any[] = [];
 
             // Filtro por texto (nombre del archivo o tipoArchivo)
             if (texto) {
@@ -331,6 +331,9 @@ class BibliotecaController {
                     { nombre: { $regex: texto, $options: 'i' } },
                     { tipoArchivo: { $regex: texto, $options: 'i' } }
                 ];
+                carpetasCoincidentes = await Folder.find({
+                    nombre: { $regex: texto as string, $options: 'i' }
+                });
             }
 
             // Filtro por tipo de archivo (por si se desea buscar por tipo aparte de la barra de búsqueda)
@@ -347,34 +350,29 @@ class BibliotecaController {
                 filtro.autor = autor;
             }
 
-            // Filtro por nombre de la carpeta
-            if (folder) {
-                const folderObj = await Folder.findOne({ nombre: { $regex: folder, $options: 'i' } });
-                if (!folderObj) {
-                    res.status(404).json({ message: 'No se encontró una carpeta con ese nombre' });
-                    return;
-                }
-                filtro.folder = folderObj._id;
-            }
-
-            // Validación: debe haber al menos un filtro
-            if (Object.keys(filtro).length === 0) {
-                res.status(400).json({ message: 'Debe proporcionar al menos un parámetro de búsqueda (texto, tipoArchivo, autor o folder)' });
+            // Si no hay ningún filtro válido, no hacemos búsqueda
+            if (Object.keys(filtro).length === 0 && !texto) {
+                res.status(400).json({ message: 'Debe proporcionar al menos un parámetro de búsqueda' });
                 return;
             }
 
-            const archivos: IArchivo[] = await Archivo.find(filtro);
+            // Buscar archivos según filtros
+            const archivos = await Archivo.find(filtro).populate('folder');
 
-            if (archivos.length === 0) {
-                res.status(404).json({ message: 'No se encontraron archivos con esos criterios' });
+            // Si no hay resultados en ambos
+            if (archivos.length === 0 && carpetasCoincidentes.length === 0) {
+                res.status(404).json({ message: 'No se encontraron resultados con esos criterios' });
                 return;
             }
 
-            res.status(200).json(archivos);
+            res.status(200).json({
+                carpetas: carpetasCoincidentes,
+                archivos
+            });
         } catch (error) {
             const err = error as Error;
             res.status(500).json({ message: err.message });
         }
-    };
+    }
 }
 export default BibliotecaController;
