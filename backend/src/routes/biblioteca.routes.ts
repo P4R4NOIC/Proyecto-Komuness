@@ -66,6 +66,28 @@ router.post("/upload", upload.array('archivos'), BibliotecaController.uploadFile
 router.delete("/delete/:id", BibliotecaController.deleteFile as any);
 
 
+/**
+ * Posibles respuestas del endpoint:
+ * HTTP 200:
+ *  {
+ *      success: true,
+ *      results: {archivo[]}
+ *  }
+ * 
+ * HTTP 404:
+ *  {
+ *      success: false,
+ *      message:'Carpeta no encontrada',
+ *  }
+ * HTTP 500:
+ *  {
+ *      success: false,
+ *      message:'Error del sistema',
+ *      error: error.message
+ *  }
+ */
+router.route("/buscar").get(BibliotecaController.filterArchivo as any);
+
 
 //**************************** Rutas de las carpetas ****************************** */
 /**
