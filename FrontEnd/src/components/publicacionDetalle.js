@@ -1,6 +1,6 @@
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import Slider from "./slider";
 
@@ -17,48 +17,68 @@ export const PublicacionDetalle = () => {
         return <h2 className="text-center text-xl font-semibold mt-10">Publicación no encontrada</h2>;
     }
 
+const usuarioLogueado = {
+    id: "67da43f3651480413241b33c",
+    nombre: "Usuario Anónimo",
+    avatar: "https://i.pravatar.cc/40",
+  };
+
+
     const agregarComentario = () => {
         if (!nuevoComentario.trim()) return;
 
-        const comentario = {
+        /*const comentario = {
             id: Date.now(),
             usuario: "Usuario Anónimo",
             avatar: "https://i.pravatar.cc/40", // Avatar aleatorio
             texto: nuevoComentario,
             fecha: new Date().toLocaleDateString(),
-        };
+        };*/
 
-        setComentarios([comentario, ...comentarios]);
-        setNuevoComentario("");
+       // setComentarios([comentario, ...comentarios]);
+       // setNuevoComentario("");
+       const comentario = {
+            autor: "Juan Pérez",
+            contenido: nuevoComentario
+        };
+        enviarComentario(comentario);
     };
 
+ 
+
     // QUIZA LE SIRVA
-    // const [comentario, setComentario] = useState({
-    //     autor: "6612abcd1234567890fedcba", // TODO: SE SACA DEL USUARIO LOGGEADO
-    //     contenido: ""
-    // });
+     /*const [comentario, setComentario] = useState({
+         autor: "6612abcd1234567890fedcba", // TODO: SE SACA DEL USUARIO LOGGEADO
+         contenido: ""
+     });*/
+
+     
+  
 
     // -----------CODIGO POST PARA ENVIAR UN COMENTARIO --------------------------
-    // const enviarComentario = async () => {
-    //     try {
-    //       const res = await fetch(`http://localhost:3000/publicaciones/${publicacion._id}/comentarios`, {
-    //         method: "POST",
-    //         headers: {
-    //           "Content-Type": "application/json"
-    //         },
-    //         body: JSON.stringify(comentario)
-    //       });
+     const enviarComentario = async (nuevoComentario) => {
+         try {
+            //console.log(nuevoComentario)
+           const res = await fetch(`https://proyecto-komuness-backend.vercel.app/publicaciones/${publicacion._id}/comentarios`, {
+             method: "POST",
+             headers: {
+               "Content-Type": "application/json"
+             },
+             body: JSON.stringify(nuevoComentario)
+            
+           });
 
-    //       if (res.ok) {
-    //         const data = await res.json();
-    //         console.log("Comentario agregado:", data);
-    //       } else {
-    //         console.error("Error al agregar comentario");
-    //       }
-    //     } catch (err) {
-    //       console.error("Error en la solicitud:", err);
-    //     }
-    // };
+           if (res.ok) {
+             const data = await res.json();
+           
+             console.log("Comentario agregado:", data);
+           } else {
+             console.error("Error al agregar comentario");
+           }
+         } catch (err) {
+           console.error("Error en la solicitud:", err);
+         }
+     };
 
 
     return (
