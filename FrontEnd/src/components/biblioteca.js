@@ -90,13 +90,15 @@ export const Biblioteca = () => {
     //   {file.name} - {file.size} bytes
     // </li>
     // console.log(file)
-    <DocumentCard
-      key={file.name}
-      name={file.name}
-      author={'Desconocido'}
-      size={file.size}
-      type={file.type}
-    />
+    <div className='mb-5'>
+      <DocumentCard
+        key={file.name}
+        name={file.name}
+        author={'Desconocido'}
+        size={file.size}
+        type={file.type}
+      />
+    </div>
   ));
 
 
@@ -106,16 +108,15 @@ export const Biblioteca = () => {
     });
   };
 
-
+  // SUBIDA DE ARCHIVOS
   const idCarpeta = 0;
   const idUser = "Animo";
   async function handleOnSubmit(params) {
     params.preventDefault();
-    // console.log("Buscando: ", {nombre, etiqueta})
 
     const data = new FormData();
     acceptedFiles.forEach((archivo) => {
-      data.append("archivos", archivo); // O "archivos[]", según espera tu backend
+      data.append("archivos", archivo); 
     });
     // data.append("folderId",idCarpeta.toString()) Si le envío id, es porque hay una carpeta
     data.append("userId", idUser.toString())
@@ -126,7 +127,7 @@ export const Biblioteca = () => {
         body: data,
       });
 
-      const result = await response.json();  // Si el servidor responde en JSON
+      const result = await response.json(); 
       if (response.ok) {
         console.log("Archivos subidos con éxito:", result);
       } else {
@@ -216,21 +217,35 @@ export const Biblioteca = () => {
         <span className="text-gray-200">Biblioteca</span>
       </h1>
 
-      <div {...getRootProps()}>
+      <div
+        {...getRootProps()}
+        className="flex flex-col items-center justify-center border-2 border-dashed border-gray-400 rounded-xl p-8 text-center cursor-pointer transition hover:border-blue-500 hover:bg-blue-50"
+      >
         <input {...getInputProps()} />
-        {
-          isDragActive ?
-            <p>Drop the files here ...</p> :
-            <p>Drag 'n' drop some files here, or click to select files</p>
-        }
+        {isDragActive ? (
+          <p className="text-blue-600 font-medium">Suelta los archivos aquí ...</p>
+        ) : (
+          <p className="text-gray-600">
+            Arrastra y suelta algunos archivos aquí, o{' '}
+            <span className="text-blue-600 underline">haz clic para seleccionarlos</span>
+          </p>
+        )}
       </div>
 
-      {acceptedFiles.length != 0 && (
-        <div>
-          <button onClick={handleOnSubmit}> Subir </button>
-          <ul>{files}</ul>
+      {acceptedFiles.length !== 0 && (
+        <div className="mt-6 space-y-4">
+          <div className='grid grid-cols-2 gap-8'>
+            <button
+              onClick={handleOnSubmit}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow transition"
+            >
+              Subir
+            </button>
+          </div>
+          <ul className="">{files}</ul>
         </div>
       )}
+
 
       <div className="w-full px-4 py-2 text-black">
         <form className="flex flex-col md:flex-row gap-2 md:items-center w-full">
@@ -250,11 +265,16 @@ export const Biblioteca = () => {
             onChange={(e) => setEtiqueta(e.target.value)}
             className="w-full md:w-48 px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="">Todas las etiquetas</option>
-            <option value="educación">Educación</option>
-            <option value="salud">Salud</option>
-            <option value="cultura">Cultura</option>
-            {/* <!-- Agrega más opciones según tus etiquetas --> */}
+            <option value="">Todos los archivos</option>
+            <option value="pdf">Pdf</option>
+            <option value="excel">Excel</option>
+            <option value="word">Word</option>
+            <option value="ppt">Ppt</option>
+            <option value="text">Texto</option>
+            <option value="img">Img</option>
+            <option value="zip">Zip</option>
+            
+            
           </select>
 
           {/* <!-- Botón de búsqueda --> */}

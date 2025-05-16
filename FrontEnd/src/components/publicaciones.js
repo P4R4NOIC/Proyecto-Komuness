@@ -92,7 +92,7 @@ export const Publicaciones = () => {
   };
 
   return (
-    <div>
+    <div className='bg-gray-800/80 pt-16 min-h-screen'>
       <div className="card-container">
         {/* {cards} */}
         {cards.length === 0 ? (
@@ -107,7 +107,7 @@ export const Publicaciones = () => {
         {hasMore && (
           <button
             onClick={handleLoadMore}
-            className="px-6 py-2 bg-[#404270] hover:bg-[#2e2f50] text-white rounded-lg  transition-colors duration-200 text-sm sm:text-base"
+            className="px-6 py-2 bg-[#5445FF] hover:bg-[#2e2f50] text-white rounded-lg  transition-colors duration-200 text-sm sm:text-base"
           >
             Cargar más
           </button>
