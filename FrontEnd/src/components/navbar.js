@@ -22,7 +22,7 @@ export const Navbar = () => {
 
   return (
     <header className="navbar">
-      <img src={logo} className="logo" alt="/" />
+     <a href = "*"><img src={logo} className="logo" alt="/" /></a> 
       <nav>
         <ul className={nav ? ["menu", "activo"].join(" ") : ["menu"]}>
           <li onClick={() => handleNavigation("/eventos")}>
