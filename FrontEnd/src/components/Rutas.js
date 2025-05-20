@@ -7,7 +7,10 @@ import {Navbar} from './navbar'
 import {Biblioteca} from './biblioteca'
 import {BibliotecaFolder} from './bibliotecaFolder'
 import FormularioPublicacion from "../pages/formulario";
+import {IniciarSesion} from './iniciarSesion'
+import {RecuperarContra} from './recuperarContra'
 export const Rutas = () =>{
+    
     return(
         <Router>
             <Navbar />
@@ -21,6 +24,8 @@ export const Rutas = () =>{
                 <Route path = "/biblioteca/:id" element = {<BibliotecaFolder/>}/>
                 <Route path = "/perfilUsuario" element= {<PerfilUsuario/>}/>
                 <Route path = "/formulario" element= {<FormularioPublicacion/>}/>
+                <Route path = "/iniciarSesion" element= {<IniciarSesion/>}/>
+                <Route path = "/recuperar" element= {<RecuperarContra/>}/>
                 
                 <Route path="*" element={<Navigate to="/publicaciones" />} />
             </Routes>

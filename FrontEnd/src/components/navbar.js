@@ -3,13 +3,15 @@ import "../CSS/navbar.css";
 import {
   AiOutlineMenu,
   AiOutlineClose,
-  AiOutlineSearch,
   AiOutlineUser,
 } from "react-icons/ai";
 import logo from "../images/logo.png";
 import { useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
+  var goToLogin = false;
+
+
   const [nav, setNav] = useState(false);
   const navigate = useNavigate();
 
@@ -39,9 +41,9 @@ export const Navbar = () => {
             <span>Crear</span>
           </li>
          
-          <li onClick={() => handleNavigation("/perfilUsuario")}>
+          <li onClick={() => handleNavigation(goToLogin ? "/perfilUsuario" : "/iniciarSesion")}>
             <AiOutlineUser size={25} style={{ marginTop: "6px" }} />
-          </li>
+        </li>
         </ul>
       </nav>
       <div onClick={() => setNav(!nav)} className="botonMovil">
