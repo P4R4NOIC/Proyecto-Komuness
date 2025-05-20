@@ -44,7 +44,7 @@ export const InitForm = () => {
         </form>
         <p className="mt-6 text-sm text-center">
           ¿No tienes cuenta? {" "}
-          <a href="#" className="text-[#ffbf30] font-medium">
+          <a href="/crearUsr" className="text-[#ffbf30] font-medium">
             Regístrate
           </a>
         </p>

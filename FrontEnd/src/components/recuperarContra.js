@@ -1,15 +1,21 @@
-import React, {useRef} from 'react'
+import React, { useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const RecuperarContra = () => {
-const codeRefs = useRef([]);
-
-
+  const codeRefs = useRef([]);
+  const navigate = useNavigate();
 
   const handleInput = (e, index) => {
     const value = e.target.value;
     if (value && index < codeRefs.current.length - 1) {
       codeRefs.current[index + 1].focus();
     }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Aquí podrías validar que el código esté completo antes de continuar
+    navigate('/nuevaCont');
   };
 
   return (
@@ -21,7 +27,7 @@ const codeRefs = useRef([]);
         <p className="text-sm text-center mb-8 text-[#f0f0f0]">
           Ingresa tu correo electrónico y te enviaremos un código de verificación para restablecer tu contraseña.
         </p>
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="block text-base mb-2">
               Correo Electrónico
@@ -49,8 +55,8 @@ const codeRefs = useRef([]);
                   key={index}
                   type="text"
                   maxLength={1}
-                  ref={el => (codeRefs.current[index] = el)}
-                  onChange={e => handleInput(e, index)}
+                  ref={(el) => (codeRefs.current[index] = el)}
+                  onChange={(e) => handleInput(e, index)}
                   className="w-full text-center px-3 py-3 rounded-xl bg-[#404270] border-none text-[#f0f0f0] focus:ring-2 focus:ring-[#5445ff] outline-none"
                 />
               ))}
@@ -65,7 +71,7 @@ const codeRefs = useRef([]);
           </button>
         </form>
         <p className="mt-6 text-sm text-center">
-          ¿Recordaste tu contraseña? {" "}
+          ¿Recordaste tu contraseña?{" "}
           <a href="/iniciarSesion" className="text-[#ffbf30] font-medium">
             Inicia Sesión
           </a>
@@ -73,6 +79,6 @@ const codeRefs = useRef([]);
       </div>
     </div>
   );
-}
+};
 
-export default RecuperarContra
+export default RecuperarContra;
