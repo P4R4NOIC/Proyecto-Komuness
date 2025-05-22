@@ -13,6 +13,13 @@ export const PublicacionDetalle = () => {
 
     const publicacion = location.state?.publicacion;
 
+     useEffect(() => {
+    if (publicacion?.comentarios) {
+        setComentarios(publicacion.comentarios);
+    }
+}, [publicacion]);
+
+
     if (!publicacion) {
         return <h2 className="text-center text-xl font-semibold mt-10">Publicación no encontrada</h2>;
     }
@@ -23,24 +30,19 @@ const usuarioLogueado = {
     avatar: "https://i.pravatar.cc/40",
   };
 
+ 
 
     const agregarComentario = () => {
         if (!nuevoComentario.trim()) return;
 
-        /*const comentario = {
-            id: Date.now(),
-            usuario: "Usuario Anónimo",
-            avatar: "https://i.pravatar.cc/40", // Avatar aleatorio
-            texto: nuevoComentario,
-            fecha: new Date().toLocaleDateString(),
-        };*/
-
-       // setComentarios([comentario, ...comentarios]);
-       // setNuevoComentario("");
+       
        const comentario = {
             autor: "Juan Pérez",
             contenido: nuevoComentario
         };
+
+        setComentarios([comentario, ...comentarios]);
+        setNuevoComentario("");
         enviarComentario(comentario);
     };
 
@@ -53,7 +55,7 @@ const usuarioLogueado = {
      });*/
 
      
-  
+    
 
     // -----------CODIGO POST PARA ENVIAR UN COMENTARIO --------------------------
      const enviarComentario = async (nuevoComentario) => {
@@ -80,8 +82,12 @@ const usuarioLogueado = {
          }
      };
 
+     console.log(publicacion.comentarios)
 
     return (
+
+        <div className="min-h-screen bg-gray-800/80">
+
         <div className="max-w-4xl mx-auto p-4 space-y-6">
             <div className="md:hidden flex justify-between w-full  mb-4">
                 <button
@@ -112,6 +118,7 @@ const usuarioLogueado = {
                     <div className="text-white-600">
                         <p className="mt-2"><strong>Fecha:</strong> {publicacion.fecha}</p>
                         <p><strong>Categoría:</strong> {publicacion.tag}</p>
+                        <p className="mt-4 text-white">{publicacion.contenido}</p>
                     </div>
                 </div>
             ) : (
@@ -154,20 +161,23 @@ const usuarioLogueado = {
 
                 <div className="mt-4 space-y-4 w-full">
                     {comentarios.length === 0 ? (
+                        
                         <p className="text-gray-400">No hay comentarios aún. Sé el primero en comentar.</p>
                     ) : (
                         comentarios.map((comentario) => (
-                            <div key={comentario.id} className="flex items-start space-x-2 bg-gray-700 p-3 rounded-lg">
+                            <div key={comentario._id} className="flex items-start space-x-2 bg-gray-700 p-3 rounded-lg">
                                 <img src={comentario.avatar} alt="avatar" className="rounded-full w-10 h-10 flex-shrink-0" />
                                 <div className="w-full">
-                                    <p className="text-sm text-gray-300 font-semibold">{comentario.usuario} <span className="text-xs text-gray-400">• {comentario.fecha}</span></p>
-                                    <p className="text-white break-words">{comentario.texto}</p>
+                                    <p className="text-sm text-gray-300 font-semibold">{comentario.autor} <span className="text-xs text-gray-400">• {comentario.fecha}</span></p>
+                                    <p className="text-white break-words">{comentario.contenido}</p>
                                 </div>
                             </div>
                         ))
                     )}
                 </div>
             </div>
+
+        </div>
 
         </div>
     );

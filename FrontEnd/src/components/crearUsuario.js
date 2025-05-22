@@ -1,6 +1,10 @@
 import React, { useState } from "react";
-
+import { useNavigate } from 'react-router-dom';
 export const CrearUsuario = () => {
+
+  const navigate = useNavigate();
+
+
    const [formData, setFormData] = useState({
     usuario: "",
     correo: "",
@@ -17,6 +21,7 @@ export const CrearUsuario = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Aquí iría lógica de validación/envío
+    navigate('/codigoGen')
     console.log(formData);
   };
 

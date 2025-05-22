@@ -6,6 +6,7 @@ export const PublicacionCard = ({ publicacion }) => {
 
 
     const handleClick = () => {
+       
         navigate(`/publicaciones/${publicacion._id}`, { state: { publicacion } });
     };
 
