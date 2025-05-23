@@ -6,12 +6,11 @@ export const CrearUsuario = () => {
 
 
    const [formData, setFormData] = useState({
-    usuario: "",
+    nombre: "",
+    apellido: "",
     correo: "",
     contraseña: "",
     confirmarContraseña: "",
-    edad: "",
-    genero: "",
   });
 
   const handleChange = (e) => {
@@ -36,12 +35,24 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
         </h2>
         <form className="space-y-5" onSubmit={handleSubmit}>
           <div>
-            <label className="block text-base mb-1">Nombre de Usuario</label>
+            <label className="block text-base mb-1">Nombre</label>
             <input
               name="usuario"
               type="text"
-              placeholder="Tu nombre de usuario"
+              placeholder="Tu nombre"
               value={formData.usuario}
+              onChange={handleChange}
+              className="w-full px-5 py-3 rounded-xl bg-[#404270] text-[#f0f0f0] focus:ring-2 focus:ring-[#5445ff] outline-none"
+            />
+          </div>
+
+          <div>
+            <label className="block text-base mb-1">Apellidos</label>
+            <input
+              name="apellido"
+              type="text"
+              placeholder="Tus apellidos"
+              value={formData.apellido}
               onChange={handleChange}
               className="w-full px-5 py-3 rounded-xl bg-[#404270] text-[#f0f0f0] focus:ring-2 focus:ring-[#5445ff] outline-none"
             />
@@ -72,9 +83,7 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     />
     <button
       type="button"
-      onMouseDown={() => setShowPassword(true)}
-      onMouseUp={() => setShowPassword(false)}
-      onMouseLeave={() => setShowPassword(false)}
+      onClick={() => setShowPassword(!showPassword)}
       className="absolute right-3 top-3 text-white"
     >
       👁️
@@ -95,9 +104,7 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     />
     <button
       type="button"
-      onMouseDown={() => setShowConfirmPassword(true)}
-      onMouseUp={() => setShowConfirmPassword(false)}
-      onMouseLeave={() => setShowConfirmPassword(false)}
+      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
       className="absolute right-3 top-3 text-white"
     >
       👁️
@@ -105,60 +112,6 @@ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   </div>
 </div>
 
-          <div>
-  <label className="block text-base mb-1">Fecha de Nacimiento</label>
-  <div className="grid grid-cols-3 gap-2">
-    <input
-      type="number"
-      name="dia"
-      min="1"
-      max="31"
-      placeholder="Día"
-      value={formData.dia}
-      onChange={handleChange}
-      className="w-full px-4 py-3 rounded-xl bg-[#404270] text-[#f0f0f0] focus:ring-2 focus:ring-[#5445ff] outline-none"
-    />
-    <select
-      name="mes"
-      value={formData.mes}
-      onChange={handleChange}
-      className="w-full px-4 py-3 rounded-xl bg-[#404270] text-[#f0f0f0] focus:ring-2 focus:ring-[#5445ff] outline-none"
-    >
-      <option value="">Mes</option>
-      {[
-        "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-        "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
-      ].map((mes, index) => (
-        <option key={index} value={index + 1}>{mes}</option>
-      ))}
-    </select>
-    <input
-      type="number"
-      name="anio"
-      min="1900"
-      max={new Date().getFullYear()}
-      placeholder="Año"
-      value={formData.anio}
-      onChange={handleChange}
-      className="w-full px-4 py-3 rounded-xl bg-[#404270] text-[#f0f0f0] focus:ring-2 focus:ring-[#5445ff] outline-none"
-    />
-  </div>
-</div>
-          <div>
-            <label className="block text-base mb-1">Género (opcional)</label>
-            <select
-              name="genero"
-              value={formData.genero}
-              onChange={handleChange}
-              className="w-full px-5 py-3 rounded-xl bg-[#404270] text-[#f0f0f0] focus:ring-2 focus:ring-[#5445ff] outline-none"
-            >
-              <option value="">Selecciona una opción</option>
-              <option value="femenino">Femenino</option>
-              <option value="masculino">Masculino</option>
-              <option value="otro">Otro</option>
-              <option value="prefiero no decirlo">Prefiero no decirlo</option>
-            </select>
-          </div>
 
           <button
             type="submit"

@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import PublicacionModal from "./publicacionModal";
 
 export const PublicacionCard = ({ publicacion }) => {
     const navigate = useNavigate();
    
-
+    const [selectedPub, setSelectedPub] = useState(false);
 
     const handleClick = () => {
        
@@ -11,12 +13,13 @@ export const PublicacionCard = ({ publicacion }) => {
     };
 
     return (
-        <div
-            key={publicacion._id}
-            className="card"
-           
-            onClick={handleClick}
-        >
+        <div className="flex flex-col justify-between card">
+            <div
+                key={publicacion._id}
+                className=""
+            
+                onClick={handleClick}
+            >
             {publicacion.tag !== 'publicacion' && (
                 <div className="imagen">
                     <img src={publicacion.adjunto[0]?.url ?? "/notFound.jpg"}
@@ -43,6 +46,25 @@ export const PublicacionCard = ({ publicacion }) => {
                     <div className="tweet-footer">
                         <p className="tweet-date">Publicado el {publicacion.fecha}</p>
                     </div>
+                </div>
+            )}
+            </div>
+            {true && (
+                <div>
+                    <button className="w-full bg-red-500 py-2 px-4 rounded hover:bg-red-600 mx-auto block"
+                        onClick={()=>setSelectedPub(true)}
+                    >
+                        Eliminar
+                    </button>
+                    
+                    <PublicacionModal
+                        name = {publicacion.titulo}
+                        date = {publicacion.fecha}
+                        tag = {publicacion.tag}
+                        id = {publicacion.id}
+                        isOpen={selectedPub}
+                        onClose={()=>setSelectedPub(false)}
+                    />
                 </div>
             )}
         </div>
