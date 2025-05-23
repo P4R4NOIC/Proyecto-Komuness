@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import { IUsuario as Usuario } from '../interfaces/usuario.interface';
 import { modelUsuario } from '../models/usuario.model';
+import { generarToken } from '../utils/jwt';
+import { hashPassword, comparePassword } from '../utils/bcryptjs';
 
 // Controlador para crear un usuario
 export const createUsuario = async (req: Request, res: Response): Promise<void> => {
@@ -62,3 +64,76 @@ export const deleteUsuario = async (req: Request, res: Response): Promise<void> 
         res.status(500).json({ message: err.message });
     }
 };
+
+/**
+ * 
+ * loginUsuario: realiza el login de un usuario y devuelve un token
+ * @param req: Request
+ * @param res: Response
+ * @returns: void
+ */
+export const loginUsuario = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { email, password } = req.body;
+        //buscamos el usuario en la base de datos
+        const usuario = await modelUsuario.findOne({ email });
+        if (!usuario) {
+            res.status(401).json({ message: 'Usuario no encontrado' });
+            return;
+        }
+        //comparamos la contraseña
+        const isPasswordValid = await comparePassword(password, usuario.password);
+        if (!isPasswordValid) {
+            res.status(401).json({ message: 'Contraseña incorrecta' });
+            return;
+        }
+        //si es exitoso, generamos un token y lo devolvemos en la cookie
+        const token = generarToken(usuario);
+        res.cookie('token',
+            token,
+            {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === "production"
+            }
+        );
+        res.status(200).json({ message: 'Login exitoso', user: usuario });
+    } catch (error) {
+        const err = error as Error;
+        console.log(err);
+        res.status(500).json({ message: err.message });
+    }
+}
+
+/**
+ * 
+ * registerUsuario: registra un usuario en la base de datos
+ * @param req: Request
+ * @param res: Response
+ * @returns: void
+ */
+export const registerUsuario = async (req: Request, res: Response): Promise<void> => {
+    const { nombre, apellido, email, password, tipoUsuario } = req.body;
+    try {
+        //verificamos si el usuario ya existe
+        const usuario = await modelUsuario.findOne({ email });
+        if (usuario) {
+            res.status(400).json({ message: 'Usuario ya existe' });
+            return;
+        }
+        //si no existe, lo creamos
+        const hashedPassword = await hashPassword(password);
+        const newUsuario = new modelUsuario({
+            nombre,
+            apellido,
+            email,
+            password: hashedPassword,
+            tipoUsuario
+        });
+        await newUsuario.save();
+        res.status(201).json({ message: 'Usuario creado', user: newUsuario });
+    } catch (error) {
+        const err = error as Error;
+        console.log(err);
+        res.status(500).json({ message: err.message });
+    }
+}

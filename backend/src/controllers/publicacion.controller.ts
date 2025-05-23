@@ -55,19 +55,23 @@ export const createPublicacionA = async (req: Request, res: Response): Promise<v
 //obtener publicaciones por tag
 export const getPublicacionesByTag = async (req: Request, res: Response): Promise<void> => {
     try {
-        //paginación
         const offset = parseInt(req.query.offset as string) || 0;
         const limit = parseInt(req.query.limit as string) || 10;
+        const { tag, publicado } = req.query;
 
-        const { tag } = req.query;
+        // Construye el query de manera explícita
+        const query: { tag: string; publicado?: boolean } = { tag: tag as string };
+        if (publicado !== undefined) {
+            query.publicado = publicado === 'true'; // Convierte a booleano
+        }
 
         const [publicaciones, totalPublicaciones] = await Promise.all([
-            modelPublicacion.find({ tag: tag })
-                .populate('autor', 'nombre') // Agregar populate para obtener el nombre del autor
+            modelPublicacion.find(query)
+                .populate('autor', 'nombre')
                 .sort({ createdAt: -1 })
                 .skip(offset)
                 .limit(limit),
-            modelPublicacion.countDocuments({ tag: tag })
+            modelPublicacion.countDocuments(query)
         ]);
 
         if (publicaciones.length === 0) {
