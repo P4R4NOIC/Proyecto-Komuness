@@ -81,49 +81,49 @@ export const PerfilUsuario = () => {
   }
 
   const aceptarArchivo = async (id) => {
-    // const promesa = fetch(
-    //   `https://proyecto-komuness-backend.vercel.app/publicaciones/${id}`,
-    //   {
-    //     method: "PUT", // o PATCH, según tu API
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({ publicado: true }),
-    //   }
-    // );
+    const promesa = fetch(
+      `https://proyecto-komuness-backend.vercel.app/biblioteca/edit/${id}`,
+      {
+        method: "PUT", // o PATCH, según tu API
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ esPublico: true }),
+      }
+    );
 
-    // toast.promise(promesa, {
-    //   loading: "Aceptando publicación...",
-    //   success: "¡Publicación aceptada!",
-    //   error: "Error al aceptar publicación",
-    // });
+    toast.promise(promesa, {
+      loading: "Aceptando archivo...",
+      success: "¡Archivo aceptado!",
+      error: "Error al aceptar el archivo",
+    });
 
-    // try {
-    //   await promesa;
-    //   setPublicaciones((prev) => prev.filter((item) => item._id !== id));
-    // } catch (error) {
-    //   console.error("Error al aceptar publicación:", error);
-    // }
+    try {
+      await promesa;
+      setArchivos((prev) => prev.filter((item) => item._id !== id));
+    } catch (error) {
+      console.error("Error al aceptar el archivo:", error);
+    }
   };
 
   const rechazarArchivo= async (id) => {
-    // const promesa = fetch(
-    //   `https://proyecto-komuness-backend.vercel.app/publicaciones/${id}`,
-    //   {
-    //     method: "DELETE",
-    //   }
-    // );
+    const promesa = fetch(
+      `https://proyecto-komuness-backend.vercel.app/biblioteca/delete/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
 
-    // toast.promise(promesa, {
-    //   loading: "Eliminando publicación...",
-    //   success: "¡Publicación eliminada!",
-    //   error: "Error al eliminar publicación",
-    // });
+    toast.promise(promesa, {
+      loading: "Eliminando archivo...",
+      success: "¡Archivo eliminado!",
+      error: "Error al eliminar el archivo",
+    });
 
-    // try {
-    //   await promesa;
-    //   setPublicaciones((prev) => prev.filter((item) => item._id !== id));
-    // } catch (error) {
-    //   console.error("Error al eliminar publicación:", error);
-    // }
+    try {
+      await promesa;
+      setArchivos((prev) => prev.filter((item) => item._id !== id));
+    } catch (error) {
+      console.error("Error al eliminar archivo:", error);
+    }
   };
 
 

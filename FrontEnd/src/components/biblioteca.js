@@ -122,7 +122,8 @@ export const Biblioteca = () => {
     data.append("userId", idUser.toString())
 
     try {
-      const response = await fetch('https://proyecto-komuness-backend.vercel.app/biblioteca/upload/', {
+      const response = await fetch('http://localhost:3000/biblioteca/upload/', {
+      // const response = await fetch('https://proyecto-komuness-backend.vercel.app/biblioteca/upload/', {
         method: 'POST',
         body: data,
       });
