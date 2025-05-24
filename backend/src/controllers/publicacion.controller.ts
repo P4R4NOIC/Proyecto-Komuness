@@ -59,10 +59,15 @@ export const getPublicacionesByTag = async (req: Request, res: Response): Promis
         const limit = parseInt(req.query.limit as string) || 10;
         const { tag, publicado } = req.query;
 
-        // Construye el query de manera explícita
-        const query: { tag: string; publicado?: boolean } = { tag: tag as string };
+        // Construye el query de manera flexible
+        const query: { tag?: string; publicado?: boolean } = {};
+        
+        if (tag) {
+            query.tag = tag as string;
+        }
+        
         if (publicado !== undefined) {
-            query.publicado = publicado === 'true'; // Convierte a booleano
+            query.publicado = publicado === 'true';
         }
 
         const [publicaciones, totalPublicaciones] = await Promise.all([
@@ -75,7 +80,7 @@ export const getPublicacionesByTag = async (req: Request, res: Response): Promis
         ]);
 
         if (publicaciones.length === 0) {
-            res.status(404).json({ message: 'No se encontraron publicaciones con ese tag' });
+            res.status(404).json({ message: 'No se encontraron publicaciones' });
             return;
         }
 
