@@ -7,8 +7,6 @@ const upload = multer({ storage });
 const router = Router();
 
 
-/* FRONTEND LEA ESTO Y NO SEA VAGO XD */
-
 //**************** Rutas de los archivos ************************ */
 /**FUNCIONA
  * Posibles respuestas del endpoint:

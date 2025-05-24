@@ -12,7 +12,7 @@ const FormularioPublicacion = () => {
     archivos: [],
     comentarios: [],
     tag: "",
-    publicado: true,  // TODO: CAMBIAR A FALSE
+    publicado: false,  // TODO: CAMBIAR A FALSE
     fechaEvento: "",
     precio: "",
 
