@@ -5,5 +5,5 @@ export interface IUsuario extends Document {
     apellido: string;
     email: string;
     password: string;
-    esAdmin: boolean;
+    tipoUsuario: number;
 }

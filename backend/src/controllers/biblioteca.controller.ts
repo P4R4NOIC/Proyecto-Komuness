@@ -112,7 +112,7 @@ class BibliotecaController {
      */
     static async list(req: Request, res: Response) {
         const { id } = req.params;
-        const { nombre, global } = req.query;
+        const { nombre, global, publico } = req.query;
 
         if (!id) {
             return res.status(400).json({
@@ -125,11 +125,12 @@ class BibliotecaController {
         const queryArchivos = {
             ...(global !== 'true' && { folder: id !== '0' ? id : null }),
             ...(nombre && { nombre: { $regex: nombre, $options: 'i' } }),
+            ...(publico !== undefined && { esPublico: publico === 'true' })
         };
     
         const queryFolders = {
             ...(global !== 'true' && { directorioPadre: id !== '0' ? id : null }),
-            ...(nombre && { nombre: { $regex: nombre, $options: 'i' } }),
+            ...(nombre && { nombre: { $regex: nombre, $options: 'i' } })
         };
 
         try {
@@ -140,7 +141,7 @@ class BibliotecaController {
                 success: true,
                 contentFile: archivos,
                 contentFolder: folders
-            })
+            });
         } catch (error) {
             console.error('Error general:', error);
             return res.status(500).json({
