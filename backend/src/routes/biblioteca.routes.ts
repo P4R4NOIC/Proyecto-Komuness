@@ -1,6 +1,8 @@
 import multer from "multer";
 import { Router } from "express";
 import BibliotecaController from "../controllers/biblioteca.controller";
+import { authMiddleware } from "@/middlewares/auth.middleware";
+import { verificarRoles } from "@/middlewares/roles.middleware";
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -28,7 +30,8 @@ const router = Router();
  *      message:'Error al subir los archivos',
  *  } 
  */
-router.post("/upload", upload.array('archivos'), BibliotecaController.uploadFiles as any);
+// solo los tipoUsuarios 0, 1 y 2 pueden subir archivos
+router.post("/upload", upload.array('archivos'),/* authMiddleware,verificarRoles([0,1,2]), */ BibliotecaController.uploadFiles as any);
 
 /**
  * Posibles respuestas del endpoint:
@@ -61,7 +64,8 @@ router.post("/upload", upload.array('archivos'), BibliotecaController.uploadFile
  *      error: error.message
  *  }
 */
-router.delete("/delete/:id", BibliotecaController.deleteFile as any);
+//solo los tipoUsuarios 0 y 1  pueden eliminar archivos
+router.delete("/delete/:id",/* authMiddleware,verificarRoles([0,1]), */ BibliotecaController.deleteFile as any);
 
 
 /**
@@ -135,7 +139,8 @@ router.get("/list/:id", BibliotecaController.list as any);
  *      error: error.message
  *  }
  */
-router.post("/folder", BibliotecaController.createFolder as any);
+//solo los tipoUsuarios 0 y 1  pueden crear carpetas
+router.post("/folder",/* authMiddleware,verificarRoles([0,1]), */ BibliotecaController.createFolder as any);
 /**
  * Posibles respuestas del endpoint:
  * HTTP 200:
@@ -161,10 +166,37 @@ router.post("/folder", BibliotecaController.createFolder as any);
  *      error: error.message
  *  }
  */
-router.route("/folder/:id").delete(BibliotecaController.deleteFolder as any);
+//solo los tipoUsuarios 0 y 1  pueden eliminar carpetas
+router.route("/folder/:id").delete(/* authMiddleware,verificarRoles([0,1]), */BibliotecaController.deleteFolder as any);
+/**
+ * Posibles respuestas del endpoint: actualizacion de los metadatos del archivo
+ * HTTP 200:
+ *  {
+ *      success: true,
+ *      message:'Archivo actualizado correctamente',
+ *      content: archivo,
+ *  }
+ * HTTP 400:
+ *  {
+ *      success: false,
+ *      message:'id es requerido',
+ *  }
+ * HTTP 404:
+ *  {
+ *      success: false,
+ *      message:'Archivo no encontrado',
+ *  }
+ * HTTP 500:
+ *  {
+ *      success: false,
+ *      message:'Error del sistema',
+ *      error: error.message    
+ *  }
+ * 
+ */
+//solo los tipoUsuarios 0 y 1  pueden actualizar archivos
+router.put("/edit/:id", /* authMiddleware,verificarRoles([0,1]), */BibliotecaController.updateFile as any);
 
-
-router.put("/edit/:id", BibliotecaController.updateFile as any);
 
 export default router;
 

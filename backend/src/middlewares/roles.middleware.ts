@@ -7,19 +7,21 @@ import { Request, Response, NextFunction } from 'express';
  */
 export const verificarRoles = (roles: number[]) => {
     return (req: Request, res: Response, next: NextFunction) => {
-        const user = (req as any).user as IUsuario;
+        const user = (req as Request & { user?: IUsuario }).user;
         if (!user) {
-            return res.status(401).json({
+            res.status(401).json({
                 success: false,
                 message: 'No autorizado'
             });
+            return;
         }
 
         if (!roles.includes(user.tipoUsuario)) {
-            return res.status(403).json({
+            res.status(403).json({
                 success: false,
                 message: 'No autorizado'
             });
+            return;
         }
         //si pasa las dos condiciones, entonces el usuario tiene los roles permitidos
         next();
