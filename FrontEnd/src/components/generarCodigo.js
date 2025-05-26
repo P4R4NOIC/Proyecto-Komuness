@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export const GenerarCodigo = () => {
   const [codigo, setCodigo] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+  const datosUsuario = location.state; // Aquí llegan los datos del formulario anterior
 
   const generarCodigo = () => {
     const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -13,10 +15,26 @@ export const GenerarCodigo = () => {
       nuevoCodigo += caracteres[index];
     }
     setCodigo(nuevoCodigo);
+
+    // Combina los datos del usuario + código y guarda en un JSON
+    const datosFinales = {
+      ...datosUsuario,
+      codigo: nuevoCodigo
+    };
+
+    // Guardar como archivo JSON en local (simulado aquí con consola)
+    console.log("Datos completos a guardar:", datosFinales);
+
+    // También puedes hacer un POST a un backend aquí si deseas
+    // fetch('http://localhost:3000/usuarios', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(datosFinales)
+    // });
   };
 
   const salir = () => {
-    navigate('/*');
+    navigate('/');
   };
 
   return (

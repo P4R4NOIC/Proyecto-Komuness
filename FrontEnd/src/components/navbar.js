@@ -9,7 +9,7 @@ import logo from "../images/logo.png";
 import { useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
-  var goToLogin = true;
+  var goToLogin = false;
 
 
   const [nav, setNav] = useState(false);
