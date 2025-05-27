@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { IUsuario as Usuario } from '../interfaces/usuario.interface';
+import { IUsuario, IUsuario as Usuario } from '../interfaces/usuario.interface';
 import { modelUsuario } from '../models/usuario.model';
-import { generarToken } from '../utils/jwt';
+import { generarToken, verificarToken } from '../utils/jwt';
 import { hashPassword, comparePassword } from '../utils/bcryptjs';
 
 // Controlador para crear un usuario
@@ -113,7 +113,7 @@ export const loginUsuario = async (req: Request, res: Response): Promise<void> =
  * @returns: void
  */
 export const registerUsuario = async (req: Request, res: Response): Promise<void> => {
-    const { nombre, apellido, email, password, tipoUsuario } = req.body;
+    const { nombre, apellido, email, password, tipoUsuario, codigo } = req.body;
     try {
         //verificamos si el usuario ya existe
         const usuario = await modelUsuario.findOne({ email });
@@ -128,10 +128,38 @@ export const registerUsuario = async (req: Request, res: Response): Promise<void
             apellido,
             email,
             password: hashedPassword,
-            tipoUsuario
+            tipoUsuario,
+            codigo
         });
         await newUsuario.save();
         res.status(201).json({ message: 'Usuario creado', user: newUsuario });
+    } catch (error) {
+        const err = error as Error;
+        console.log(err);
+        res.status(500).json({ message: err.message });
+    }
+}
+
+/**
+ * checkAuth: verifica si el usuario esta autenticado en la aplicacion
+ * @param req: Request
+ * @param res: Response
+ * @returns: void
+ */
+export const checkAuth = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { token } = req.cookies;
+        if (!token) {
+            res.status(401).json({ message: 'Token no proporcionado' });
+            return;
+        }
+        //verificamos el token
+        const usuario: unknown = await verificarToken(token);
+        if (!usuario) {
+            res.status(401).json({ message: 'No autorizado' });
+            return;
+        }
+        res.status(200).json({ message: 'Autorizado', user: usuario });
     } catch (error) {
         const err = error as Error;
         console.log(err);

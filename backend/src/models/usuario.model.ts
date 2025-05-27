@@ -7,6 +7,7 @@ const usuarioSchema = new Schema({
     email: { type: String, required: true },
     password: { type: String, required: true },
     tipoUsuario: { type: Number, required: true },
+    codigo: { type: String, required: true },
 });
 
 export const modelUsuario = model<IUsuario>('Usuario', usuarioSchema);

@@ -7,7 +7,7 @@ export const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 
 //generamos un token con el objeto usuario
 export const generarToken = (usuario: IUsuario): string => {
-    const token = jwt.sign({ usuario }, JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ usuario }, JWT_SECRET, { expiresIn: '1d' });
     return token;
 }
 

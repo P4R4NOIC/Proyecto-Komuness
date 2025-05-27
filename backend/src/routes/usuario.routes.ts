@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createUsuario, deleteUsuario, getUsuarioById, getUsuarios, updateUsuario, loginUsuario, registerUsuario } from '../controllers/usuario.controller';
+import { createUsuario, deleteUsuario, getUsuarioById, getUsuarios, updateUsuario, loginUsuario, registerUsuario, checkAuth } from '../controllers/usuario.controller';
 import { authMiddleware } from '@/middlewares/auth.middleware';
 import { verificarRoles } from '@/middlewares/roles.middleware';
 
@@ -14,5 +14,6 @@ router.put('/:id',/* authMiddleware,verificarRoles([0,1,2]), */ updateUsuario); 
 // para cualquier usuario registrado o no registrados
 router.post('/login', loginUsuario); //login
 router.post('/register', registerUsuario); //register
+router.get('/check', checkAuth);// verificar el token
 
 export default router;

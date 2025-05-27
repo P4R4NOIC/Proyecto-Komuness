@@ -6,4 +6,5 @@ export interface IUsuario extends Document {
     email: string;
     password: string;
     tipoUsuario: number;
+    codigo: string;
 }
