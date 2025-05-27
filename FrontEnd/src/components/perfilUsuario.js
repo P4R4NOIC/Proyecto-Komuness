@@ -7,6 +7,7 @@ import "../CSS/perfilUsuario.css";
 export const PerfilUsuario = () => {
   const [publicaciones, setPublicaciones] = useState([]);
   const [archivos, setArchivos] = useState([]);
+   var usuario = JSON.parse(localStorage.getItem("user")) ;
 
   useEffect(() => {
     fetch(
@@ -132,19 +133,21 @@ export const PerfilUsuario = () => {
       <div className="paginaUsuario flex flex-col items-center gap-4 w-full md:w-1/3">
         <AiOutlineUser size={150} className="text-white" />
 
-        <div className="text-white text-center md:text-left">
-          <div>
-            <span className="text-xl font-semibold">Nombre de usuario</span>
-          </div>
-          <div>
-            <a
-              href="mailto:correo@ejemplo.com"
-              className="text-blue-400 hover:underline"
-            >
-              correo@ejemplo.com
+       <div className="text-white text-center md:text-left">
+        <div>
+          <span className="text-xl font-semibold">
+            {usuario?.nombre} {usuario?.apellido}
+          </span>
+        </div>
+        <div>
+          <a
+            href={`mailto:${usuario?.email}`}
+            className="text-blue-400 hover:underline"
+          >
+              {usuario?.email}
             </a>
           </div>
-        </div>
+        </div>  
       </div>
 
       <div className="w-full md:w-2/3 flex flex-col gap-4 bg-white rounded-lg shadow p-4">

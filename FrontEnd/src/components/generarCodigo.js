@@ -25,7 +25,7 @@ export const GenerarCodigo = () => {
     // Guardar como archivo JSON en local (simulado aquí con consola)
     console.log("Datos completos a guardar:", datosFinales);
 
-    // También puedes hacer un POST a un backend aquí si deseas
+   
     // fetch('http://localhost:3000/usuarios', {
     //   method: 'POST',
     //   headers: { 'Content-Type': 'application/json' },

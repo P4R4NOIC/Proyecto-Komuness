@@ -9,7 +9,16 @@ import logo from "../images/logo.png";
 import { useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
-  var goToLogin = false;
+  var usuario = JSON.parse(localStorage.getItem("user"));
+
+  console.log(usuario)
+  var goToLogin;
+  if(usuario !== null ){
+    goToLogin = true;
+  }else{
+    goToLogin = false;
+  }
+  
 
 
   const [nav, setNav] = useState(false);

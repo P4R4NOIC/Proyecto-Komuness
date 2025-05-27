@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import '../CSS/fuenteKomuness.css';
 
 export const InitForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [mostrarContrasena, setMostrarContrasena] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,10 +25,20 @@ export const InitForm = () => {
 
       if (response.ok) {
         console.log('Login exitoso:', data);
-        // Aquí puedes redirigir o guardar token, etc.
+
+        
+    
+      const userData = { ...data.user };
+      delete userData.password;
+
+      // Guardar en localStorage
+      localStorage.setItem('user', JSON.stringify(userData));
+
+      
+        navigate('/');
+        
       } else {
         console.error('Error en login:', data.message || 'Error desconocido');
-        // Aquí puedes mostrar un mensaje de error
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);
@@ -57,15 +70,26 @@ export const InitForm = () => {
             <label htmlFor="password" className="block text-base mb-2">
               Contraseña
             </label>
-            <input
-              id="password"
-              type="password"
-              placeholder="********"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-5 py-3 rounded-xl bg-[#404270] border-none text-[#f0f0f0] focus:ring-2 focus:ring-[#5445ff] outline-none"
-              required
-            />
+            <div className="relative">
+              <input
+                id="password"
+                type={mostrarContrasena ? 'text' : 'password'}
+                placeholder="********"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full px-5 py-3 rounded-xl bg-[#404270] border-none text-[#f0f0f0] focus:ring-2 focus:ring-[#5445ff] outline-none pr-12"
+                required
+              />
+              <button
+                type="button"
+                onMouseDown={() => setMostrarContrasena(true)}
+                onMouseUp={() => setMostrarContrasena(false)}
+                onMouseLeave={() => setMostrarContrasena(false)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-[#ffbf30] hover:underline"
+              >
+                Ver
+              </button>
+            </div>
             <div className="text-right mt-2">
               <a href="/recuperar" className="text-sm text-[#ffbf30] hover:underline">
                 ¿Olvidaste tu contraseña?

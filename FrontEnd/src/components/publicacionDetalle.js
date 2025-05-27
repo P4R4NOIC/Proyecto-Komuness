@@ -9,6 +9,8 @@ export const PublicacionDetalle = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  var usuario = JSON.parse(localStorage.getItem("user"))
+
   const [comentarios, setComentarios] = useState([]);
   const publicacion = location.state?.publicacion;
 
@@ -74,6 +76,7 @@ export const PublicacionDetalle = () => {
           comentarios={comentarios}
           setComentarios={setComentarios}
           publicacionId={publicacion._id}
+          usuario={usuario}
         />
       </div>
     </div>
