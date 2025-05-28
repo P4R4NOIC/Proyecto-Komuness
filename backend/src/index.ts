@@ -20,7 +20,7 @@ app.use(cors(
             'http://localhost:3001',
             'http://localhost:3000',
             'https://proyecto-komuness-front.vercel.app',
-            'https://komuness-project.netlify.app/'
+            'https://komuness-project.netlify.app'
         ],
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         credentials: true
