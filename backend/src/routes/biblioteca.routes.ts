@@ -1,8 +1,8 @@
 import multer from "multer";
 import { Router } from "express";
 import BibliotecaController from "../controllers/biblioteca.controller";
-import { authMiddleware } from "@/middlewares/auth.middleware";
-import { verificarRoles } from "@/middlewares/roles.middleware";
+import { authMiddleware } from "../middlewares/auth.middleware";
+import { verificarRoles } from "../middlewares/roles.middleware";
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -118,7 +118,7 @@ router.route("/buscar").get(BibliotecaController.filterArchivo as any);
  *      error: error.message
  *  }
  */
-router.get("/list/:id", BibliotecaController.list as any);
+router.get("/list/:id", /*authMiddleware, verificarRoles([0, 1]),*/ BibliotecaController.list as any);
 /**FUNCIONA
  * Posibles respuestas del endpoint:
  * HTTP 200:

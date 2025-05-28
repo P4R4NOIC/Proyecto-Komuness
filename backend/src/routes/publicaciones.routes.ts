@@ -1,8 +1,8 @@
 import multer from "multer";
 import { Router } from 'express';
 import { createPublicacion, getPublicacionById, updatePublicacion, deletePublicacion, addComentario, getPublicacionesByTag, filterPublicaciones, createPublicacionA } from '../controllers/publicacion.controller';
-import { authMiddleware } from "@/middlewares/auth.middleware";
-import { verificarRoles } from "@/middlewares/roles.middleware";
+import { authMiddleware } from "../middlewares/auth.middleware";
+import { verificarRoles } from "../middlewares/roles.middleware";
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 const router = Router();

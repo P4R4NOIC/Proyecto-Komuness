@@ -6,15 +6,22 @@ import usuarioRoutes from './routes/usuario.routes';
 import publicacionRoutes from './routes/publicaciones.routes';
 import bibliotecaRoutes from './routes/biblioteca.routes';
 import { sendEmail } from './utils/mail';
+import cookieParser from 'cookie-parser';
 
 const app: Express = express();
 dotenv.config();
 
 app.disable('x-powered-by');
+app.use(cookieParser())
 app.use(express.json());
 app.use(cors(
     {
-        origin: '*',
+        origin: [
+            'http://localhost:3001',
+            'http://localhost:3000',
+            'https://proyecto-komuness-front.vercel.app',
+            'https://komuness-project.netlify.app/'
+        ],
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         credentials: true
     }

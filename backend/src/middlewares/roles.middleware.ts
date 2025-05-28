@@ -11,7 +11,7 @@ export const verificarRoles = (roles: number[]) => {
         if (!user) {
             res.status(401).json({
                 success: false,
-                message: 'No autorizado'
+                message: 'No hay usuario'
             });
             return;
         }
@@ -19,7 +19,7 @@ export const verificarRoles = (roles: number[]) => {
         if (!roles.includes(user.tipoUsuario)) {
             res.status(403).json({
                 success: false,
-                message: 'No autorizado'
+                message: 'No tienes los suficientes permisos'
             });
             return;
         }

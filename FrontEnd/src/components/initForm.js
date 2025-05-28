@@ -12,7 +12,7 @@ export const InitForm = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('https://proyecto-komuness-backend.vercel.app/usuario/login', {
+      const response = await fetch('http://localhost:3000/usuario/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,17 +26,17 @@ export const InitForm = () => {
       if (response.ok) {
         console.log('Login exitoso:', data);
 
-        
-    
-      const userData = { ...data.user };
-      delete userData.password;
 
-      // Guardar en localStorage
-      localStorage.setItem('user', JSON.stringify(userData));
 
-      
+        const userData = { ...data.user };
+        delete userData.password;
+
+        // Guardar en localStorage
+        localStorage.setItem('user', JSON.stringify(userData));
+
+
         navigate('/');
-        
+
       } else {
         console.error('Error en login:', data.message || 'Error desconocido');
       }
