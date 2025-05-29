@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import '../CSS/publicaciones.css'
 import PublicacionCard from './publicacionCard';
+import FormularioPublicacion from '../pages/formulario';
+import { useAuth } from './context/AuthContext';
 
 
 export const Publicaciones = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const [mostrar, setMostrar] = useState(0);
   const [cards, setCards] = useState([]);
@@ -12,9 +15,9 @@ export const Publicaciones = () => {
   const [offset, setOffset] = useState(0);
   const limite = 10; // Definimos cuántas publicaciones por página
   const [tag, setTag] = useState(null);
+  const [formulario, setFormulario] = useState(false);
 
-
-
+  const { user } = useAuth();
 
   const [publicaciones, setPublicaciones] = useState([]);
 
@@ -113,6 +116,22 @@ export const Publicaciones = () => {
           </button>
         )}
       </div>
+      <button
+        onClick={() => {
+          if(user){
+            setFormulario(true)
+          } else {
+            navigate('/iniciarSesion')
+          }
+        }}
+        className="fixed bottom-4 right-4 md:bottom-6 md:right-6 bg-blue-600 text-white w-14 h-14 md:w-16 md:h-16 rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 z-50 flex items-center justify-center text-2xl"
+      >
+        +
+      </button>
+      <FormularioPublicacion
+        isOpen={formulario}
+        onClose={()=>setFormulario(false)}
+      />
     </div>
 
 

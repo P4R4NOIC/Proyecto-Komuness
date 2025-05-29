@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AiOutlineUser } from "react-icons/ai";
 import { toast } from "react-hot-toast";
 
 import "../CSS/perfilUsuario.css";
+import { useAuth } from "./context/AuthContext";
 
 export const PerfilUsuario = () => {
+  const navigate = useNavigate();
   const [publicaciones, setPublicaciones] = useState([]);
   const [archivos, setArchivos] = useState([]);
-  var usuario = JSON.parse(localStorage.getItem("user"));
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     fetch(
@@ -142,20 +145,33 @@ export const PerfilUsuario = () => {
         <div className="text-white text-center md:text-left">
           <div>
             <span className="text-xl font-semibold">
-              {usuario?.nombre} {usuario?.apellido}
+              {user?.nombre} {user?.apellido}
             </span>
           </div>
           <div>
             <a
-              href={`mailto:${usuario?.email}`}
+              href={`mailto:${user?.email}`}
               className="text-blue-400 hover:underline"
             >
-              {usuario?.email}
+              {user?.email}
             </a>
+          </div>
+          <div>
+            <button
+              onClick={() => {
+                logout();
+                navigate('/');
+
+              }}
+              className="mt-4 bg-red-500 hover:bg-red-600 text-white font-medium px-4 py-2 rounded"
+            >
+              Cerrar sesión
+            </button>
           </div>
         </div>
       </div>
 
+{user && user.tipoUsuario === 0 && (
       <div className="w-full md:w-2/3 flex flex-col gap-4 bg-white rounded-lg shadow p-4">
         <h1 className="text-black">Dashboard Administrativo</h1>
         <div className="overflow-x-auto max-h-[300px] overflow-y-auto bg-white rounded-lg shadow p-4">
@@ -266,6 +282,7 @@ export const PerfilUsuario = () => {
           </table>
         </div>
       </div>
+      )}
     </div>
   );
 };

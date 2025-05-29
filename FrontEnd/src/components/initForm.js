@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../CSS/fuenteKomuness.css';
+import { useAuth } from '../components/context/AuthContext';
+
 
 export const InitForm = () => {
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
@@ -26,14 +29,12 @@ export const InitForm = () => {
       if (response.ok) {
         console.log('Login exitoso:', data);
 
-
-
         const userData = { ...data.user };
         delete userData.password;
 
         // Guardar en localStorage
         localStorage.setItem('user', JSON.stringify(userData));
-
+        login(userData);
 
         navigate('/');
 

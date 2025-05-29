@@ -34,20 +34,17 @@ export const Navbar = () => {
      <a href = "*"><img src={logo} className="logo" alt="/" /></a> 
       <nav>
         <ul className={nav ? ["menu", "activo"].join(" ") : ["menu"]}>
+          <li onClick={() => handleNavigation("/publicaciones")}>
+            <span>Publicaciones</span>
+          </li>
           <li onClick={() => handleNavigation("/eventos")}>
             <span>Eventos</span>
           </li>
           <li onClick={() => handleNavigation("/emprendimientos")}>
             <span>Emprendimientos</span>
           </li>
-          <li onClick={() => handleNavigation("/publicaciones")}>
-            <span>Publicaciones</span>
-          </li>
           <li onClick={() => handleNavigation("/biblioteca")}>
             <span>Biblioteca</span>
-          </li>
-          <li onClick={() => handleNavigation("/formulario")}>
-            <span>Crear</span>
           </li>
          
           <li onClick={() => handleNavigation(goToLogin ? "/perfilUsuario" : "/iniciarSesion")}>

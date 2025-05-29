@@ -26,7 +26,6 @@ export const Rutas = () =>{
                 <Route path = "/biblioteca" element = {<Biblioteca/>}/>
                 <Route path = "/biblioteca/:id" element = {<BibliotecaFolder/>}/>
                 <Route path = "/perfilUsuario" element= {<PerfilUsuario/>}/>
-                <Route path = "/formulario" element= {<FormularioPublicacion/>}/>
                 <Route path = "/iniciarSesion" element= {<IniciarSesion/>}/>
                 <Route path = "/recuperar" element= {<RecuperarContra/>}/>
                 <Route path = "/nuevaCont" element= {<NuevaContra/>}/>

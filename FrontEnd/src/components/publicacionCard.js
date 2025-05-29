@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PublicacionModal from "./publicacionModal";
+import { useAuth } from "./context/AuthContext";
 
 export const PublicacionCard = ({ publicacion }) => {
     const navigate = useNavigate();
    
     const [selectedPub, setSelectedPub] = useState(false);
-
+    const { user } = useAuth();
     const handleClick = () => {
        
         navigate(`/publicaciones/${publicacion._id}`, { state: { publicacion } });
@@ -49,7 +50,7 @@ export const PublicacionCard = ({ publicacion }) => {
                 </div>
             )}
             </div>
-            {true && (
+            {user && user.tipoUsuario === 0 && (
                 <div>
                     <button className="w-full bg-red-500 py-2 px-4 rounded hover:bg-red-600 mx-auto block"
                         onClick={()=>setSelectedPub(true)}
