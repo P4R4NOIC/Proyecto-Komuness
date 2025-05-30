@@ -249,7 +249,7 @@ export const PerfilUsuario = () => {
                     <td className="px-4 py-2">{item.autor ? item.autor : "Sin autor"}</td>
                     <td className="px-4 py-2">{item.nombre}</td>
                     <td className="px-4 py-2">{formatearTamano(item.tamano)}</td>
-                    <td className="px-4 py-2">{item.fechaSubida}</td>
+                    <td className="px-4 py-2">{item.fechaSubida ? new Date(item.fechaSubida).toLocaleDateString('es-ES') : 'Fecha no disponible'}</td>
                     <td className="px-4 py-2 space-x-2">
                       <div className="flex flex-col gap-2 justify-center">
                         <button
