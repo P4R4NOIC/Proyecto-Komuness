@@ -24,19 +24,48 @@ export const Biblioteca = () => {
   const [selectedDoc, setSelectedDoc] = useState(null);
   const handleOpenModal = (doc) => setSelectedDoc(doc);
   const handleCloseModal = () => setSelectedDoc(null);
+  
   const handleDownload = () => {
     
     const link = document.createElement('a');
     link.href = selectedDoc.url;
-    link.download = selectedDoc.nombre || 'archivo'; // nombre sugerido para guardar
+    link.target = '_blank'; 
+    link.rel = 'noopener noreferrer'; 
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
 
     handleCloseModal();
   };
+
+  const handleDelete = async () => {
+    try {
+      await toast.promise(
+        fetch(`https://proyecto-komuness-backend.vercel.app/biblioteca/delete/${selectedDoc.id}`, {
+          method: "DELETE",
+        }).then((res) => {
+          if (!res.ok) throw new Error("No se pudo eliminar el archivo");
+          return res.json();
+        }),
+        {
+          loading: "Eliminando archivo...",
+          success: "¡Archivo eliminado!",
+          error: "Error al eliminar el archivo",
+        }
+      );
+
+      setDocumentos((prevDocs) =>
+        prevDocs.filter((doc) => doc.id !== selectedDoc.id)
+      );
+
+      handleCloseModal();
+    } catch (error) {
+      // El error ya fue mostrado con toast, no es necesario hacer más
+    }
+  };
+
   const { user } = useAuth();
-  console.log(user.nombre)
+  
   const [documentos, setDocumentos] = useState([]);
 
   const modalIconMap = {
@@ -155,8 +184,9 @@ export const Biblioteca = () => {
         }),
       {
         loading: 'Subiendo archivos...',
-        success: 'Archivos subidos con éxito 🎉',
+        success: 'Archivos subidos con éxito, solicita a un administrador que lo publique 🎉',
         error: (err) => `Error: ${err.message}`,
+        duration: 8000,
       }
     );
 
@@ -191,14 +221,15 @@ export const Biblioteca = () => {
   useEffect(() => {
     const obtenerArchivos = async () => {
       try {
-        const response = await fetch(`https://proyecto-komuness-backend.vercel.app/biblioteca/list/${ubicacion}`);
+        const response = await fetch(`https://proyecto-komuness-backend.vercel.app/biblioteca/list/${ubicacion}?publico=true`);
         const data = await response.json();
         const archivos = data.contentFile.map(file => ({
           nombre: file.nombre,
           autor: file.autor,
           size: `${(file.tamano / (1024 * 1024)).toFixed(2)} MB`,
           tag: mapTipoArchivo(file.tipoArchivo),
-          url: file.url
+          url: file.url,
+          id: file._id
         }));
 
         const carpetas = data.contentFolder.map(folder => ({
@@ -238,7 +269,9 @@ export const Biblioteca = () => {
       <h1 className="text-4xl sm:text-5xl font-bold text-white drop-shadow-[0_2px_6px_rgba(0,0,0,1)]">
         <span className="text-gray-200">Biblioteca</span>
       </h1>
-
+      {user && user.tipoUsuario === 0 && (
+        
+      
       <div className="flex flex-wrap justify-center gap-4 w-full max-w-6xl p-4">
         <div
           {...getRootProps()}
@@ -282,7 +315,7 @@ export const Biblioteca = () => {
         )}
 
       </div>
-
+      )}
       <div className="w-full px-4 py-2 text-black">
         <form className="flex flex-col md:flex-row gap-2 md:items-center w-full">
 
@@ -351,6 +384,7 @@ export const Biblioteca = () => {
         icon={modalIconMap[selectedDoc?.tag] || modalIconMap.default}
         onClose={handleCloseModal}
         onDownload={handleDownload}
+        onDelete={handleDelete}
       />
 
     </div>

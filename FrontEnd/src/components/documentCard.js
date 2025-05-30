@@ -14,7 +14,7 @@ import {
 } from 'react-icons/ai'
 
 
-export const DocumentCard = ({ name, author, type = 'defiault', size, onClick }) => {
+export const DocumentCard = ({ name, author, type = 'default', size, onClick }) => {
    
   
 
