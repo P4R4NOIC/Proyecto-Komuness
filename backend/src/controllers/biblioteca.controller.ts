@@ -112,8 +112,8 @@ class BibliotecaController {
      */
     static async list(req: Request, res: Response) {
         const { id } = req.params;
-        const { nombre, global, publico } = req.query;
-
+        const { nombre, global, publico, orden } = req.query;
+        const ordenamiento = orden === 'asc' ? 1 : -1;
         if (!id) {
             return res.status(400).json({
                 success: false,
@@ -121,21 +121,26 @@ class BibliotecaController {
                 errors: []
             });
         }
-        
+
         const queryArchivos = {
             ...(global !== 'true' && { folder: id !== '0' ? id : null }),
             ...(nombre && { nombre: { $regex: nombre, $options: 'i' } }),
             ...(publico !== undefined && { esPublico: publico === 'true' })
         };
-    
+
         const queryFolders = {
             ...(global !== 'true' && { directorioPadre: id !== '0' ? id : null }),
             ...(nombre && { nombre: { $regex: nombre, $options: 'i' } })
         };
 
         try {
-            const archivos = await Archivo.find(queryArchivos);
-            const folders = await Folder.find(queryFolders);
+            const archivos = await Archivo.find(queryArchivos)
+                .populate('autor', 'nombre')
+                .collation({ locale: 'es', strength: 2 })
+                .sort({ nombre: ordenamiento });
+            const folders = await Folder.find(queryFolders)
+                .collation({ locale: 'es', strength: 2 })
+                .sort({ nombre: ordenamiento });
 
             return res.status(200).json({
                 success: true,
@@ -377,12 +382,12 @@ class BibliotecaController {
     }
 
     static async updateFile(req: Request, res: Response) {
-        try{
+        try {
             const { id } = req.params;
             const data: Partial<IArchivo> = req.body;
-            const resultado = await Archivo.findByIdAndUpdate(id,data,{new: true});
-    
-            if(!resultado){
+            const resultado = await Archivo.findByIdAndUpdate(id, data, { new: true });
+
+            if (!resultado) {
                 res.status(404).json({
                     message: 'No se pudo editar el archivo'
                 })
@@ -391,7 +396,7 @@ class BibliotecaController {
             res.status(200).json({
                 resultado
             })
-        }catch(error){
+        } catch (error) {
             const err = error as Error;
             res.status(500).json({
                 message: err.message
