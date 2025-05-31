@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { API_URL } from '../utils/api';
 const ComentariosPub = ({ comentarios, setComentarios, publicacionId }) => {
   const [nuevoComentario, setNuevoComentario] = useState("");
 
@@ -24,7 +24,7 @@ const ComentariosPub = ({ comentarios, setComentarios, publicacionId }) => {
   const enviarComentario = async (comentario) => {
     try {
       const res = await fetch(
-        `https://proyecto-komuness-backend.vercel.app/publicaciones/${publicacionId}/comentarios`,
+        `${API_URL}/publicaciones/${publicacionId}/comentarios`,
         {
           method: "POST",
           headers: {

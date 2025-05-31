@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AiOutlineUser } from "react-icons/ai";
 import { toast } from "react-hot-toast";
-
+import { API_URL } from '../utils/api';
 import "../CSS/perfilUsuario.css";
 import { useAuth } from "./context/AuthContext";
 
@@ -14,7 +14,7 @@ export const PerfilUsuario = () => {
 
   useEffect(() => {
     fetch(
-      `https://proyecto-komuness-backend.vercel.app/publicaciones/?publicado=false`,
+      `${API_URL}/publicaciones/?publicado=false`,
       {
         credentials: "include",
       }
@@ -26,7 +26,7 @@ export const PerfilUsuario = () => {
 
   useEffect(() => {
     fetch(
-      `https://proyecto-komuness-backend.vercel.app/biblioteca/list/0?publico=false&global=true`,
+      `${API_URL}/biblioteca/list/0?publico=false&global=true`,
       {
         credentials: "include",
       }
@@ -38,7 +38,7 @@ export const PerfilUsuario = () => {
 
   const aceptarPost = async (id) => {
     const promesa = fetch(
-      `https://proyecto-komuness-backend.vercel.app/publicaciones/${id}`,
+      `${API_URL}/publicaciones/${id}`,
       {
         method: "PUT", // o PATCH, según tu API
         headers: { "Content-Type": "application/json" },
@@ -62,7 +62,7 @@ export const PerfilUsuario = () => {
 
   const rechazarPost = async (id) => {
     const promesa = fetch(
-      `https://proyecto-komuness-backend.vercel.app/publicaciones/${id}`,
+      `${API_URL}/publicaciones/${id}`,
       {
         method: "DELETE",
       }
@@ -92,7 +92,7 @@ export const PerfilUsuario = () => {
 
   const aceptarArchivo = async (id) => {
     const promesa = fetch(
-      `https://proyecto-komuness-backend.vercel.app/biblioteca/edit/${id}`,
+      `${API_URL}/biblioteca/edit/${id}`,
       {
         method: "PUT", // o PATCH, según tu API
         headers: { "Content-Type": "application/json" },
@@ -116,7 +116,7 @@ export const PerfilUsuario = () => {
 
   const rechazarArchivo = async (id) => {
     const promesa = fetch(
-      `https://proyecto-komuness-backend.vercel.app/biblioteca/delete/${id}`,
+      `${API_URL}/biblioteca/delete/${id}`,
       {
         method: "DELETE",
       }

@@ -17,6 +17,7 @@ import {
 import { useDropzone } from 'react-dropzone'
 import { toast } from "react-hot-toast";
 import { useAuth } from "../components/context/AuthContext";
+import { API_URL } from '../utils/api';
 
 export const Biblioteca = () => {
   const navigate = useNavigate();
@@ -38,10 +39,14 @@ export const Biblioteca = () => {
     handleCloseModal();
   };
 
+  const apiUrl = process.env.REACT_APP_BACKEND_URL;
+  console.log('URL de la API:', apiUrl);
+
+
   const handleDelete = async () => {
     try {
       await toast.promise(
-        fetch(`https://proyecto-komuness-backend.vercel.app/biblioteca/delete/${selectedDoc.id}`, {
+        fetch(`${API_URL}/biblioteca/delete/${selectedDoc.id}`, {
           method: "DELETE",
         }).then((res) => {
           if (!res.ok) throw new Error("No se pudo eliminar el archivo");
@@ -171,7 +176,7 @@ export const Biblioteca = () => {
   
 
     await toast.promise(
-      fetch('https://proyecto-komuness-backend.vercel.app/biblioteca/upload/', {
+      fetch(`${API_URL}/biblioteca/upload/`, {
         method: 'POST',
         body: data,
       })
@@ -201,7 +206,7 @@ export const Biblioteca = () => {
     console.log("Buscando: ", { nombre, etiqueta })
 
     try {
-      const respuesta = await fetch(`https://proyecto-komuness-backend.vercel.app/biblioteca/list/0?nombre=${nombre}&etiqueta=${etiqueta}&global=true&publico=true`);
+      const respuesta = await fetch(`${API_URL}/biblioteca/list/0?nombre=${nombre}&etiqueta=${etiqueta}&global=true&publico=true`);
       const datos = await respuesta.json();
       const archivos = datos.contentFile.map(file => ({
           nombre: file.nombre,
@@ -232,7 +237,7 @@ export const Biblioteca = () => {
   useEffect(() => {
     const obtenerArchivos = async () => {
       try {
-        const response = await fetch(`https://proyecto-komuness-backend.vercel.app/biblioteca/list/${ubicacion}?publico=true`);
+        const response = await fetch(`${API_URL}/biblioteca/list/${ubicacion}?publico=true`);
         const data = await response.json();
         const archivos = data.contentFile.map(file => ({
           nombre: file.nombre,

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../CSS/fuenteKomuness.css';
 import { useAuth } from '../components/context/AuthContext';
-
+import { API_URL } from '../utils/api';
 
 export const InitForm = () => {
   const { login } = useAuth();
@@ -15,7 +15,7 @@ export const InitForm = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('https://proyecto-komuness-backend.vercel.app/usuario/login', {
+      const response = await fetch(`${API_URL}/usuario/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

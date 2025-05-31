@@ -4,7 +4,7 @@ import '../CSS/publicaciones.css'
 import PublicacionCard from './publicacionCard';
 import FormularioPublicacion from '../pages/formulario';
 import { useAuth } from './context/AuthContext';
-
+import { API_URL } from '../utils/api';
 
 export const Publicaciones = () => {
   const navigate = useNavigate();
@@ -63,7 +63,7 @@ export const Publicaciones = () => {
 
   const obtenerPublicaciones = async (tag, offset, limit = 10) => {
     try {
-      const response = await fetch(`https://proyecto-komuness-backend.vercel.app/publicaciones/?tag=${tag}&offset=${offset}&limit=${limit}`);
+      const response = await fetch(`${API_URL}/publicaciones/?tag=${tag}&offset=${offset}&limit=${limit}`);
 
       if (!response.ok) {
         if (response.status === 404) {

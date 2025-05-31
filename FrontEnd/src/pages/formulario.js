@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { IoMdClose } from "react-icons/io";
 import { useAuth } from "../components/context/AuthContext";
+import { API_URL } from '../utils/api';
 
 export const FormularioPublicacion = ({ isOpen, onClose}) => {
   
@@ -61,7 +62,7 @@ export const FormularioPublicacion = ({ isOpen, onClose}) => {
 
     try {
       const response = await fetch(
-        "https://proyecto-komuness-backend.vercel.app/publicaciones/v2/",
+        `${API_URL}/publicaciones/v2/`,
         {
           method: "POST",
           body: data,

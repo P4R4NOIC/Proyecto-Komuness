@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { API_URL } from '../utils/api';
 export const PublicacionModal = ({ name, date, tag, id, isOpen, onClose }) => {
     const navigate = useNavigate();
     if (!isOpen) return null;
@@ -13,7 +14,7 @@ export const PublicacionModal = ({ name, date, tag, id, isOpen, onClose }) => {
         
 
         try {
-            const res = await fetch(`https://proyecto-komuness-backend.vercel.app/publicaciones/${id}`, {
+            const res = await fetch(`${API_URL}/publicaciones/${id}`, {
                 method: "DELETE",
                 headers: {
                 "Content-Type": "application/json"

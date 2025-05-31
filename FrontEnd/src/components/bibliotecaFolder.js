@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import DocumentCard from './documentCard';
 import DocumentModal from './documentModal';
-
+import { API_URL } from '../utils/api';
 import {
   AiFillFilePdf,
   AiFillFileExcel,
@@ -64,7 +64,7 @@ export const BibliotecaFolder = () => {
   useEffect(() => {
     const obtenerArchivos = async () => {
       try {
-        const response = await fetch(`https://proyecto-komuness-backend.vercel.app/biblioteca/list/${id}`);
+        const response = await fetch(`${API_URL}/biblioteca/list/${id}`);
         const data = await response.json();
 
         
