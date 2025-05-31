@@ -246,7 +246,7 @@ export const PerfilUsuario = () => {
               {archivos && archivos.length > 0 ? (
                 archivos.map((item) => (
                   <tr key={item._id} className="border-t">
-                    <td className="px-4 py-2">{item.autor ? item.autor : "Sin autor"}</td>
+                    <td className="px-4 py-2">{item.autor ? item.autor.nombre : "Sin autor"}</td>
                     <td className="px-4 py-2">{item.nombre}</td>
                     <td className="px-4 py-2">{formatearTamano(item.tamano)}</td>
                     <td className="px-4 py-2">{item.fechaSubida ? new Date(item.fechaSubida).toLocaleDateString('es-ES') : 'Fecha no disponible'}</td>
