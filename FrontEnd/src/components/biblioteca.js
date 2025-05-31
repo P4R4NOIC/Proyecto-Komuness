@@ -39,10 +39,6 @@ export const Biblioteca = () => {
     handleCloseModal();
   };
 
-  const apiUrl = process.env.REACT_APP_BACKEND_URL;
-  console.log('URL de la API:', apiUrl);
-
-
   const handleDelete = async () => {
     try {
       await toast.promise(
@@ -237,7 +233,7 @@ export const Biblioteca = () => {
   useEffect(() => {
     const obtenerArchivos = async () => {
       try {
-        const response = await fetch(`${API_URL}/biblioteca/list/${ubicacion}?publico=true`);
+        const response = await fetch(`${API_URL}/biblioteca/list/${ubicacion}?orden=desc&global=true&publico=true`);
         const data = await response.json();
         const archivos = data.contentFile.map(file => ({
           nombre: file.nombre,
