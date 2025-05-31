@@ -111,7 +111,7 @@ export const Biblioteca = () => {
    * en el ejemplo anterior se busca desde la carpeta con <idcarpeta> solo en esa carpeta el "nombreArchivo"
    */
 
-  const maxSize = 10 * 1024 * 1024; // 10 MB
+  const maxSize = 100 * 1024 * 1024; // 100 MB
   const { 
     acceptedFiles, 
     fileRejections,
@@ -124,7 +124,7 @@ export const Biblioteca = () => {
       fileRejections.forEach(({ file, errors }) => {
         errors.forEach(error => {
           if (error.code === 'file-too-large') {
-            toast.error(`El archivo ${file.name} es demasiado grande. Tamaño máximo permitido: ${maxSize / (1024 * 1024)} MB.`);
+            toast.error(`El archivo ${file.name} es demasiado grande. Tamaño máximo permitido: ${maxSize} MB.`);
           } else {
             toast.error(`Error al subir el archivo ${file.name}: ${error.message}`);
           }
@@ -166,7 +166,7 @@ export const Biblioteca = () => {
     acceptedFiles.forEach((archivo) => {
       data.append("archivos", archivo);
     });
-    data.append("userId", user.nombre);
+    data.append("userId", user._id);
 
   
 
@@ -201,19 +201,30 @@ export const Biblioteca = () => {
     console.log("Buscando: ", { nombre, etiqueta })
 
     try {
-      // const respuesta = await fetch("https://api.ejemplo.com/documentos");
-      // const datos = await respuesta.json();
-      const datos = [{
-        nombre: "Informe Final",
-        autor: "Anonimo",
-        size: "2.0 MB",
-        tag: "pdf"
+      const respuesta = await fetch(`https://proyecto-komuness-backend.vercel.app/biblioteca/list/0?nombre=${nombre}&etiqueta=${etiqueta}&global=true&publico=true`);
+      const datos = await respuesta.json();
+      const archivos = datos.contentFile.map(file => ({
+          nombre: file.nombre,
+          autor: file.autor,
+          size: `${(file.tamano / (1024 * 1024)).toFixed(2)} MB`,
+          tag: mapTipoArchivo(file.tipoArchivo),
+          url: file.url,
+          id: file._id
+      }));
+
+      const carpetas = datos.contentFolder.map(folder => ({
+          nombre: folder.nombre,
+          autor: "",
+          size: "",
+          tag: "carpeta",
+          id: folder._id
+      }));
+
+      setDocumentos([...carpetas, ...archivos]);
+        console.log("Archivos obtenidos:", datos);
+      } catch (error) {
+        console.error("Error al obtener archivos:", error);
       }
-      ];
-      setDocumentos(datos);
-    } catch (error) {
-      console.log("Error al buscar documentos:", error);
-    }
   }
 
   // OBTENER TODOS LOS ARCHIVOS
