@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { API_URL } from '../utils/api';
 const ComentariosPub = ({ comentarios, setComentarios, publicacionId }) => {
   const [nuevoComentario, setNuevoComentario] = useState("");
@@ -48,6 +48,8 @@ const ComentariosPub = ({ comentarios, setComentarios, publicacionId }) => {
       agregarComentario();
     }
   };
+  const textareaRef = useRef(null);
+
 
   return (
     <div className="mt-6 p-4 bg-gray-800 rounded-lg shadow-md">
@@ -55,27 +57,44 @@ const ComentariosPub = ({ comentarios, setComentarios, publicacionId }) => {
 
       {/* Caja de comentario solo si el usuario está logueado */}
       {usuarioLogueado && (
-        <div className="mt-4 flex w-full">
-          <img
-            src={usuarioLogueado.avatar || "https://i.pravatar.cc/40"}
-            alt="avatar"
-            className="rounded-full mr-2 w-10 h-10"
-          />
-          <input
-            type="text"
-            value={nuevoComentario}
-            onChange={(e) => setNuevoComentario(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Escribe un comentario..."
-            className="flex-1 p-2 rounded-lg bg-gray-900 text-white border border-gray-600"
-          />
+        <div className="mt-4 w-full flex flex-col sm:flex-row sm:items-start gap-2">
+          <div className="flex flex-col gap-1 w-full">
+            <div className="flex items-start gap-2">
+              <img
+                src={usuarioLogueado.avatar || "https://i.pravatar.cc/40"}
+                alt="avatar"
+                className="rounded-full w-10 h-10 mt-1"
+              />
+              <textarea
+                ref={textareaRef}
+                value={nuevoComentario}
+                onChange={(e) => {
+                  setNuevoComentario(e.target.value);
+                  const textarea = e.target;
+                  textarea.style.height = "auto";
+                  textarea.style.height = `${textarea.scrollHeight}px`;
+                }}
+                onKeyDown={handleKeyDown}
+                placeholder="Escribe un comentario..."
+                className="flex-1 p-2 rounded-lg bg-gray-900 text-white border border-gray-600 resize-none min-h-[40px] max-h-40 overflow-y-auto"
+                rows={1}
+                maxLength={500}
+              />
+            </div>
+            <p className="text-right text-xs text-gray-400">
+              {nuevoComentario.length}/500 caracteres
+            </p>
+          </div>
+
           <button
             onClick={agregarComentario}
-            className="ml-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="self-end sm:self-auto px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
           >
             Comentar
           </button>
         </div>
+
+
       )}
 
       {/* Lista de comentarios */}
