@@ -20,12 +20,33 @@ export const createUsuario = async (req: Request, res: Response): Promise<void> 
 
 // Controlador para obtener todos los usuarios
 export const getUsuarios = async (req: Request, res: Response): Promise<void> => {
+    const { tipoUsuario } = req.query;
+
+    const query: any = {};
+
+    if (tipoUsuario) {
+        // Convertir a array de números
+        const tipos = String(tipoUsuario).split(',').map(Number);
+
+        // Validar que todos sean números
+        if (tipos.some(isNaN)) {
+            res.status(400).json({
+                success: false,
+                message: 'tipoUsuario debe contener números separados por comas'
+            });
+            return;
+        }
+
+        query.tipoUsuario = { $in: tipos };
+    }
+
     try {
-        const usuarios = await modelUsuario.find();
+        const usuarios = await modelUsuario.find(query);
         res.status(200).json(usuarios);
     } catch (error) {
         const err = error as Error;
-        res.status(500).json({ message: err.message });
+        console.log(`Error en ${getUsuarios.name}: ${err.message}`);
+        res.status(500).json({ success: false, message: err.message });
     }
 };
 
