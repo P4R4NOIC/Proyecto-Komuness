@@ -131,6 +131,7 @@ export const Publicaciones = () => {
       <FormularioPublicacion
         isOpen={formulario}
         onClose={()=>setFormulario(false)}
+        openTag={tag}
       />
     </div>
 

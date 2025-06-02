@@ -10,7 +10,7 @@ export const PublicacionCard = ({ publicacion }) => {
     const { user } = useAuth();
     const handleClick = () => {
        
-        navigate(`/publicaciones/${publicacion._id}`, { state: { publicacion } });
+        navigate(`/publicaciones/${publicacion._id}`);
     };
 
     return (
@@ -47,6 +47,13 @@ export const PublicacionCard = ({ publicacion }) => {
                     <div className="tweet-footer">
                         <p className="tweet-date">Publicado el {publicacion.fecha}</p>
                     </div>
+                    {publicacion.adjunto[0]?.url && (
+                        <div className="imagen mt-2">
+                            <img src={publicacion.adjunto[0]?.url ?? "/notFound.jpg"}
+                                alt={publicacion.titulo}
+                                className="object-fill h-40 w-96" />
+                        </div>
+                )}
                 </div>
             )}
             </div>
