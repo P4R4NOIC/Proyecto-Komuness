@@ -1,18 +1,44 @@
 import { IoMdArrowRoundBack } from "react-icons/io";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { API_URL } from "../utils/api";
 
 import Slider from "./slider";
 import ComentariosPub from "./comentariosPub";
 
 export const PublicacionDetalle = () => {
-  const location = useLocation();
   const navigate = useNavigate();
 
   var usuario = JSON.parse(localStorage.getItem("user"))
 
   const [comentarios, setComentarios] = useState([]);
-  const publicacion = location.state?.publicacion;
+  const { id } = useParams();
+  const [publicacion, setPublicacion] = useState(null);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    const obtenerPublicacion = async () => {
+      try {
+        setCargando(true);
+        setError(null);
+
+        const response = await fetch(`${API_URL}/publicaciones/${id}`);
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.mensaje || "No se encontró la publicación");
+        }
+        setPublicacion(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setCargando(false);
+      }
+    }
+    if (id) {
+      obtenerPublicacion();
+    }
+  }, [id]);
 
   useEffect(() => {
     if (publicacion?.comentarios) {
@@ -20,12 +46,33 @@ export const PublicacionDetalle = () => {
     }
   }, [publicacion]);
 
-  if (!publicacion) {
+  if (cargando) {
     return (
-      <h2 className="text-center text-xl font-semibold mt-10">
-        Publicación no encontrada
-      </h2>
+    <div className="flex flex-col items-center justify-center mt-10 bg-gray-800/80">
+      <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-3"></div>
+      <h2 className="text-white-600">Cargando publicación...</h2>
+    </div>
+  );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center py-20">
+        <div className="flex flex-col justify-center items-center h-96 bg-gray-900/80 text-white rounded-lg shadow-lg p-8 w-full max-w-md text-center">
+          <p className="text-lg mb-4">{error}</p>
+          <button
+            onClick={() => (window.location.href = "/publicaciones")}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
+          >
+            Volver a publicaciones
+          </button>
+        </div>
+      </div>
     );
+  }
+
+  if (!publicacion) {
+    return null; 
   }
 
   return (
