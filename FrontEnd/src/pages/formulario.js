@@ -6,7 +6,7 @@ import { toast } from "react-hot-toast";
 export const FormularioPublicacion = ({ isOpen, onClose, openTag}) => {
   
   const { user } = useAuth();
-  const [formData, setFormData] = useState({
+  const valoresIniciales = {
     titulo: "",
     contenido: "",
     autor: "",
@@ -17,16 +17,20 @@ export const FormularioPublicacion = ({ isOpen, onClose, openTag}) => {
     publicado: false,
     fechaEvento: "",
     precio: "",
+  };
+  const [formData, setFormData] = useState({
+    ...valoresIniciales,
+    tag: openTag || "",
   });
-
+  
   useEffect(() => {
-    if (openTag) {
-      setFormData((prev) => ({
-        ...prev,
-        tag: openTag,
-      }));
+    if (isOpen) {
+      setFormData({
+        ...valoresIniciales,
+        tag: openTag || "",
+      });
     }
-  }, [openTag]);
+  }, [isOpen, openTag]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -183,13 +187,14 @@ Descripción del evento:`}
                 <div>
                   {/* Precio */}
                   
-                  <label className="block font-semibold">Precio:</label>
+                  <label className="block font-semibold">Precio en colones:</label>
                   <input
                     type="number"
                     name="precio"
                     value={formData.precio}
                     onChange={handleChange}
                     className="w-full p-2 border rounded"
+                    required
                   />
                   
                   
@@ -205,6 +210,7 @@ Descripción del evento:`}
                   multiple
                   onChange={handleImageChange}
                   className="w-full p-2 border rounded"
+                  required={formData.tag !== "publicacion"}
                 />
               </div>
               {/* Vista previa de imágenes */}
