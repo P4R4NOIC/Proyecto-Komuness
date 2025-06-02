@@ -1,12 +1,11 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
 import { useAuth } from "../components/context/AuthContext";
 import { API_URL } from '../utils/api';
-
-export const FormularioPublicacion = ({ isOpen, onClose}) => {
+import { toast } from "react-hot-toast";
+export const FormularioPublicacion = ({ isOpen, onClose, openTag}) => {
   
   const { user } = useAuth();
-  
   const [formData, setFormData] = useState({
     titulo: "",
     contenido: "",
@@ -19,6 +18,15 @@ export const FormularioPublicacion = ({ isOpen, onClose}) => {
     fechaEvento: "",
     precio: "",
   });
+
+  useEffect(() => {
+    if (openTag) {
+      setFormData((prev) => ({
+        ...prev,
+        tag: openTag,
+      }));
+    }
+  }, [openTag]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -43,7 +51,7 @@ export const FormularioPublicacion = ({ isOpen, onClose}) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
-
+    
     const data = new FormData();
 
     data.append("titulo", formData.titulo);
@@ -61,24 +69,36 @@ export const FormularioPublicacion = ({ isOpen, onClose}) => {
     });
 
     try {
-      const response = await fetch(
-        `${API_URL}/publicaciones/v2/`,
-        {
-          method: "POST",
-          body: data,
-        }
-      );
-
-      const result = await response.json(); // Si el servidor responde en JSON
-      if (response.ok) {
-        console.log("Publicación enviada con éxito:", result);
-      } else {
-        console.error("Error al enviar publicación:", result);
-      }
+      await enviarPublicacion(data);
+      onClose(); 
     } catch (error) {
-      console.error("Error de red:", error);
+      // El error ya se mostró con toast
     }
+    
   };
+
+  const enviarPublicacion = async (data) => {
+    const promise = fetch(`${API_URL}/publicaciones/v2/`, {
+      method: "POST",
+      body: data,
+    }).then(async (response) => {
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result?.mensaje || "Error al enviar publicación.");
+      }
+
+      return result;
+    });
+
+    return toast.promise(promise, {
+      loading: "Enviando publicación...",
+      success: "Publicación enviada con éxito, solicita a un administrador que la publique 🎉",
+      error: (err) => err.message || "Error al enviar la publicación",
+      duration: 8000,
+    });
+  };
+
 
   if (!isOpen) return null;
 
@@ -132,6 +152,7 @@ export const FormularioPublicacion = ({ isOpen, onClose}) => {
                   onChange={handleChange}
                   className="w-full p-2 border rounded"
                   required
+                  disabled
                 >
                   <option value="">Selecciona una categoría</option>
                   <option value="publicacion">Publicacion</option>
@@ -148,9 +169,9 @@ export const FormularioPublicacion = ({ isOpen, onClose}) => {
                   value={formData.contenido}
                   onChange={handleChange}
                   className="w-full p-2 border rounded"
-                  placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            Numero de telefono:
-            Enlace de contacto:"
+                  placeholder={`Numero de telefono:
+Enlace de contacto:
+Descripción del evento:`}
                   rows="4"
                   required
                 ></textarea>
@@ -161,31 +182,31 @@ export const FormularioPublicacion = ({ isOpen, onClose}) => {
                 formData.tag === "emprendimiento") && (
                 <div>
                   {/* Precio */}
-                  <div>
-                    <label className="block font-semibold">Precio:</label>
-                    <input
-                      type="number"
-                      name="precio"
-                      value={formData.precio}
-                      onChange={handleChange}
-                      className="w-full p-2 border rounded"
-                    />
-                  </div>
-                  <div>
-                    <label className="block font-semibold">Imágenes:</label>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={handleImageChange}
-                      className="w-full p-2 border rounded"
-                    />
-                  </div>
+                  
+                  <label className="block font-semibold">Precio:</label>
+                  <input
+                    type="number"
+                    name="precio"
+                    value={formData.precio}
+                    onChange={handleChange}
+                    className="w-full p-2 border rounded"
+                  />
+                  
+                  
                 </div>
               )}
 
               {/* Subir imágenes */}
-
+              <div>
+                <label className="block font-semibold">Imágenes:</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageChange}
+                  className="w-full p-2 border rounded"
+                />
+              </div>
               {/* Vista previa de imágenes */}
               {formData.archivos.length > 0 && (
                 <div className="mt-3">
