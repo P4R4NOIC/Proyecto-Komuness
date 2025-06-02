@@ -168,7 +168,9 @@ export const checkAuth = async (req: Request, res: Response): Promise<void> => {
     }
 }
 
-export async function enviarCorreoRecuperacion(email: string): Promise<void> {
+export async function enviarCorreoRecuperacion(req: Request, res: Response): Promise<void> {
+
+    const { email } = req.body;
 
     // setup del transporter de nodemailer para enviar correos 
     const transporter = nodemailer.createTransport({
@@ -202,16 +204,18 @@ export async function enviarCorreoRecuperacion(email: string): Promise<void> {
     try {
         const usuario = await modelUsuario.findOne({ email });
         if (!usuario) {
-            throw new Error('Usuario no encontrado');;
+            res.status(404).json({ message: 'Usuario no encontrado' });
+            throw new Error('Usuario no encontrado');
+        } else {
+            await transporter.sendMail(mailOptions);
+            await modelUsuario.findOneAndUpdate(
+                { email },
+                { password: hashedPassword }
+            );
+            res.status(200).json({ message: 'Correo electrónico enviado con éxito' });
         }
-        await transporter.sendMail(mailOptions);
-        await modelUsuario.findOneAndUpdate(
-            { email },
-            { password: hashedPassword }
-        );
     } catch (error) {
         console.error('Error al enviar el correo electrónico:', error);
     }
-
 }
 
