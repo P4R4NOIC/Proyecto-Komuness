@@ -3,6 +3,7 @@ import { IUsuario, IUsuario as Usuario } from '../interfaces/usuario.interface';
 import { modelUsuario } from '../models/usuario.model';
 import { generarToken, verificarToken } from '../utils/jwt';
 import { hashPassword, comparePassword } from '../utils/bcryptjs';
+const nodemailer = require('nodemailer');
 
 // Controlador para crear un usuario
 export const createUsuario = async (req: Request, res: Response): Promise<void> => {
@@ -166,3 +167,51 @@ export const checkAuth = async (req: Request, res: Response): Promise<void> => {
         res.status(500).json({ message: err.message });
     }
 }
+
+export async function enviarCorreoRecuperacion(email: string): Promise<void> {
+
+    // setup del transporter de nodemailer para enviar correos 
+    const transporter = nodemailer.createTransport({
+        service: 'zoho',
+        host: 'smtp.zoho.com',
+        port: 465,
+        secure: true,
+        auth: {
+            user: process.env.MAIL_USER,
+            pass: process.env.MAIL_PASS
+        }
+    });
+
+    // Generar una nueva contraseña aleatoria
+    const newPassword = Math.random().toString(36).slice(-8);
+    const hashedPassword = await hashPassword(newPassword);
+
+    // opciones del correo electrónico con la nueva contraseña
+    const mailOptions = {
+        from: 'komuness@zohomail.com',
+        to: email,
+        subject: 'Recuperación de contraseña',
+        html: `
+            <p>Has solicitado restablecer tu contraseña.</p>
+            <p>La nueva contraseña para el ingreso a su cuenta será:</p>
+            <p>${newPassword}</p>
+        `
+    };
+
+    // Enviar el correo electrónico y actualizar la contraseña en la base de datos
+    try {
+        const usuario = await modelUsuario.findOne({ email });
+        if (!usuario) {
+            throw new Error('Usuario no encontrado');;
+        }
+        await transporter.sendMail(mailOptions);
+        await modelUsuario.findOneAndUpdate(
+            { email },
+            { password: hashedPassword }
+        );
+    } catch (error) {
+        console.error('Error al enviar el correo electrónico:', error);
+    }
+
+}
+
