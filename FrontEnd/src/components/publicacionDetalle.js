@@ -5,17 +5,20 @@ import { API_URL } from "../utils/api";
 
 import Slider from "./slider";
 import ComentariosPub from "./comentariosPub";
+import PublicacionModal from "./publicacionModal";
+import { useAuth } from "./context/AuthContext";
 
 export const PublicacionDetalle = () => {
   const navigate = useNavigate();
 
-  var usuario = JSON.parse(localStorage.getItem("user"))
-
+  const { user } = useAuth();
+  const [selectedPub, setSelectedPub] = useState(false);
   const [comentarios, setComentarios] = useState([]);
   const { id } = useParams();
   const [publicacion, setPublicacion] = useState(null);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
+  
   useEffect(() => {
     const obtenerPublicacion = async () => {
       try {
@@ -90,7 +93,7 @@ export const PublicacionDetalle = () => {
 
         {
           <div>
-            <h1 className="text-3xl font-bold text-white">
+            <h1 className="text-3xl font-bold text-white flex flex-row items-center justify-between">
               <button
                 type="button"
                 onClick={() => navigate(-1)}
@@ -99,6 +102,24 @@ export const PublicacionDetalle = () => {
                 <IoMdArrowRoundBack color={"black"} size={25} />
               </button>
               {publicacion.titulo}
+              {user && user.tipoUsuario === 0 && (
+                <div>
+                    <button className="w-full bg-red-500 py-2 px-4 rounded hover:bg-red-600 mx-auto block"
+                        onClick={()=>setSelectedPub(true)}
+                    >
+                        Eliminar
+                    </button>
+                    
+                    <PublicacionModal
+                        name = {publicacion.titulo}
+                        date = {publicacion.fecha}
+                        tag = {publicacion.tag}
+                        id = {publicacion._id}
+                        isOpen={selectedPub}
+                        onClose={()=>setSelectedPub(false)}
+                    />
+                </div>
+            )}
             </h1>
             <h2>
               {publicacion.autor
@@ -123,7 +144,7 @@ export const PublicacionDetalle = () => {
           comentarios={comentarios}
           setComentarios={setComentarios}
           publicacionId={publicacion._id}
-          usuario={usuario}
+          usuario={user}
         />
       </div>
     </div>
