@@ -5,29 +5,17 @@ import { verificarRoles } from '@/middlewares/roles.middleware';
 
 const router = Router();
 
+// Endpoint para recuperar contraseña
+router.post("/recuperar-contrasena", enviarCorreoRecuperacion);
 
-router.post("/recuperar-contrasena", async (req, res) => {
-    const { email } = req.body;
-    try {
-        await enviarCorreoRecuperacion(email);
-        res.json({ success: true, message: "Correo enviado" });
-    } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
-        res.status(500).json({ success: false, message: errorMessage });
-    }
-});
-
-
+// Endpoints de autenticación
 router.post('/login', loginUsuario); //login
 router.post('/register', registerUsuario); //register
 router.get('/check', checkAuth);// verificar el token
 
-
 //los siguientes endpoints son de uso exclusivo para el superadmin = 0
 router.post('/',/* authMiddleware,verificarRoles([0]), */ createUsuario); //create
 router.get('/',/* authMiddleware,verificarRoles([0]), */ getUsuarios); //read
-
-
 
 router.get('/:id',/* authMiddleware,verificarRoles([0]), */ getUsuarioById); //read by id
 router.delete('/:id',/* authMiddleware,verificarRoles([0]), */ deleteUsuario); //delete
