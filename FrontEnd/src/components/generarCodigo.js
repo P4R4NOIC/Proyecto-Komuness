@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-
+import { API_URL } from '../utils/api';
 export const GenerarCodigo = () => {
   const [codigo, setCodigo] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
   const datosUsuario = location.state; // Aquí llegan los datos del formulario anterior
 
-  const generarCodigo = () => {
+  const generarCodigo = async () => {
     const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let nuevoCodigo = '';
     for (let i = 0; i < 12; i++) {
@@ -19,18 +19,34 @@ export const GenerarCodigo = () => {
     // Combina los datos del usuario + código y guarda en un JSON
     const datosFinales = {
       ...datosUsuario,
-      codigo: nuevoCodigo
+      codigo: nuevoCodigo,
+      tipoUsuario: 2
     };
 
     // Guardar como archivo JSON en local (simulado aquí con consola)
     console.log("Datos completos a guardar:", datosFinales);
 
    
-    // fetch('http://localhost:3000/usuarios', {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(datosFinales)
-    // });
+      try {
+  const response = await fetch(`${API_URL}/usuario/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(datosFinales)
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    console.error("Error del servidor:", data);
+    alert(`Error al registrar usuario: ${data.message || 'Error desconocido'}`);
+    return;
+  }
+
+  console.log("Registro exitoso:", data);
+} catch (error) {
+  console.error("Error en la solicitud:", error);
+  alert("Error de red o conexión con el servidor");
+}
   };
 
   const salir = () => {

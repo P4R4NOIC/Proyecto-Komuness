@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import bcrypt from 'bcryptjs'; // ← IMPORTACIÓN
+
 
 export const CrearUsuario = () => {
   const navigate = useNavigate();
@@ -24,27 +24,24 @@ export const CrearUsuario = () => {
     e.preventDefault();
 
     // Validación de campos requeridos
-    const { usuario, apellido, correo, contraseña, confirmarContraseña } = formData;
-    if (!usuario || !apellido || !correo || !contraseña || !confirmarContraseña) {
+    const { nombre, apellido, email, password, confirmarContraseña } = formData;
+    if (!nombre || !apellido || !email || !password || !confirmarContraseña) {
       alert("Todos los campos son obligatorios");
       return;
     }
 
-    if (contraseña !== confirmarContraseña) {
+    if (password !== confirmarContraseña) {
       alert("Las contraseñas no coinciden");
       return;
     }
 
-    // Hashear la contraseña antes de continuar
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(contraseña, salt);
-
+   
     // Crear nuevo objeto sin confirmarContraseña
     const usuarioFinal = {
-      usuario,
+      nombre,
       apellido,
-      correo,
-      contraseña: hash
+      email,
+      password: password
     };
 
     console.log("Usuario final con contraseña hasheada:", usuarioFinal);
@@ -61,7 +58,7 @@ export const CrearUsuario = () => {
           <div>
             <label className="block text-base mb-1">Nombre</label>
             <input
-              name="usuario"
+              name="nombre"
               type="text"
               placeholder="Tu nombre"
               value={formData.usuario}
@@ -87,10 +84,10 @@ export const CrearUsuario = () => {
           <div>
             <label className="block text-base mb-1">Correo Electrónico</label>
             <input
-              name="correo"
+              name="email"
               type="email"
               placeholder="ejemplo@correo.com"
-              value={formData.correo}
+              value={formData.email}
               onChange={handleChange}
               required
               className="w-full px-5 py-3 rounded-xl bg-[#404270] text-[#f0f0f0]"
@@ -102,8 +99,8 @@ export const CrearUsuario = () => {
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
-                name="contraseña"
-                value={formData.contraseña}
+                name="password"
+                value={formData.password}
                 onChange={handleChange}
                 required
                 placeholder="Contraseña"
