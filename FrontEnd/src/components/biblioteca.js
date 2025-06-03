@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import DocumentCard from './documentCard'
 import DocumentModal from './documentModal'
 
-import { useNavigate } from "react-router-dom";
+import {  useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   AiFillFilePdf,
   AiFillFileExcel,
@@ -12,6 +12,7 @@ import {
   AiFillFileImage,
   AiFillFileZip,
   AiFillFile,
+  AiFillFolder,
 
 } from 'react-icons/ai'
 import { useDropzone } from 'react-dropzone'
@@ -20,9 +21,13 @@ import { useAuth } from "../components/context/AuthContext";
 import { API_URL } from '../utils/api';
 
 export const Biblioteca = () => {
+  
+   const { id } = useParams();
   const navigate = useNavigate();
-
+ const location = useLocation();
+  const [folderName, setFolderName] = useState(location.state?.folderName || 'Biblioteca');
   const [selectedDoc, setSelectedDoc] = useState(null);
+   
   const handleOpenModal = (doc) => setSelectedDoc(doc);
   const handleCloseModal = () => setSelectedDoc(null);
   
@@ -77,6 +82,7 @@ export const Biblioteca = () => {
     text: <AiFillFileText className="text-[#fb544a] text-7xl" />,
     img: <AiFillFileImage className="text-[#fea190] text-7xl" />,
     zip: <AiFillFileZip className="text-[#f8bd3a] text-7xl" />,
+    carpeta: <AiFillFolder className="text-[#ffd04c] text-4xl min-w-[32px]" />,
     default: <AiFillFile className="text-gray-400 text-7xl" />,
   };
 
@@ -261,8 +267,45 @@ export const Biblioteca = () => {
     obtenerArchivos();
   }, [ubicacion]);
 
+  useEffect(() => {
+      const obtenerArchivosID = async () => {
+        try {
+          const response = await fetch(`${API_URL}/biblioteca/list/${id}`);
+          const data = await response.json();
+  
+          
+  
+          const archivos = data.contentFile.map(file => ({
+            nombre: file.nombre,
+            autor: file.autor || 'Desconocido',
+            size: `${(file.tamano / (1024 * 1024)).toFixed(2)} MB`,
+            tag: mapTipoArchivo(file.tipoArchivo),
+            url: file.url,
+          }));
+  
+          const carpetas = data.contentFolder.map(folder => ({
+            nombre: folder.nombre,
+            autor: '',
+            size: '',
+            tag: 'carpeta',
+            id: folder._id,
+          }));
+  
+          setDocumentos([...carpetas, ...archivos]);
+          console.log("Archivos obtenidos:", data);
+        } catch (error) {
+          console.error("Error al obtener archivos:", error);
+        }
+      };
+  
+      obtenerArchivosID();
+    }, [id]);
 
-
+useEffect(() => {
+  if (location.state?.folderName) {
+    setFolderName(location.state.folderName);
+  }
+}, [location.state?.folderName]);
   const mapTipoArchivo = (mime) => {
     if (mime.includes("pdf")) return "pdf";
     if (mime.includes("word")) return "word";
@@ -274,6 +317,18 @@ export const Biblioteca = () => {
     return "otro";
   };
 
+useEffect(() => {
+  const handlePopState = () => {
+    window.location.reload(); // fuerza el reload completo
+  };
+
+  window.addEventListener("popstate", handlePopState);
+
+  return () => {
+    window.removeEventListener("popstate", handlePopState);
+  };
+}, []);
+  
   return (
 
     <div className="flex flex-col items-center gap-4  bg-gray-800/80 pt-16 min-h-screen p-4 sm:p-8">
@@ -281,6 +336,11 @@ export const Biblioteca = () => {
       <h1 className="text-4xl sm:text-5xl font-bold text-white drop-shadow-[0_2px_6px_rgba(0,0,0,1)]">
         <span className="text-gray-200">Biblioteca</span>
       </h1>
+
+       <p className="text-xl text-white font-semibold flex items-center gap-2">
+              <AiFillFolder className="text-[#ffd04c] text-2xl" />
+              {folderName}
+          </p>
       {user && user.tipoUsuario === 0 && (
         
       
