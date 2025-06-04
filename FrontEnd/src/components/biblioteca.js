@@ -341,7 +341,7 @@ useEffect(() => {
               <AiFillFolder className="text-[#ffd04c] text-2xl" />
               {folderName}
           </p>
-      {user && user.tipoUsuario === 0 && (
+      {user && (user.tipoUsuario === 0 || user.tipoUsuario === 1) && (
         
       
       <div className="flex flex-wrap justify-center gap-4 w-full max-w-6xl p-4">

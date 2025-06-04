@@ -27,7 +27,7 @@ export const DocumentModal = ({ isOpen, onClose, onDownload, onDelete, name, siz
               >
                 Descargar
               </button>
-              {user && user.tipoUsuario === 0 && (
+              {user && (user.tipoUsuario === 0 || user.tipoUsuario === 1) && (
                 <button
                   onClick={onDelete}
                   className="bg-red-500 hover:bg-red-600 px-4 py-2 rounded text-white"

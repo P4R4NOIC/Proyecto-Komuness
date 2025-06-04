@@ -93,34 +93,47 @@ export const PublicacionDetalle = () => {
 
         {
           <div>
-            <h1 className="text-3xl font-bold text-white flex flex-row items-center justify-between">
-              <button
-                type="button"
-                onClick={() => navigate(-1)}
-                className="hidden md:inline px-1 py-1 bg-white rounded-full mr-2"
-              >
-                <IoMdArrowRoundBack color={"black"} size={25} />
-              </button>
-              {publicacion.titulo}
-              {user && user.tipoUsuario === 0 && (
-                <div>
-                    <button className="w-full bg-red-500 py-2 px-4 rounded hover:bg-red-600 mx-auto block"
-                        onClick={()=>setSelectedPub(true)}
+            <div className="flex items-center justify-between w-full mb-4">
+              {/* Botón atrás (izquierda) */}
+              <div className="w-1/3 flex justify-start">
+                <button
+                  type="button"
+                  onClick={() => navigate(-1)}
+                  className="hidden md:inline px-1 py-1 bg-white rounded-full"
+                >
+                  <IoMdArrowRoundBack color={"black"} size={25} />
+                </button>
+              </div>
+
+              {/* Título (centro) */}
+              <h1 className="w-1/3 text-3xl font-bold text-white text-center">
+                {publicacion.titulo}
+              </h1>
+
+              {/* Botón Eliminar (derecha) */}
+              <div className="w-1/3 flex justify-end">
+                {user && (user.tipoUsuario === 0 || user.tipoUsuario === 1) && (
+                  <div>
+                    <button
+                      className="bg-red-500 py-2 px-4 rounded hover:bg-red-600"
+                      onClick={() => setSelectedPub(true)}
                     >
-                        Eliminar
+                      Eliminar
                     </button>
-                    
+
                     <PublicacionModal
-                        name = {publicacion.titulo}
-                        date = {publicacion.fecha}
-                        tag = {publicacion.tag}
-                        id = {publicacion._id}
-                        isOpen={selectedPub}
-                        onClose={()=>setSelectedPub(false)}
+                      name={publicacion.titulo}
+                      date={publicacion.fecha}
+                      tag={publicacion.tag}
+                      id={publicacion._id}
+                      isOpen={selectedPub}
+                      onClose={() => setSelectedPub(false)}
                     />
-                </div>
-            )}
-            </h1>
+                  </div>
+                )}
+              </div>
+            </div>
+
             <h2>
               {publicacion.autor
                 ? publicacion.autor.nombre

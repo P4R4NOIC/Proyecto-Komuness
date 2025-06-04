@@ -57,7 +57,7 @@ export const PublicacionCard = ({ publicacion }) => {
                 </div>
             )}
             </div>
-            {user && user.tipoUsuario === 0 && (
+            {user && (user.tipoUsuario === 0 || user.tipoUsuario === 1) && (
                 <div>
                     <button className="w-full bg-red-500 py-2 px-4 rounded hover:bg-red-600 mx-auto block"
                         onClick={()=>setSelectedPub(true)}
