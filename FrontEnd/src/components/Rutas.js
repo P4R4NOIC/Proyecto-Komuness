@@ -23,7 +23,6 @@ export const Rutas = () =>{
                 <Route path = "/publicaciones" element = {<LandingPage/>}/>
                 <Route path = "/publicaciones/:id" element = {<PublicacionDetalle/>}/>
                 <Route path = "/emprendimientos" element = {<LandingPage/>}/>
-                <Route path = "/biblioteca" element = {<Biblioteca/>}/>
                 <Route path = "/biblioteca/:id" element = {<Biblioteca/>}/>
                 <Route path = "/perfilUsuario" element= {<PerfilUsuario/>}/>
                 <Route path = "/iniciarSesion" element= {<IniciarSesion/>}/>

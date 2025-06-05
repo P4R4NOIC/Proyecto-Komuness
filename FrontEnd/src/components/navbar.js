@@ -31,7 +31,7 @@ export const Navbar = () => {
 
   return (
     <header className="navbar">
-     <a href = "*"><img src={logo} className="logo" alt="/" /></a> 
+     <a href = ""><img src={logo} className="logo" alt="/" /></a> 
       <nav>
         <ul className={nav ? ["menu", "activo"].join(" ") : ["menu"]}>
           <li onClick={() => handleNavigation("/publicaciones")}>
@@ -43,7 +43,7 @@ export const Navbar = () => {
           <li onClick={() => handleNavigation("/emprendimientos")}>
             <span>Emprendimientos</span>
           </li>
-          <li onClick={() => handleNavigation("/biblioteca")}>
+          <li onClick={() => handleNavigation("/biblioteca/0")}>
             <span>Biblioteca</span>
           </li>
          
