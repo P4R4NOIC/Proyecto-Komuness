@@ -471,7 +471,7 @@ useEffect(() => {
         )}
       </div>
 
-      <div className="w-full px-4 py-2 text-black">
+      <div className="flex flex-wrap justify-center gap-4 w-full max-w-6xl p-4 text-black">
         <form className="flex flex-col md:flex-row gap-2 md:items-center w-full">
 
           {/* <!-- Input de búsqueda --> */}
