@@ -46,29 +46,52 @@ export const Biblioteca = () => {
 
   const handleDelete = async () => {
     try {
-      await toast.promise(
-        fetch(`${API_URL}/biblioteca/delete/${selectedDoc.id}`, {
-          method: "DELETE",
-        }).then((res) => {
-          if (!res.ok) throw new Error("No se pudo eliminar el archivo");
-          return res.json();
-        }),
-        {
-          loading: "Eliminando archivo...",
-          success: "¡Archivo eliminado!",
-          error: "Error al eliminar el archivo",
-        }
-      );
+      // Si es una carpeta, ejecuta una lógica distinta
+      if (selectedDoc.tag === 'carpeta') {
+        await toast.promise(
+          fetch(`${API_URL}/biblioteca/folder/${selectedDoc.id}`, {
+            method: "DELETE",
+          }).then((res) => {
+            if (!res.ok) throw new Error("No se pudo eliminar la carpeta");
+            return res.json();
+          }),
+          {
+            loading: "Eliminando carpeta...",
+            success: "¡Carpeta eliminada!",
+            error: "Error al eliminar la carpeta",
+          }
+        );
+      } else {
+        // Si no es una carpeta, eliminar como archivo
+        await toast.promise(
+          fetch(`${API_URL}/biblioteca/delete/${selectedDoc.id}`, {
+            method: "DELETE",
+          }).then((res) => {
+            if (!res.ok) throw new Error("No se pudo eliminar el archivo");
+            return res.json();
+          }),
+          {
+            loading: "Eliminando archivo...",
+            success: "¡Archivo eliminado!",
+            error: "Error al eliminar el archivo",
+          }
+        );
+      }
 
+      // Remover del estado ambos casos
       setDocumentos((prevDocs) =>
+        prevDocs.filter((doc) => doc.id !== selectedDoc.id)
+      );
+      setDocumentosFiltrados((prevDocs) =>
         prevDocs.filter((doc) => doc.id !== selectedDoc.id)
       );
 
       handleCloseModal();
     } catch (error) {
-      // El error ya fue mostrado con toast, no es necesario hacer más
+      // El toast ya lo muestra, no hace falta más aquí
     }
   };
+
 
   const { user } = useAuth();
   
@@ -86,37 +109,6 @@ export const Biblioteca = () => {
     default: <AiFillFile className="text-gray-400 text-7xl" />,
   };
 
-  // const onDrop = useCallback(acceptedFiles => {
-  // const file = new FileReader;
-  // file.onload = function(){
-  //   setPreview(file.result);
-  // }
-  // file.readAsDataURL(acceptedFiles[0])
-  // }, [])
-
-  /**
-   * Feat búsqueda de archivos ya sea en una carpeta específica o en toda la biblioteca
-   * //creamos la url
-   * const url = new URL('http://localhost:3000/biblioteca/list');
-   * //agregamos los parámetros
-   * para la carpeta raiz le mandamos id=0 en el path variables
-   * 
-   * url.pathname += "/0";
-   * 
-   * si es un directorio especifico le mandamos el id de la carpeta
-   * 
-   * url.pathname += `/${idCarpeta}`;
-   * 
-   * //agregamos los parámetros
-   * url.searchParams.append('nombre', nombre);
-   * url.searchParams.append('global', "true"); //si es true busca en toda la biblioteca, si no se agrega este global, busca solo en la carpeta
-   * 
-   * ejemplo: http://localhost:3000/biblioteca/list/0?nombre=nombreArchivo&global=true
-   * en el ejemplo anterior se busca desde la carpeta raiz (id=0) y en toda la biblioteca
-   * 
-   * ejemplo: http://localhost:3000/biblioteca/list/<idcarpeta>?nombre=nombreArchivo
-   * en el ejemplo anterior se busca desde la carpeta con <idcarpeta> solo en esa carpeta el "nombreArchivo"
-   */
 
   const maxSize = 100 * 1024 * 1024; // 100 MB
   const { 
@@ -141,10 +133,7 @@ export const Biblioteca = () => {
   })
 
   const files = acceptedFiles.map(file => (
-    // <li key={file.name}>
-    //   {file.name} - {file.size} bytes
-    // </li>
-    // console.log(file)
+    
     <div className='flex flex-wrap justify-center gap-4 w-full max-w-6xl p-4'>
       <DocumentCard
         key={file.name}
@@ -158,14 +147,11 @@ export const Biblioteca = () => {
   ));
 
 
-  const handleNavigation = (folderId, folderName) => {
-    navigate(`/biblioteca/${folderId}`, {
-      state: { folderName }, // pasa el nombre aquí
-    });
+  const handleNavigation = () => {
+    navigate(`/biblioteca/${selectedDoc.id}`)
   };
 
   // SUBIDA DE ARCHIVOS
-  const idCarpeta = 0;
   async function handleOnSubmit(params) {
     params.preventDefault();
 
@@ -202,13 +188,11 @@ export const Biblioteca = () => {
 
   // SEARCH
   const [nombre, setNombre] = useState('');
-  const [etiqueta, setEtiqueta] = useState('');
   const handleSearch = async (e) => {
     e.preventDefault();
-    console.log("Buscando: ", { nombre, etiqueta })
 
     try {
-      const respuesta = await fetch(`${API_URL}/biblioteca/list/0?nombre=${nombre}&etiqueta=${etiqueta}&global=true&publico=true`);
+      const respuesta = await fetch(`${API_URL}/biblioteca/list/${0}?nombre=${nombre}&orden=asc&global=true&publico=true`);
       const datos = await respuesta.json();
       const archivos = datos.contentFile.map(file => ({
           nombre: file.nombre,
@@ -228,6 +212,7 @@ export const Biblioteca = () => {
       }));
 
       setDocumentos([...carpetas, ...archivos]);
+      setDocumentosFiltrados([...carpetas, ...archivos]); 
         console.log("Archivos obtenidos:", datos);
       } catch (error) {
         console.error("Error al obtener archivos:", error);
@@ -235,11 +220,11 @@ export const Biblioteca = () => {
   }
 
   // OBTENER TODOS LOS ARCHIVOS
-  const [ubicacion, setUbicacion] = useState(0);
   useEffect(() => {
     const obtenerArchivos = async () => {
       try {
-        const response = await fetch(`${API_URL}/biblioteca/list/${ubicacion}?orden=asc&global=true&publico=true`);
+        console.log("Obteniendo archivos de la biblioteca con ID:", id);
+        const response = await fetch(`${API_URL}/biblioteca/list/${id}?orden=asc&global=true&publico=true`);
         const data = await response.json();
         const archivos = data.contentFile.map(file => ({
           nombre: file.nombre,
@@ -259,53 +244,56 @@ export const Biblioteca = () => {
         }));
 
         setDocumentos([...carpetas, ...archivos]);
+        setDocumentosFiltrados([...carpetas, ...archivos]);
         console.log("Archivos obtenidos:", data);
       } catch (error) {
         console.error("Error al obtener archivos:", error);
       }
     };
     obtenerArchivos();
-  }, [ubicacion]);
+  }, [id, location.state?.folderName]);
 
-  useEffect(() => {
-      const obtenerArchivosID = async () => {
-        try {
-          const response = await fetch(`${API_URL}/biblioteca/list/${id}`);
-          const data = await response.json();
+  // useEffect(() => {
+  //     const obtenerArchivosID = async () => {
+  //       try {
+  //         const response = await fetch(`${API_URL}/biblioteca/list/${id}`);
+  //         const data = await response.json();
   
           
   
-          const archivos = data.contentFile.map(file => ({
-            nombre: file.nombre,
-            autor: file.autor || 'Desconocido',
-            size: `${(file.tamano / (1024 * 1024)).toFixed(2)} MB`,
-            tag: mapTipoArchivo(file.tipoArchivo),
-            url: file.url,
-          }));
+  //         const archivos = data.contentFile.map(file => ({
+  //           nombre: file.nombre,
+  //           autor: file.autor || 'Desconocido',
+  //           size: `${(file.tamano / (1024 * 1024)).toFixed(2)} MB`,
+  //           tag: mapTipoArchivo(file.tipoArchivo),
+  //           url: file.url,
+  //         }));
   
-          const carpetas = data.contentFolder.map(folder => ({
-            nombre: folder.nombre,
-            autor: '',
-            size: '',
-            tag: 'carpeta',
-            id: folder._id,
-          }));
+  //         const carpetas = data.contentFolder.map(folder => ({
+  //           nombre: folder.nombre,
+  //           autor: '',
+  //           size: '',
+  //           tag: 'carpeta',
+  //           id: folder._id,
+  //         }));
   
-          setDocumentos([...carpetas, ...archivos]);
-          console.log("Archivos obtenidos:", data);
-        } catch (error) {
-          console.error("Error al obtener archivos:", error);
-        }
-      };
+  //         setDocumentos([...carpetas, ...archivos]);
+          
+  //         console.log("Archivos obtenidos:", data);
+  //       } catch (error) {
+  //         console.error("Error al obtener archivos:", error);
+  //       }
+  //     };
   
-      obtenerArchivosID();
-    }, [id]);
+  //     obtenerArchivosID();
+  //   }, [id]);
 
 useEffect(() => {
   if (location.state?.folderName) {
     setFolderName(location.state.folderName);
   }
 }, [location.state?.folderName]);
+
   const mapTipoArchivo = (mime) => {
     if (mime.includes("pdf")) return "pdf";
     if (mime.includes("word")) return "word";
@@ -329,6 +317,60 @@ useEffect(() => {
   };
 }, []);
   
+
+  const [documentosFiltrados, setDocumentosFiltrados] = useState([]);
+
+  const handleFiltroChange = (e) => {
+    const valor = e.target.value;
+
+    if (valor === "") {
+      setDocumentosFiltrados(documentos); // mostrar todos
+    } else {
+      const filtrados = documentos.filter(doc => doc.tag.toLowerCase() === valor);
+      setDocumentosFiltrados(filtrados);
+    }
+  };
+
+
+
+  const [mostrarModal, setMostrarModal] = useState(false);
+  const [nombreCarpeta, setNombreCarpeta] = useState("");
+
+  const handleCrearCarpeta = async () => {
+    if (!nombreCarpeta.trim()) return;
+
+    await toast.promise(
+      fetch(`${API_URL}/biblioteca/folder`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", 
+        },
+        body: JSON.stringify({
+          nombre: nombreCarpeta,
+          parent: id, 
+        }),
+      }).then(async (response) => {
+        const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.message || "Error al crear la carpeta");
+        }
+        return result;
+      }),
+      {
+        loading: "Creando carpeta...",
+        success: "Carpeta creada con éxito 🎉",
+        error: (err) => `Error: ${err.message}`,
+        duration: 8000,
+      }
+    );
+
+    // Limpiar y cerrar
+    setNombreCarpeta("");
+    setMostrarModal(false);
+    window.location.reload();
+  };
+
+
   return (
 
     <div className="flex flex-col items-center gap-4  bg-gray-800/80 pt-16 min-h-screen p-4 sm:p-8">
@@ -388,6 +430,47 @@ useEffect(() => {
 
       </div>
       )}
+      <div className="w-full max-w-6xl px-4 py-2 text-white">
+        <button
+          onClick={() => setMostrarModal(true)}
+          className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium p-4 rounded-lg shadow"
+        >
+          + Crear carpeta
+        </button>
+
+        {/* Modal */}
+        {mostrarModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className="bg-white rounded-xl p-6 w-full max-w-sm shadow-lg">
+              <h3 className="text-lg font-semibold mb-4 text-gray-800">
+                Nueva carpeta
+              </h3>
+              <input
+                type="text"
+                value={nombreCarpeta}
+                onChange={(e) => setNombreCarpeta(e.target.value)}
+                placeholder="Nombre de la carpeta"
+                className="w-full px-4 py-2 mb-4 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <div className="flex justify-end space-x-2">
+                <button
+                  onClick={() => setMostrarModal(false)}
+                  className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleCrearCarpeta}
+                  className="px-4 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                >
+                  Crear
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className="w-full px-4 py-2 text-black">
         <form className="flex flex-col md:flex-row gap-2 md:items-center w-full">
 
@@ -402,8 +485,7 @@ useEffect(() => {
 
           {/* <!-- Select de etiquetas --> */}
           <select
-            value={etiqueta}
-            onChange={(e) => setEtiqueta(e.target.value)}
+            onChange={handleFiltroChange}
             className="w-full md:w-48 px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Todos los archivos</option>
@@ -430,7 +512,7 @@ useEffect(() => {
       </div>
 
       <div className="flex flex-wrap justify-center gap-4 w-full max-w-6xl p-4">
-        {documentos.map((doc, index) => (
+        {documentosFiltrados.map((doc, index) => (
           <DocumentCard
             key={index}
             name={doc.nombre}
@@ -438,11 +520,11 @@ useEffect(() => {
             size={doc.size}
             type={doc.tag}
             onClick={() => {
-              if (doc.tag === 'carpeta') {
-                handleNavigation(doc.id, doc.nombre);
-              } else {
+              // if (doc.tag === 'carpeta') {
+              //   handleNavigation(doc.id, doc.nombre);
+              // } else {
                 handleOpenModal(doc);
-              }
+              // }
             }}
           />
         ))}
@@ -454,7 +536,9 @@ useEffect(() => {
         size={selectedDoc?.size}
         author={selectedDoc?.autor}
         icon={modalIconMap[selectedDoc?.tag] || modalIconMap.default}
+        tag= {selectedDoc?.tag}
         onClose={handleCloseModal}
+        onRedirect={handleNavigation}
         onDownload={handleDownload}
         onDelete={handleDelete}
       />

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useAuth } from "../components/context/AuthContext";
 
-export const DocumentModal = ({ isOpen, onClose, onDownload, onDelete, name, size, icon, author }) => {
+export const DocumentModal = ({ isOpen, onClose, onDownload, onRedirect, onDelete, name, size, tag, icon, author }) => {
     const { user } = useAuth();
     
     if (!isOpen) return null;
@@ -18,15 +18,26 @@ export const DocumentModal = ({ isOpen, onClose, onDownload, onDelete, name, siz
             <h2 className="text-xl font-semibold">{name}</h2>
             <p className="text-sm text-gray-300">{author}</p> 
             <p className="text-sm text-gray-300">{size}</p>
-  
+            
             {/* Botones */}
+            
+
             <div className="flex flex-col justify-center gap-4 mt-6">
-              <button
-                onClick={onDownload}
-                className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white"
-              >
-                Descargar
-              </button>
+              {tag === 'carpeta' ? (
+                <button
+                  onClick={onRedirect}
+                  className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white"
+                >
+                  Abrir Carpeta
+                </button>
+              ) : (
+                <button
+                  onClick={onDownload}
+                  className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white"
+                >
+                  Descargar
+                </button>
+              )}
               {user && (user.tipoUsuario === 0 || user.tipoUsuario === 1) && (
                 <button
                   onClick={onDelete}
