@@ -9,10 +9,12 @@ export const InitForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
+  const [errorMensaje, setErrorMensaje] = useState('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrorMensaje(''); // Limpiar mensaje de error previo
 
     try {
       const response = await fetch(`${API_URL}/usuario/login`, {
@@ -32,17 +34,17 @@ export const InitForm = () => {
         const userData = { ...data.user };
         delete userData.password;
 
-        // Guardar en localStorage
         localStorage.setItem('user', JSON.stringify(userData));
         login(userData);
 
         navigate('/');
-
       } else {
         console.error('Error en login:', data.message || 'Error desconocido');
+        setErrorMensaje(data.message || 'Error al iniciar sesión');
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);
+      setErrorMensaje('Ocurrió un error al conectar con el servidor');
     }
   };
 
@@ -52,6 +54,14 @@ export const InitForm = () => {
         <h2 className="text-4xl font-bold mb-8 text-center text-[#ffbf30]">
           ¡Bienvenido!
         </h2>
+
+        {/* Mostrar mensaje de error si existe */}
+        {errorMensaje && (
+          <div className="mb-4 text-red-400 text-center font-semibold">
+            {errorMensaje}
+          </div>
+        )}
+
         <form className="space-y-6" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="block text-base mb-2">
