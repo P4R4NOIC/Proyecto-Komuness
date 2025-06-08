@@ -1,10 +1,11 @@
 import multer from "multer";
 import { Router } from "express";
 import BibliotecaController from "../controllers/biblioteca.controller";
+import { upload } from "../middlewares/multer.middleware";
 import { authMiddleware } from "../middlewares/auth.middleware";
 import { verificarRoles } from "../middlewares/roles.middleware";
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
+//const storage = multer.memoryStorage();
+//const upload = multer({ storage });
 
 const router = Router();
 
