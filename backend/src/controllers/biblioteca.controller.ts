@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { Archivo } from '../models/archivo.model';
 import { Folder } from '../models/folder.model';
 import { uploadFile } from '../utils/digitalOceanSpace';
+import { uploadFileStorage } from '../utils/digitalOceanSpace';
 import { IArchivo } from '../interfaces/archivo.interface';
 import mongoose from 'mongoose';
 
@@ -41,7 +42,7 @@ class BibliotecaController {
 
                 try {
                     //subir archivo a digitalOcean spaces
-                    const result: { location: string, key: string } | null = await uploadFile(file, folderId);
+                    const result: { location: string, key: string } | null = await uploadFileStorage(file, folderId);
                     if (!result) {
                         return {
                             success: false,
