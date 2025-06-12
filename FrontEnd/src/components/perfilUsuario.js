@@ -176,6 +176,11 @@ export const PerfilUsuario = () => {
     );
   });
 
+  const cambiarContra = () => {
+    alert("Funcionalidad no implementada aún.");
+    // const nuevaContra = prompt("Ingrese su nueva contraseña:");
+  }
+
   return (
     <div className={`flex flex-col md:flex-row gap-6 w-full min-h-screen bg-gray-800/80 p-6
       ${user?.tipoUsuario === 2 ? "justify-center" : "md:flex-row gap-6"}`}>
@@ -197,6 +202,16 @@ export const PerfilUsuario = () => {
             >
               {user?.email}
             </a>
+          </div>
+          <div>
+            <button
+              onClick={() => {
+                cambiarContra();
+              }}
+              className="mt-4 bg-yellow-500 hover:bg-yellow-600 text-white font-medium px-4 py-2 rounded"
+            >
+              Cambiar contraseña
+            </button>
           </div>
           <div>
             <button
