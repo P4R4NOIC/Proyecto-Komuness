@@ -61,11 +61,11 @@ export const getPublicacionesByTag = async (req: Request, res: Response): Promis
 
         // Construye el query de manera flexible
         const query: { tag?: string; publicado?: boolean } = {};
-        
+
         if (tag) {
             query.tag = tag as string;
         }
-        
+
         if (publicado !== undefined) {
             query.publicado = publicado === 'true';
         }
@@ -162,8 +162,8 @@ export const addComentario = async (req: Request, res: Response): Promise<void> 
     const nuevoComentario: IComentario = {
         autor,
         contenido,
-        fecha: "",
-        // fecha: new Date().toLocaleDateString()
+        //fecha: "",
+        fecha: new Date().toLocaleDateString()
     }
 
     try {
