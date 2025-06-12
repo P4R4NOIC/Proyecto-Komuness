@@ -15,7 +15,7 @@ router.get('/check', checkAuth);// verificar el token
 
 //los siguientes endpoints son de uso exclusivo para el superadmin = 0
 router.post('/', authMiddleware, verificarRoles([0]), createUsuario); //create
-router.get('/', authMiddleware, verificarRoles([0]), getUsuarios); //read
+router.get('/', authMiddleware, verificarRoles([0, 1]), getUsuarios); //read
 
 router.get('/:id', authMiddleware, verificarRoles([0]), getUsuarioById); //read by id
 router.delete('/:id', authMiddleware, verificarRoles([0]), deleteUsuario); //delete
