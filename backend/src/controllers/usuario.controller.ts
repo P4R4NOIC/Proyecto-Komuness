@@ -66,7 +66,12 @@ export const getUsuarioById = async (req: Request, res: Response): Promise<void>
 export const updateUsuario = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = req.params.id;
-        const usuario: Usuario = req.body;
+        const usuario: Partial<Usuario> = req.body;
+
+        // If password is included in the update, hash it before saving
+        if (usuario.password) {
+            usuario.password = await hashPassword(usuario.password);
+        }
         const user = await modelUsuario.findByIdAndUpdate(id, usuario, { new: true });
         res.status(200).json(user);
     } catch (error) {
