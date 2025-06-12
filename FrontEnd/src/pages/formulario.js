@@ -1,10 +1,10 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import { IoMdClose } from "react-icons/io";
 import { useAuth } from "../components/context/AuthContext";
 import { API_URL } from '../utils/api';
 import { toast } from "react-hot-toast";
-export const FormularioPublicacion = ({ isOpen, onClose, openTag}) => {
-  
+export const FormularioPublicacion = ({ isOpen, onClose, openTag }) => {
+
   const { user } = useAuth();
   const valoresIniciales = {
     titulo: "",
@@ -22,7 +22,7 @@ export const FormularioPublicacion = ({ isOpen, onClose, openTag}) => {
     ...valoresIniciales,
     tag: openTag || "",
   });
-  
+
   useEffect(() => {
     if (isOpen) {
       setFormData({
@@ -55,7 +55,7 @@ export const FormularioPublicacion = ({ isOpen, onClose, openTag}) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
-    
+
     const data = new FormData();
 
     data.append("titulo", formData.titulo);
@@ -74,17 +74,20 @@ export const FormularioPublicacion = ({ isOpen, onClose, openTag}) => {
 
     try {
       await enviarPublicacion(data);
-      onClose(); 
+      onClose();
     } catch (error) {
       // El error ya se mostró con toast
     }
-    
+
   };
 
   const enviarPublicacion = async (data) => {
     const promise = fetch(`${API_URL}/publicaciones/v2/`, {
       method: "POST",
       body: data,
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      }
     }).then(async (response) => {
       const result = await response.json();
 
@@ -109,9 +112,9 @@ export const FormularioPublicacion = ({ isOpen, onClose, openTag}) => {
   return (
     <>
       {isOpen && (
-        
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-start pt-10 px-4 overflow-y-auto">
-           <div className="max-w-3xl w-full bg-white text-zinc-950 shadow-md rounded-lg p-4 md:p-6">
+
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-start pt-10 px-4 overflow-y-auto">
+          <div className="max-w-3xl w-full bg-white text-zinc-950 shadow-md rounded-lg p-4 md:p-6">
             {/* Formulario */}
             <form onSubmit={handleSubmit} className="grid gap-4">
               {/* Botones flotantes SOLO en móviles, dentro del formulario */}
@@ -184,22 +187,22 @@ Descripción del evento:`}
               {/* Precio */}
               {(formData.tag === "evento" ||
                 formData.tag === "emprendimiento") && (
-                <div>
-                  {/* Precio */}
-                  
-                  <label className="block font-semibold">Precio en colones:</label>
-                  <input
-                    type="number"
-                    name="precio"
-                    value={formData.precio}
-                    onChange={handleChange}
-                    className="w-full p-2 border rounded"
-                    required
-                  />
-                  
-                  
-                </div>
-              )}
+                  <div>
+                    {/* Precio */}
+
+                    <label className="block font-semibold">Precio en colones:</label>
+                    <input
+                      type="number"
+                      name="precio"
+                      value={formData.precio}
+                      onChange={handleChange}
+                      className="w-full p-2 border rounded"
+                      required
+                    />
+
+
+                  </div>
+                )}
 
               {/* Subir imágenes */}
               <div>
@@ -271,7 +274,7 @@ Descripción del evento:`}
               </div>
             </form>
           </div>
-          </div>
+        </div>
       )}
     </>
   );

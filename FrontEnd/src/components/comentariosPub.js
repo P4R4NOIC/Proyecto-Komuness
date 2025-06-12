@@ -29,6 +29,7 @@ const ComentariosPub = ({ comentarios, setComentarios, publicacionId }) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
           body: JSON.stringify(comentario),
         }
@@ -60,7 +61,7 @@ const ComentariosPub = ({ comentarios, setComentarios, publicacionId }) => {
         <div className="mt-4 w-full flex flex-col sm:flex-row sm:items-start gap-2">
           <div className="flex flex-col gap-1 w-full">
             <div className="flex items-start gap-2">
-             
+
               <textarea
                 ref={textareaRef}
                 value={nuevoComentario}
@@ -103,7 +104,7 @@ const ComentariosPub = ({ comentarios, setComentarios, publicacionId }) => {
               key={index}
               className="flex items-start space-x-2 bg-gray-700 p-3 rounded-lg"
             >
-             
+
               <div className="w-full">
                 <p className="text-sm text-gray-300 font-semibold">
                   {comentario.autor}{" "}

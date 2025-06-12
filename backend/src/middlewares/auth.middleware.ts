@@ -8,7 +8,7 @@ import { verificarToken } from '../utils/jwt';
  * @param next - Función para pasar al siguiente middleware
  * @returns void
  */
-export const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+/*export const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
         const token = req.cookies.token;
         if (!token) {
@@ -33,4 +33,32 @@ export const authMiddleware = async (req: Request, res: Response, next: NextFunc
             error: error instanceof Error ? error.message : 'Error desconocido'
         });
     }
-};
+};*/
+export const authMiddleware = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const header = req.headers.authorization;
+        if (!header || !header.startsWith('Bearer ')) {
+            res.status(401).json({ message: 'No provee Bearer header' });
+            return;
+        }
+        const token = header.split(' ')[1];
+        if (!token) {
+            res.status(401).json({ message: 'No provee token' });
+            return;
+        }
+        const user = await verificarToken(token);
+        if (!user) {
+            res.status(401).json({ message: 'No autorizado' });
+            return;
+        }
+        (req as Request & { user?: any }).user = user;
+        next();
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            message: `Error interno del servidor en al funcion: ${authMiddleware.name}`,
+            error: error instanceof Error ? error.message : 'Error desconocido'
+        });
+    }
+}

@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react'
 import DocumentCard from './documentCard'
 import DocumentModal from './documentModal'
 
-import {  useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   AiFillFilePdf,
   AiFillFileExcel,
@@ -21,22 +21,22 @@ import { useAuth } from "../components/context/AuthContext";
 import { API_URL } from '../utils/api';
 
 export const Biblioteca = () => {
-  
-   const { id } = useParams();
+
+  const { id } = useParams();
   const navigate = useNavigate();
- const location = useLocation();
+  const location = useLocation();
   const [folderName, setFolderName] = useState(location.state?.folderName || 'Biblioteca');
   const [selectedDoc, setSelectedDoc] = useState(null);
-   
+
   const handleOpenModal = (doc) => setSelectedDoc(doc);
   const handleCloseModal = () => setSelectedDoc(null);
-  
+
   const handleDownload = () => {
-    
+
     const link = document.createElement('a');
     link.href = selectedDoc.url;
-    link.target = '_blank'; 
-    link.rel = 'noopener noreferrer'; 
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -51,6 +51,9 @@ export const Biblioteca = () => {
         await toast.promise(
           fetch(`${API_URL}/biblioteca/folder/${selectedDoc.id}`, {
             method: "DELETE",
+            headers: {
+              "Authorization": `Bearer ${localStorage.getItem("token")}`,
+            },
           }).then((res) => {
             if (!res.ok) throw new Error("No se pudo eliminar la carpeta");
             return res.json();
@@ -66,7 +69,9 @@ export const Biblioteca = () => {
         await toast.promise(
           fetch(`${API_URL}/biblioteca/delete/${selectedDoc.id}`, {
             method: "DELETE",
-            credentials: "include",
+            headers: {
+              "Authorization": `Bearer ${localStorage.getItem("token")}`,
+            },
           }).then((res) => {
             if (!res.ok) throw new Error("No se pudo eliminar el archivo");
             return res.json();
@@ -95,7 +100,7 @@ export const Biblioteca = () => {
 
 
   const { user } = useAuth();
-  
+
   const [documentos, setDocumentos] = useState([]);
 
   const modalIconMap = {
@@ -112,12 +117,12 @@ export const Biblioteca = () => {
 
 
   const maxSize = 100 * 1024 * 1024; // 100 MB
-  const { 
-    acceptedFiles, 
+  const {
+    acceptedFiles,
     fileRejections,
-    getRootProps, 
-    getInputProps, 
-    isDragActive 
+    getRootProps,
+    getInputProps,
+    isDragActive
   } = useDropzone({
     maxSize,
     onDropRejected: (fileRejections) => {
@@ -134,14 +139,14 @@ export const Biblioteca = () => {
   })
 
   const files = acceptedFiles.map(file => (
-    
+
     <div className='flex flex-wrap justify-center gap-4 w-full max-w-6xl p-4'>
       <DocumentCard
         key={file.name}
         name={file.name}
         author={user.nombre || "Anónimo"} // Cambia esto según cómo obtengas el autor
         size={`${(file.size / (1024 * 1024)).toFixed(2)} MB`}
-        
+
         type={file.type}
       />
     </div>
@@ -164,15 +169,17 @@ export const Biblioteca = () => {
     });
     data.append("userId", user._id);
     data.append("folderId", id);
-    
 
-  
+
+
 
     await toast.promise(
       fetch(`${API_URL}/biblioteca/upload/`, {
         method: 'POST',
         body: data,
-        credentials: "include",
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        },
       })
         .then(async (response) => {
           const result = await response.json();
@@ -201,28 +208,28 @@ export const Biblioteca = () => {
       const respuesta = await fetch(`${API_URL}/biblioteca/list/0?nombre=${nombre}&orden=asc&global=true&publico=true`);
       const datos = await respuesta.json();
       const archivos = datos.contentFile.map(file => ({
-          nombre: file.nombre,
-          autor: file.autor?.nombre || "Desconocido",
-          size: `${(file.tamano / (1024 * 1024)).toFixed(2)} MB`,
-          tag: mapTipoArchivo(file.tipoArchivo),
-          url: file.url,
-          id: file._id
+        nombre: file.nombre,
+        autor: file.autor?.nombre || "Desconocido",
+        size: `${(file.tamano / (1024 * 1024)).toFixed(2)} MB`,
+        tag: mapTipoArchivo(file.tipoArchivo),
+        url: file.url,
+        id: file._id
       }));
 
       const carpetas = datos.contentFolder.map(folder => ({
-          nombre: folder.nombre,
-          autor: "",
-          size: "",
-          tag: "carpeta",
-          id: folder._id
+        nombre: folder.nombre,
+        autor: "",
+        size: "",
+        tag: "carpeta",
+        id: folder._id
       }));
 
       setDocumentos([...carpetas, ...archivos]);
-      setDocumentosFiltrados([...carpetas, ...archivos]); 
-        console.log("Archivos obtenidos:", datos);
-      } catch (error) {
-        console.error("Error al obtener archivos:", error);
-      }
+      setDocumentosFiltrados([...carpetas, ...archivos]);
+      console.log("Archivos obtenidos:", datos);
+    } catch (error) {
+      console.error("Error al obtener archivos:", error);
+    }
   }
 
   // OBTENER TODOS LOS ARCHIVOS
@@ -260,11 +267,11 @@ export const Biblioteca = () => {
   }, [id, location.state?.folderName]);
 
 
-useEffect(() => {
-  if (location.state?.folderName) {
-    setFolderName(location.state.folderName);
-  }
-}, [location.state?.folderName]);
+  useEffect(() => {
+    if (location.state?.folderName) {
+      setFolderName(location.state.folderName);
+    }
+  }, [location.state?.folderName]);
 
   const mapTipoArchivo = (mime) => {
     if (mime.includes("pdf")) return "pdf";
@@ -277,18 +284,18 @@ useEffect(() => {
     return "otro";
   };
 
-useEffect(() => {
-  const handlePopState = () => {
-    window.location.reload(); // fuerza el reload completo
-  };
+  useEffect(() => {
+    const handlePopState = () => {
+      window.location.reload(); // fuerza el reload completo
+    };
 
-  window.addEventListener("popstate", handlePopState);
+    window.addEventListener("popstate", handlePopState);
 
-  return () => {
-    window.removeEventListener("popstate", handlePopState);
-  };
-}, []);
-  
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, []);
+
 
   const [documentosFiltrados, setDocumentosFiltrados] = useState([]);
 
@@ -317,11 +324,12 @@ useEffect(() => {
       fetch(`${API_URL}/biblioteca/folder`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json", 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
           nombre: nombreCarpeta,
-          parent: id, 
+          parent: id,
         }),
       }).then(async (response) => {
         const result = await response.json();
@@ -353,56 +361,56 @@ useEffect(() => {
         <span className="text-gray-200">Biblioteca</span>
       </h1>
 
-       <p className="text-xl text-white font-semibold flex items-center gap-2">
-              <AiFillFolder className="text-[#ffd04c] text-2xl" />
-              {folderName}
-          </p>
+      <p className="text-xl text-white font-semibold flex items-center gap-2">
+        <AiFillFolder className="text-[#ffd04c] text-2xl" />
+        {folderName}
+      </p>
       {user && (user.tipoUsuario === 0 || user.tipoUsuario === 1) && (
-        
-      
-      <div className="flex flex-wrap justify-center gap-4 w-full max-w-6xl p-4">
-        <div
-          {...getRootProps()}
-          className="flex flex-col items-center justify-center border-2 border-dashed border-gray-400 rounded-xl p-8 text-center cursor-pointer transition hover:border-blue-500 hover:bg-blue-50"
-        >
-          <input {...getInputProps()} />
-          {isDragActive ? (
-            <p className="text-blue-600 font-medium">Suelta los archivos aquí ...</p>
-          ) : (
-            <p className="text-gray-600">
-              Arrastra y suelta algunos archivos aquí, o{' '}
-              <span className="text-blue-600 underline">haz clic para seleccionarlos</span>
-            </p>
+
+
+        <div className="flex flex-wrap justify-center gap-4 w-full max-w-6xl p-4">
+          <div
+            {...getRootProps()}
+            className="flex flex-col items-center justify-center border-2 border-dashed border-gray-400 rounded-xl p-8 text-center cursor-pointer transition hover:border-blue-500 hover:bg-blue-50"
+          >
+            <input {...getInputProps()} />
+            {isDragActive ? (
+              <p className="text-blue-600 font-medium">Suelta los archivos aquí ...</p>
+            ) : (
+              <p className="text-gray-600">
+                Arrastra y suelta algunos archivos aquí, o{' '}
+                <span className="text-blue-600 underline">haz clic para seleccionarlos</span>
+              </p>
+            )}
+          </div>
+
+          <div>
+            {fileRejections.length > 0 && (
+              <div className="mt-4 text-red-600">
+                Algunos archivos no se pudieron subir por exceder el tamaño máximo permitido de 10 MB.
+              </div>
+            )}
+          </div>
+
+          {acceptedFiles.length !== 0 && (
+            <div className="w-full max-w-6xl px-4 mt-6 space-y-6">
+
+              <div className="flex justify-center">
+                <button
+                  onClick={handleOnSubmit}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  Subir
+                </button>
+              </div>
+
+              <div className="">
+                {files}
+              </div>
+            </div>
           )}
+
         </div>
-
-        <div>
-        {fileRejections.length > 0 && (
-          <div className="mt-4 text-red-600">
-            Algunos archivos no se pudieron subir por exceder el tamaño máximo permitido de 10 MB.
-          </div>
-        )}
-        </div>
-
-        {acceptedFiles.length !== 0 && (
-          <div className="w-full max-w-6xl px-4 mt-6 space-y-6">
-            
-            <div className="flex justify-center">
-              <button
-                onClick={handleOnSubmit}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl shadow-md transition focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                Subir
-              </button>
-            </div>
-
-            <div className="">
-              {files}
-            </div>
-          </div>
-        )}
-
-      </div>
       )}
       <div className="w-full max-w-6xl px-4 py-2 text-white">
         <button
@@ -470,8 +478,8 @@ useEffect(() => {
             <option value="text">Texto</option>
             <option value="img">Img</option>
             <option value="zip">Zip</option>
-            
-            
+
+
           </select>
 
           {/* <!-- Botón de búsqueda --> */}
@@ -497,7 +505,7 @@ useEffect(() => {
               // if (doc.tag === 'carpeta') {
               //   handleNavigation(doc.id, doc.nombre);
               // } else {
-                handleOpenModal(doc);
+              handleOpenModal(doc);
               // }
             }}
           />
@@ -510,7 +518,7 @@ useEffect(() => {
         size={selectedDoc?.size}
         author={selectedDoc?.autor}
         icon={modalIconMap[selectedDoc?.tag] || modalIconMap.default}
-        tag= {selectedDoc?.tag}
+        tag={selectedDoc?.tag}
         onClose={handleCloseModal}
         onRedirect={handleNavigation}
         onDownload={handleDownload}

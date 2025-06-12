@@ -18,11 +18,13 @@ export const PerfilUsuario = () => {
     if (!user) {
       navigate("/");
     }
-  }, [user, navigate]); 
-  
+  }, [user, navigate]);
+
   useEffect(() => {
     fetch(`${API_URL}/publicaciones/?publicado=false`, {
-      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      }
     })
       .then((res) => res.json())
       .then((data) => setPublicaciones(data.data))
@@ -31,7 +33,9 @@ export const PerfilUsuario = () => {
 
   useEffect(() => {
     fetch(`${API_URL}/biblioteca/list/0?publico=false&global=true`, {
-      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     })
       .then((res) => res.json())
       .then((data) => setArchivos(data.contentFile))
@@ -40,7 +44,9 @@ export const PerfilUsuario = () => {
 
   useEffect(() => {
     fetch(`${API_URL}/usuario?tipoUsuario=1,2`, {
-      credentials: "include",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     })
       .then((res) => res.json())
       .then((data) => setUsuarios(data))
@@ -51,7 +57,10 @@ export const PerfilUsuario = () => {
   const aceptarPost = async (id) => {
     const promesa = fetch(`${API_URL}/publicaciones/${id}`, {
       method: "PUT", // o PATCH, según tu API
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
       body: JSON.stringify({ publicado: true }),
     });
 
@@ -72,6 +81,9 @@ export const PerfilUsuario = () => {
   const rechazarPost = async (id) => {
     const promesa = fetch(`${API_URL}/publicaciones/${id}`, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     });
 
     toast.promise(promesa, {
@@ -99,7 +111,10 @@ export const PerfilUsuario = () => {
   const aceptarArchivo = async (id) => {
     const promesa = fetch(`${API_URL}/biblioteca/edit/${id}`, {
       method: "PUT", // o PATCH, según tu API
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
       body: JSON.stringify({ esPublico: true }),
     });
 
@@ -120,6 +135,9 @@ export const PerfilUsuario = () => {
   const rechazarArchivo = async (id) => {
     const promesa = fetch(`${API_URL}/biblioteca/delete/${id}`, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
     });
 
     toast.promise(promesa, {
@@ -141,7 +159,10 @@ export const PerfilUsuario = () => {
 
     const promesa = fetch(`${API_URL}/usuario/${id}`, {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
       body: JSON.stringify({ tipoUsuario: nuevoTipoUsuario }),
     });
 
@@ -183,7 +204,7 @@ export const PerfilUsuario = () => {
   }
 
   return (
-    
+
     <div className={`flex flex-col md:flex-row gap-6 w-full min-h-screen bg-gray-800/80 p-6
       ${user?.tipoUsuario === 2 ? "justify-center" : "md:flex-row gap-6"}`}>
       <div
@@ -207,18 +228,18 @@ export const PerfilUsuario = () => {
           </div>
           <div>
             {modalAbierto && (
-            <ModalCambioContrasena
-             userId={user._id}
-            onClose={() => setModalAbierto(false)}
-            API_URL={API_URL}
-            />
+              <ModalCambioContrasena
+                userId={user._id}
+                onClose={() => setModalAbierto(false)}
+                API_URL={API_URL}
+              />
             )}
             <button
-  onClick={() => setModalAbierto(true)}
-  className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
->
-  Cambiar contraseña
-</button>
+              onClick={() => setModalAbierto(true)}
+              className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+            >
+              Cambiar contraseña
+            </button>
           </div>
           <div>
             <button
@@ -237,7 +258,7 @@ export const PerfilUsuario = () => {
       {user && (user.tipoUsuario === 0 || user.tipoUsuario === 1) && (
         <div className="w-full md:w-2/3 flex flex-col gap-6 bg-gray-50 rounded-xl p-6">
           <h1 className="text-black">Dashboard Administrativo</h1>
-          
+
           <div className="overflow-x-auto max-h-[300px] overflow-y-auto bg-white rounded-xl shadow-md p-4">
             <h2 className="text-lg font-semibold text-black mb-2">
               Publicaciones nuevas
@@ -322,8 +343,8 @@ export const PerfilUsuario = () => {
                       <td className="px-4 py-2">
                         {item.fechaSubida
                           ? new Date(item.fechaSubida).toLocaleDateString(
-                              "es-ES"
-                            )
+                            "es-ES"
+                          )
                           : "Fecha no disponible"}
                       </td>
                       <td className="px-4 py-2 space-x-2">
@@ -358,67 +379,67 @@ export const PerfilUsuario = () => {
             </table>
           </div>
 
-          {user.tipoUsuario === 0 &&(
-          <div className="overflow-x-auto max-h-[300px] overflow-y-auto bg-white rounded-xl shadow-md p-4">
-            <h2 className="text-lg font-semibold text-black mb-2">Otorgar permisos</h2>
+          {user.tipoUsuario === 0 && (
+            <div className="overflow-x-auto max-h-[300px] overflow-y-auto bg-white rounded-xl shadow-md p-4">
+              <h2 className="text-lg font-semibold text-black mb-2">Otorgar permisos</h2>
 
-            <input
-              type="text"
-              placeholder="Busqueda"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="mb-4 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black-400 text-black"
-            />
+              <input
+                type="text"
+                placeholder="Busqueda"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="mb-4 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black-400 text-black"
+              />
 
-            <table className="min-w-full text-black text-sm">
-              <thead>
-                <tr>
-                  <th className="text-left px-4 py-2">Nombre</th>
-                  <th className="text-left px-4 py-2">Apellidos</th>
-                  <th className="text-left px-4 py-2">Email</th>
-                  <th className="text-left px-4 py-2">Tipo de Usuario</th>
-                </tr>
-              </thead>
-              <tbody>
-                {usuariosFiltrados && usuariosFiltrados.length > 0 ? (
-                  usuariosFiltrados.map((item) => (
-                    <tr key={item._id} className="border-t">
-                      <td className="px-4 py-2">{item.nombre || "Sin nombre"}</td>
-                      <td className="px-4 py-2">{item.apellido || "Sin apellido"}</td>
-                      <td className="px-4 py-2">{item.email}</td>
-                      <td className="px-4 py-2">
-                        <label className="inline-flex items-center cursor-pointer">
-                          <input
-                            type="checkbox"
-                            className="absolute w-0 h-0 opacity-0 sr-only peer"
-                            checked={item.tipoUsuario === 1}
-                            onChange={() => otorgarPermiso(item._id, item.tipoUsuario)}
-                          />
-                          <div
-                            className="relative w-14 h-7 bg-gray-200 rounded-full peer dark:bg-gray-700
+              <table className="min-w-full text-black text-sm">
+                <thead>
+                  <tr>
+                    <th className="text-left px-4 py-2">Nombre</th>
+                    <th className="text-left px-4 py-2">Apellidos</th>
+                    <th className="text-left px-4 py-2">Email</th>
+                    <th className="text-left px-4 py-2">Tipo de Usuario</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {usuariosFiltrados && usuariosFiltrados.length > 0 ? (
+                    usuariosFiltrados.map((item) => (
+                      <tr key={item._id} className="border-t">
+                        <td className="px-4 py-2">{item.nombre || "Sin nombre"}</td>
+                        <td className="px-4 py-2">{item.apellido || "Sin apellido"}</td>
+                        <td className="px-4 py-2">{item.email}</td>
+                        <td className="px-4 py-2">
+                          <label className="inline-flex items-center cursor-pointer">
+                            <input
+                              type="checkbox"
+                              className="absolute w-0 h-0 opacity-0 sr-only peer"
+                              checked={item.tipoUsuario === 1}
+                              onChange={() => otorgarPermiso(item._id, item.tipoUsuario)}
+                            />
+                            <div
+                              className="relative w-14 h-7 bg-gray-200 rounded-full peer dark:bg-gray-700
                           peer-focus:ring-4 peer-focus:ring-yellow-300 dark:peer-focus:ring-yellow-800
                           peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full
                           peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5
                           after:start-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full
                           after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-yellow-400 dark:peer-checked:bg-yellow-400"
-                          ></div>
-                          <span className="ms-3 text-sm font-medium text-black-900 dark:text-black-300">
-                            {item.tipoUsuario === 1 ? "Admin" : "Usuario"}
-                          </span>
-                        </label>
+                            ></div>
+                            <span className="ms-3 text-sm font-medium text-black-900 dark:text-black-300">
+                              {item.tipoUsuario === 1 ? "Admin" : "Usuario"}
+                            </span>
+                          </label>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={5} className="px-4 py-4 text-center text-gray-500">
+                        No existen usuarios.
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan={5} className="px-4 py-4 text-center text-gray-500">
-                      No existen usuarios.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+                  )}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       )}

@@ -23,7 +23,6 @@ export const InitForm = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
-        credentials: 'include',
       });
 
       const data = await response.json();
@@ -35,6 +34,8 @@ export const InitForm = () => {
         delete userData.password;
 
         localStorage.setItem('user', JSON.stringify(userData));
+        //guardamos el token en el local storage
+        localStorage.setItem('token', data.token);
         login(userData);
 
         navigate('/');

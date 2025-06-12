@@ -116,14 +116,14 @@ export const loginUsuario = async (req: Request, res: Response): Promise<void> =
         }
         //si es exitoso, generamos un token y lo devolvemos en la cookie
         const token = generarToken(usuario);
-        res.cookie('token',
-            token,
-            {
-                httpOnly: true,
-                secure: process.env.NODE_ENV === "production",
-            }
-        );
-        res.status(200).json({ message: 'Login exitoso', user: usuario });
+        // res.cookie('token',
+        //     token,
+        //     {
+        //         httpOnly: true,
+        //         secure: process.env.NODE_ENV === "production",
+        //     }
+        // );
+        res.status(200).json({ token, message: 'Login exitoso', user: usuario });
     } catch (error) {
         const err = error as Error;
         console.log(err);

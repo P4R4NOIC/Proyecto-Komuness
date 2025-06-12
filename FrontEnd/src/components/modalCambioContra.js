@@ -17,6 +17,7 @@ export default function ModalCambioContrasena({ userId, onClose, API_URL }) {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({ password: nuevaContrasena }),
       });
