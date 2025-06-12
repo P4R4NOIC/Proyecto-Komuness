@@ -121,7 +121,6 @@ export const loginUsuario = async (req: Request, res: Response): Promise<void> =
             {
                 httpOnly: true,
                 secure: process.env.NODE_ENV === "production",
-                sameSite: "strict",
             }
         );
         res.status(200).json({ message: 'Login exitoso', user: usuario });
