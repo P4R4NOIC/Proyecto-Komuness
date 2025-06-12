@@ -180,7 +180,7 @@ class BibliotecaController {
             const folder = new Folder({
                 nombre,
                 fechaCreacion: new Date(),
-                parent
+                directorioPadre: parent
             });
             await folder.save();
 
