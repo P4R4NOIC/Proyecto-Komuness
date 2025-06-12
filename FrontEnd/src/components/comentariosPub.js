@@ -60,11 +60,7 @@ const ComentariosPub = ({ comentarios, setComentarios, publicacionId }) => {
         <div className="mt-4 w-full flex flex-col sm:flex-row sm:items-start gap-2">
           <div className="flex flex-col gap-1 w-full">
             <div className="flex items-start gap-2">
-              <img
-                src={usuarioLogueado.avatar || "https://i.pravatar.cc/40"}
-                alt="avatar"
-                className="rounded-full w-10 h-10 mt-1"
-              />
+             
               <textarea
                 ref={textareaRef}
                 value={nuevoComentario}
@@ -107,11 +103,7 @@ const ComentariosPub = ({ comentarios, setComentarios, publicacionId }) => {
               key={index}
               className="flex items-start space-x-2 bg-gray-700 p-3 rounded-lg"
             >
-              <img
-                src={comentario.avatar}
-                alt="avatar"
-                className="rounded-full w-10 h-10 flex-shrink-0"
-              />
+             
               <div className="w-full">
                 <p className="text-sm text-gray-300 font-semibold">
                   {comentario.autor}{" "}

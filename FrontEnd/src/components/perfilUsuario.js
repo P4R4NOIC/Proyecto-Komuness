@@ -5,6 +5,7 @@ import { toast } from "react-hot-toast";
 import { API_URL } from "../utils/api";
 import "../CSS/perfilUsuario.css";
 import { useAuth } from "./context/AuthContext";
+import ModalCambioContrasena from "./modalCambioContra";
 
 export const PerfilUsuario = () => {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ export const PerfilUsuario = () => {
   const [archivos, setArchivos] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
   const { user, logout } = useAuth();
-
+  const [modalAbierto, setModalAbierto] = useState(false);
   useEffect(() => {
     if (!user) {
       navigate("/");
@@ -182,6 +183,7 @@ export const PerfilUsuario = () => {
   }
 
   return (
+    
     <div className={`flex flex-col md:flex-row gap-6 w-full min-h-screen bg-gray-800/80 p-6
       ${user?.tipoUsuario === 2 ? "justify-center" : "md:flex-row gap-6"}`}>
       <div
@@ -204,14 +206,19 @@ export const PerfilUsuario = () => {
             </a>
           </div>
           <div>
+            {modalAbierto && (
+            <ModalCambioContrasena
+             userId={user._id}
+            onClose={() => setModalAbierto(false)}
+            API_URL={API_URL}
+            />
+            )}
             <button
-              onClick={() => {
-                cambiarContra();
-              }}
-              className="mt-4 bg-yellow-500 hover:bg-yellow-600 text-white font-medium px-4 py-2 rounded"
-            >
-              Cambiar contraseña
-            </button>
+  onClick={() => setModalAbierto(true)}
+  className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+>
+  Cambiar contraseña
+</button>
           </div>
           <div>
             <button
