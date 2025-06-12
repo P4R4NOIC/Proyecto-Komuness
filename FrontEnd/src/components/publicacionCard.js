@@ -69,7 +69,7 @@ export const PublicacionCard = ({ publicacion }) => {
                         name = {publicacion.titulo}
                         date = {publicacion.fecha}
                         tag = {publicacion.tag}
-                        id = {publicacion.id}
+                        id = {publicacion._id}
                         isOpen={selectedPub}
                         onClose={()=>setSelectedPub(false)}
                     />
