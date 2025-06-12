@@ -11,9 +11,10 @@ export const Publicaciones = () => {
   const location = useLocation();
   const [mostrar, setMostrar] = useState(0);
   const [cards, setCards] = useState([]);
-  const [hasMore, setHasMore] = useState(true);
-  const [offset, setOffset] = useState(0);
-  const limite = 10; // Definimos cuántas publicaciones por página
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [totalPaginas, setTotalPaginas] = useState(1);
+
+  const limite = 12; // Definimos cuántas publicaciones por página
   const [tag, setTag] = useState(null);
   const [formulario, setFormulario] = useState(false);
 
@@ -37,13 +38,11 @@ export const Publicaciones = () => {
       setMostrar(3);
     }
     setPublicaciones([]);
-    setOffset(0);
-    setHasMore(true);
   }, [location.pathname]);
 
   useEffect(() => {
     if (tag) {
-      obtenerPublicaciones(tag, 0, limite);
+      obtenerPublicaciones(tag, 1, limite);
     }
   }, [tag]);
 
@@ -61,14 +60,14 @@ export const Publicaciones = () => {
     }
   }, [mostrar, publicaciones]);
 
-  const obtenerPublicaciones = async (tag, offset, limit = 10) => {
+  const obtenerPublicaciones = async (tag, page = 1, limit) => {
+    const offset = (page - 1) * limit; 
     try {
       const response = await fetch(`${API_URL}/publicaciones/?tag=${tag}&offset=${offset}&limit=${limit}`);
 
       if (!response.ok) {
         if (response.status === 404) {
-          console.warn("No hay más publicaciones para cargar.");
-          setHasMore(false);
+          console.warn("No hay publicaciones.");
           return;
         } else {
           throw new Error(`Error HTTP: ${response.status}`);
@@ -76,23 +75,18 @@ export const Publicaciones = () => {
       }
 
       const data = await response.json();
-      // setPublicaciones(data); // Guardamos las publicaciones en el estado
-      setPublicaciones((prev) => {
-        const nuevos = data.data.filter(pub => !prev.some(p => p._id === pub._id));
-        return [...prev, ...nuevos];
-      });
-      setOffset((prev) => prev + limit); // Aumentar offset
+     
+      setPublicaciones(data.data);
+      setPaginaActual(page);
+      setTotalPaginas(data.pagination.pages);
 
       console.log("Publicaciones obtenidas:", data);
     } catch (error) {
       console.error("Error al obtener publicaciones:", error);
-      setHasMore(false);
+      
     }
   };
 
-  const handleLoadMore = () => {
-    obtenerPublicaciones(tag, offset, limite);
-  };
 
   return (
     <div className='bg-gray-800/80 pt-16 min-h-screen'>
@@ -106,16 +100,53 @@ export const Publicaciones = () => {
           ))
         )}
       </div>
-      <div className="w-full flex justify-center mt-6">
-        {hasMore && (
+
+      <div className="w-full flex justify-center mt-6 gap-2 flex-wrap pb-6">
+        {paginaActual > 1 && (
           <button
-            onClick={handleLoadMore}
-            className="px-6 py-2 bg-[#5445FF] hover:bg-[#2e2f50] text-white rounded-lg  transition-colors duration-200 text-sm sm:text-base"
+            onClick={() => obtenerPublicaciones(tag, paginaActual - 1, limite)}
+            className="px-3 py-1 rounded bg-yellow-500 hover:bg-yellow-600"
           >
-            Cargar más
+            « Anterior
+          </button>
+        )}
+
+        {Array.from({ length: totalPaginas }, (_, i) => i + 1)
+          .filter(p =>
+            p === 1 || 
+            p === totalPaginas ||
+            (p >= paginaActual - 2 && p <= paginaActual + 2)
+          )
+          .map((p, i, arr) => (
+            <React.Fragment key={p}>
+              {i > 0 && p - arr[i - 1] > 1 && (
+                <span className="px-2 py-1 text-gray-500">...</span>
+              )}
+              <button
+                onClick={() => obtenerPublicaciones(tag, p, limite)}
+                className={`px-3 py-1 rounded text-sm ${
+                  p === paginaActual
+                    ? "bg-[#5445FF] text-white"
+                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                }`}
+              >
+                {p}
+              </button>
+            </React.Fragment>
+          ))}
+
+        {paginaActual < totalPaginas && (
+          <button
+            onClick={() => obtenerPublicaciones(tag, paginaActual + 1, limite)}
+            className="px-3 py-1 rounded bg-yellow-500 hover:bg-yellow-600"
+          >
+            Siguiente »
           </button>
         )}
       </div>
+
+
+
       <button
         onClick={() => {
           if(user){
