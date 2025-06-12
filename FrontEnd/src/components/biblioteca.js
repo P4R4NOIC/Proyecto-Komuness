@@ -66,6 +66,7 @@ export const Biblioteca = () => {
         await toast.promise(
           fetch(`${API_URL}/biblioteca/delete/${selectedDoc.id}`, {
             method: "DELETE",
+            credentials: "include",
           }).then((res) => {
             if (!res.ok) throw new Error("No se pudo eliminar el archivo");
             return res.json();
@@ -148,6 +149,7 @@ export const Biblioteca = () => {
 
 
   const handleNavigation = () => {
+    handleCloseModal();
     navigate(`/biblioteca/${selectedDoc.id}`)
   };
 
@@ -157,9 +159,12 @@ export const Biblioteca = () => {
 
     const data = new FormData();
     acceptedFiles.forEach((archivo) => {
+      console.log("Archivo:", archivo);
       data.append("archivos", archivo);
     });
     data.append("userId", user._id);
+    data.append("folderId", id);
+    
 
   
 
@@ -167,6 +172,7 @@ export const Biblioteca = () => {
       fetch(`${API_URL}/biblioteca/upload/`, {
         method: 'POST',
         body: data,
+        credentials: "include",
       })
         .then(async (response) => {
           const result = await response.json();
@@ -192,7 +198,7 @@ export const Biblioteca = () => {
     e.preventDefault();
 
     try {
-      const respuesta = await fetch(`${API_URL}/biblioteca/list/${0}?nombre=${nombre}&orden=asc&global=true&publico=true`);
+      const respuesta = await fetch(`${API_URL}/biblioteca/list/0?nombre=${nombre}&orden=asc&global=true&publico=true`);
       const datos = await respuesta.json();
       const archivos = datos.contentFile.map(file => ({
           nombre: file.nombre,
@@ -224,7 +230,7 @@ export const Biblioteca = () => {
     const obtenerArchivos = async () => {
       try {
         console.log("Obteniendo archivos de la biblioteca con ID:", id);
-        const response = await fetch(`${API_URL}/biblioteca/list/${id}?orden=asc&global=true&publico=true`);
+        const response = await fetch(`${API_URL}/biblioteca/list/${id}?orden=asc&publico=true`);
         const data = await response.json();
         const archivos = data.contentFile.map(file => ({
           nombre: file.nombre,
@@ -253,40 +259,6 @@ export const Biblioteca = () => {
     obtenerArchivos();
   }, [id, location.state?.folderName]);
 
-  // useEffect(() => {
-  //     const obtenerArchivosID = async () => {
-  //       try {
-  //         const response = await fetch(`${API_URL}/biblioteca/list/${id}`);
-  //         const data = await response.json();
-  
-          
-  
-  //         const archivos = data.contentFile.map(file => ({
-  //           nombre: file.nombre,
-  //           autor: file.autor || 'Desconocido',
-  //           size: `${(file.tamano / (1024 * 1024)).toFixed(2)} MB`,
-  //           tag: mapTipoArchivo(file.tipoArchivo),
-  //           url: file.url,
-  //         }));
-  
-  //         const carpetas = data.contentFolder.map(folder => ({
-  //           nombre: folder.nombre,
-  //           autor: '',
-  //           size: '',
-  //           tag: 'carpeta',
-  //           id: folder._id,
-  //         }));
-  
-  //         setDocumentos([...carpetas, ...archivos]);
-          
-  //         console.log("Archivos obtenidos:", data);
-  //       } catch (error) {
-  //         console.error("Error al obtener archivos:", error);
-  //       }
-  //     };
-  
-  //     obtenerArchivosID();
-  //   }, [id]);
 
 useEffect(() => {
   if (location.state?.folderName) {
@@ -337,6 +309,8 @@ useEffect(() => {
   const [nombreCarpeta, setNombreCarpeta] = useState("");
 
   const handleCrearCarpeta = async () => {
+    console.log("ID de la carpeta:", id);
+    console.log("Nombre de la carpeta:", nombreCarpeta);
     if (!nombreCarpeta.trim()) return;
 
     await toast.promise(
