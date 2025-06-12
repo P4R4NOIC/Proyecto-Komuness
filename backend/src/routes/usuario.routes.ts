@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { createUsuario, deleteUsuario, getUsuarioById, getUsuarios, updateUsuario, loginUsuario, registerUsuario, checkAuth, enviarCorreoRecuperacion } from '../controllers/usuario.controller';
-import { authMiddleware } from '@/middlewares/auth.middleware';
-import { verificarRoles } from '@/middlewares/roles.middleware';
+import { authMiddleware } from '../middlewares/auth.middleware';
+import { verificarRoles } from '../middlewares/roles.middleware';
 
 const router = Router();
 
