@@ -157,13 +157,13 @@ export const deletePublicacion = async (req: Request, res: Response): Promise<vo
  */
 export const addComentario = async (req: Request, res: Response): Promise<void> => {
     const { id } = req.params; //identificador de la publicación
-    const { autor, contenido } = req.body; //autor y contenido del comentario
+    const { autor, contenido, fecha } = req.body; //autor y contenido del comentario
     //creado el comentario
     const nuevoComentario: IComentario = {
         autor,
         contenido,
-        //fecha: "",
-        fecha: new Date().toLocaleDateString()
+        fecha,
+        // fecha: new Date().toLocaleDateString()
     }
 
     try {
