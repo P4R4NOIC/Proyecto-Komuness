@@ -80,7 +80,7 @@ export const Publicaciones = () => {
       setPaginaActual(page);
       setTotalPaginas(data.pagination.pages);
 
-      console.log("Publicaciones obtenidas:", data);
+    
     } catch (error) {
       console.error("Error al obtener publicaciones:", error);
       

@@ -54,7 +54,7 @@ export const FormularioPublicacion = ({ isOpen, onClose, openTag }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+   
 
     const data = new FormData();
 

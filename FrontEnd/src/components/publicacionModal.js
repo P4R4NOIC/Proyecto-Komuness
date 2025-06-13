@@ -26,7 +26,7 @@ export const PublicacionModal = ({ name, date, tag, id, isOpen, onClose }) => {
       if (res.ok) {
         const data = await res.json();
 
-        console.log("Publicación eliminada:", data);
+     
         if (rutas[tag]) {
           navigate(rutas[tag]);
         }

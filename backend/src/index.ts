@@ -42,7 +42,7 @@ const port = process.env.PORT || 5000;
 // Conexión a MongoDB y exportación
 (async () => {
     await connectBD(process.env.BD_URL!);
-    console.log("✅ MongoDB conectado");
+ 
 })();
 
 
