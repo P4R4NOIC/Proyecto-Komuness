@@ -28,7 +28,7 @@ export const InitForm = () => {
       const data = await response.json();
 
       if (response.ok) {
-        console.log('Login exitoso:', data);
+     
 
         const userData = { ...data.user };
         delete userData.password;

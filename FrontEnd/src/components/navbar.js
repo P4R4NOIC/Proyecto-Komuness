@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 export const Navbar = () => {
   var usuario = JSON.parse(localStorage.getItem("user"));
 
-  console.log(usuario)
+ 
   var goToLogin;
   if(usuario !== null ){
     goToLogin = true;

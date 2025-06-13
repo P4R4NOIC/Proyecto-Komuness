@@ -164,7 +164,7 @@ export const Biblioteca = () => {
 
     const data = new FormData();
     acceptedFiles.forEach((archivo) => {
-      console.log("Archivo:", archivo);
+    
       data.append("archivos", archivo);
     });
     data.append("userId", user._id);
@@ -226,7 +226,7 @@ export const Biblioteca = () => {
 
       setDocumentos([...carpetas, ...archivos]);
       setDocumentosFiltrados([...carpetas, ...archivos]);
-      console.log("Archivos obtenidos:", datos);
+   
     } catch (error) {
       console.error("Error al obtener archivos:", error);
     }
@@ -236,7 +236,7 @@ export const Biblioteca = () => {
   useEffect(() => {
     const obtenerArchivos = async () => {
       try {
-        console.log("Obteniendo archivos de la biblioteca con ID:", id);
+     
         const response = await fetch(`${API_URL}/biblioteca/list/${id}?orden=asc&publico=true`);
         const data = await response.json();
         const archivos = data.contentFile.map(file => ({
@@ -258,7 +258,7 @@ export const Biblioteca = () => {
 
         setDocumentos([...carpetas, ...archivos]);
         setDocumentosFiltrados([...carpetas, ...archivos]);
-        console.log("Archivos obtenidos:", data);
+       
       } catch (error) {
         console.error("Error al obtener archivos:", error);
       }
@@ -316,8 +316,8 @@ export const Biblioteca = () => {
   const [nombreCarpeta, setNombreCarpeta] = useState("");
 
   const handleCrearCarpeta = async () => {
-    console.log("ID de la carpeta:", id);
-    console.log("Nombre de la carpeta:", nombreCarpeta);
+  
+  
     if (!nombreCarpeta.trim()) return;
 
     await toast.promise(
