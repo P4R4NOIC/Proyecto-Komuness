@@ -198,10 +198,6 @@ export const PerfilUsuario = () => {
     );
   });
 
-  const cambiarContra = () => {
-    alert("Funcionalidad no implementada aún.");
-    // const nuevaContra = prompt("Ingrese su nueva contraseña:");
-  }
 
   return (
 
@@ -270,6 +266,7 @@ export const PerfilUsuario = () => {
                   <th className="text-left px-4 py-2">Título</th>
                   <th className="text-left px-4 py-2">Tipo</th>
                   <th className="text-left px-4 py-2">Fecha</th>
+                  <th className="text-left px-4 py-2">Vista Previa</th>
                   <th className="text-left px-4 py-2">Decisión</th>
                 </tr>
               </thead>
@@ -283,6 +280,16 @@ export const PerfilUsuario = () => {
                       <td className="px-4 py-2">{item.titulo}</td>
                       <td className="px-4 py-2">{item.tag}</td>
                       <td className="px-4 py-2">{item.fecha}</td>
+                      <td className="px-4 py-2">
+                        <a 
+                          href={`publicaciones/${item._id}`} 
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-500 hover:underline"
+                        >
+                          Ver publicación
+                        </a>
+                      </td>
                       <td className="px-4 py-2 space-x-2">
                         <div className="flex flex-col gap-2 justify-center">
                           <button
