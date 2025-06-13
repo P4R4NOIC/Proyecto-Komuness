@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { useNavigate } from 'react-router-dom';
-
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { API_URL } from "../utils/api";
 
 export const CrearUsuario = () => {
   const navigate = useNavigate();
@@ -23,31 +24,48 @@ export const CrearUsuario = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validación de campos requeridos
     const { nombre, apellido, email, password, confirmarContraseña } = formData;
+
     if (!nombre || !apellido || !email || !password || !confirmarContraseña) {
-      alert("Todos los campos son obligatorios");
+      toast.error("Todos los campos son obligatorios");
       return;
     }
 
     if (password !== confirmarContraseña) {
-      alert("Las contraseñas no coinciden");
+      toast.error("Las contraseñas no coinciden");
       return;
     }
 
-   
-    // Crear nuevo objeto sin confirmarContraseña
     const usuarioFinal = {
       nombre,
       apellido,
       email,
-      password: password
+      password,
+      codigo: "0",
+      tipoUsuario: 2,
     };
 
-    console.log("Usuario final con contraseña hasheada:", usuarioFinal);
+    try {
+      const response = await fetch(`${API_URL}/usuario/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(usuarioFinal),
+      });
 
-    // Simular que pasas los datos al siguiente paso
-    navigate('/codigoGen', { state: usuarioFinal });
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("Error del servidor:", data);
+        toast.error(`Error: ${data.message || "No se pudo registrar el usuario"}`);
+        return;
+      }
+
+      toast.success("Usuario registrado con éxito");
+      navigate("/iniciarSesion");
+    } catch (error) {
+      console.error("Error en la solicitud:", error);
+      toast.error("Error de red o conexión con el servidor");
+    }
   };
 
   return (
@@ -61,7 +79,7 @@ export const CrearUsuario = () => {
               name="nombre"
               type="text"
               placeholder="Tu nombre"
-              value={formData.usuario}
+              value={formData.nombre}
               onChange={handleChange}
               required
               className="w-full px-5 py-3 rounded-xl bg-[#404270] text-[#f0f0f0]"
@@ -106,7 +124,13 @@ export const CrearUsuario = () => {
                 placeholder="Contraseña"
                 className="w-full px-5 py-3 pr-12 rounded-xl bg-[#404270] text-[#f0f0f0]"
               />
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-3 text-white">👁️</button>
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3 text-white"
+              >
+                👁️
+              </button>
             </div>
           </div>
 
@@ -122,11 +146,22 @@ export const CrearUsuario = () => {
                 placeholder="Confirmar Contraseña"
                 className="w-full px-5 py-3 pr-12 rounded-xl bg-[#404270] text-[#f0f0f0]"
               />
-              <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute right-3 top-3 text-white">👁️</button>
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-3 text-white"
+              >
+                👁️
+              </button>
             </div>
           </div>
 
-          <button type="submit" className="w-full bg-[#ffbf30] text-[#12141a] font-bold rounded-xl py-3 text-lg">Registrarse</button>
+          <button
+            type="submit"
+            className="w-full bg-[#ffbf30] text-[#12141a] font-bold rounded-xl py-3 text-lg"
+          >
+            Registrarse
+          </button>
         </form>
 
         <p className="mt-6 text-sm text-center">
