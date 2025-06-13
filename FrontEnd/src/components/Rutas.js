@@ -11,7 +11,7 @@ import {IniciarSesion} from './iniciarSesion'
 import {RecuperarContra} from './recuperarContra'
 import {NuevaContra} from './nuevaContra'
 import {CrearUsuario} from './crearUsuario'
-import {GenerarCodigo} from './generarCodigo'
+
 export const Rutas = () =>{
     
     return(
@@ -31,7 +31,7 @@ export const Rutas = () =>{
                  <Route path = "/crearUsr" element= {<CrearUsuario/>}/>
 
 
-                  <Route path = "/codigoGen" element= {<GenerarCodigo/>}/>
+               
                 
                 <Route path="*" element={<Navigate to="/publicaciones" />} />
             </Routes>
