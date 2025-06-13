@@ -42,7 +42,7 @@ const port = process.env.PORT || 5000;
 // Conexión a MongoDB y exportación
 (async () => {
     await connectBD(process.env.BD_URL!);
- 
+    console.log("✅ MongoDB conectado");
 })();
 
 
@@ -50,7 +50,7 @@ export default app;
 
 // esto es para que no se ejecute el server al importarlo en otro archivo
 if (require.main === module) {
-    console.log(process.env.AWS_ACCESS_KEY_ID, process.env.S3_ENDPOINT);
+    
     connectBD(process.env.BD_URL || '').then(() => {
         console.log('Connected to MongoDB');
         app.listen(port, () => {
