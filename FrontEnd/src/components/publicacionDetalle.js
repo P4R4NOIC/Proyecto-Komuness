@@ -147,7 +147,7 @@ export const PublicacionDetalle = () => {
               <p>
                 <strong>Categoría:</strong> {publicacion.tag}
               </p>
-              <p className="mt-4 text-white">{publicacion.contenido}</p>
+              <p className="mt-4 text-white whitespace-pre-line">{publicacion.contenido}</p>
             </div>
           </div>
         }
