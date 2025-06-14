@@ -20,18 +20,20 @@ export const PerfilUsuario = () => {
     }
   }, [user, navigate]);
 
-  useEffect(() => {
+  // Función para cargar publicaciones
+  const cargarPublicaciones = () => {
     fetch(`${API_URL}/publicaciones/?publicado=false`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
-      }
+      },
     })
       .then((res) => res.json())
       .then((data) => setPublicaciones(data.data))
-      .catch((error) => console.error("Error al obtener los datos: ", error));
-  }, []);
+      .catch((error) => console.error("Error al obtener las publicaciones: ", error));
+  };
 
-  useEffect(() => {
+  // Función para cargar archivos
+  const cargarArchivos = () => {
     fetch(`${API_URL}/biblioteca/list/0?publico=false&global=true`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -39,10 +41,11 @@ export const PerfilUsuario = () => {
     })
       .then((res) => res.json())
       .then((data) => setArchivos(data.contentFile))
-      .catch((error) => console.error("Error al obtener los datos: ", error));
-  }, []);
+      .catch((error) => console.error("Error al obtener los archivos: ", error));
+  };
 
-  useEffect(() => {
+  // Función para cargar usuarios
+  const cargarUsuarios = () => {
     fetch(`${API_URL}/usuario?tipoUsuario=1,2`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -50,8 +53,17 @@ export const PerfilUsuario = () => {
     })
       .then((res) => res.json())
       .then((data) => setUsuarios(data))
-      .catch((error) => console.error("Error al obtener los datos: ", error));
-  }, []);
+      .catch((error) => console.error("Error al obtener los usuarios: ", error));
+  };
+
+  // useEffect que controla la carga de datos administrativos
+  useEffect(() => {
+    if (user && (user.tipoUsuario === 0 || user.tipoUsuario === 1)) {
+      cargarPublicaciones();
+      cargarArchivos();
+      cargarUsuarios();
+    }
+  }, [user]);
 
 
   const aceptarPost = async (id) => {
