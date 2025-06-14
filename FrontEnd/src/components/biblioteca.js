@@ -410,48 +410,48 @@ export const Biblioteca = () => {
             </div>
           )}
 
+          <div className="w-full max-w-6xl px-4 py-2 text-white">
+            <button
+              onClick={() => setMostrarModal(true)}
+              className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium p-4 rounded-lg shadow"
+            >
+              + Crear carpeta
+            </button>
+
+            {/* Modal */}
+            {mostrarModal && (
+              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                <div className="bg-white rounded-xl p-6 w-full max-w-sm shadow-lg">
+                  <h3 className="text-lg font-semibold mb-4 text-gray-800">
+                    Nueva carpeta
+                  </h3>
+                  <input
+                    type="text"
+                    value={nombreCarpeta}
+                    onChange={(e) => setNombreCarpeta(e.target.value)}
+                    placeholder="Nombre de la carpeta"
+                    className="w-full px-4 py-2 mb-4 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <div className="flex justify-end space-x-2">
+                    <button
+                      onClick={() => setMostrarModal(false)}
+                      className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      onClick={handleCrearCarpeta}
+                      className="px-4 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                    >
+                      Crear
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
-      <div className="w-full max-w-6xl px-4 py-2 text-white">
-        <button
-          onClick={() => setMostrarModal(true)}
-          className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium p-4 rounded-lg shadow"
-        >
-          + Crear carpeta
-        </button>
-
-        {/* Modal */}
-        {mostrarModal && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className="bg-white rounded-xl p-6 w-full max-w-sm shadow-lg">
-              <h3 className="text-lg font-semibold mb-4 text-gray-800">
-                Nueva carpeta
-              </h3>
-              <input
-                type="text"
-                value={nombreCarpeta}
-                onChange={(e) => setNombreCarpeta(e.target.value)}
-                placeholder="Nombre de la carpeta"
-                className="w-full px-4 py-2 mb-4 border text-black border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <div className="flex justify-end space-x-2">
-                <button
-                  onClick={() => setMostrarModal(false)}
-                  className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg"
-                >
-                  Cancelar
-                </button>
-                <button
-                  onClick={handleCrearCarpeta}
-                  className="px-4 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
-                >
-                  Crear
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
 
       <div className="flex flex-wrap justify-center gap-4 w-full max-w-6xl p-4 text-black">
         <form className="flex flex-col md:flex-row gap-2 md:items-center w-full">
