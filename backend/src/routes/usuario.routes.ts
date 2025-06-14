@@ -5,6 +5,7 @@ import { verificarRoles } from '../middlewares/roles.middleware';
 
 const router = Router();
 
+router.use(authMiddleware);
 // Endpoint para recuperar contraseña
 router.post("/recuperar-contrasena", enviarCorreoRecuperacion);
 

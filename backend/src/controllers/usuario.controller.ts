@@ -3,7 +3,11 @@ import { IUsuario, IUsuario as Usuario } from '../interfaces/usuario.interface';
 import { modelUsuario } from '../models/usuario.model';
 import { generarToken, verificarToken } from '../utils/jwt';
 import { hashPassword, comparePassword } from '../utils/bcryptjs';
-const nodemailer = require('nodemailer');
+import { createTransport } from 'nodemailer';
+import dotenv from 'dotenv';
+dotenv.config();
+//const nodemailer = require('nodemailer');
+
 
 // Controlador para crear un usuario
 export const createUsuario = async (req: Request, res: Response): Promise<void> => {
@@ -198,7 +202,7 @@ export async function enviarCorreoRecuperacion(req: Request, res: Response): Pro
     const { email } = req.body;
 
     // setup del transporter de nodemailer para enviar correos 
-    const transporter = nodemailer.createTransport({
+    const transporter = createTransport({
         service: 'zoho',
         host: 'smtp.zoho.com',
         port: 465,
