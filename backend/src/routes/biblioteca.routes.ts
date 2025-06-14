@@ -32,7 +32,7 @@ const router = Router();
  *  } 
  */
 // solo los tipoUsuarios 0, 1 y 2 pueden subir archivos
-router.post("/upload", upload.array('archivos'), /*authMiddleware, verificarRoles([0, 1, 2]),*/ BibliotecaController.uploadFiles as any);
+router.post("/upload", upload.array('archivos'), authMiddleware, verificarRoles([0, 1, 2]), BibliotecaController.uploadFiles as any);
 
 /**
  * Posibles respuestas del endpoint:
@@ -66,7 +66,7 @@ router.post("/upload", upload.array('archivos'), /*authMiddleware, verificarRole
  *  }
 */
 //solo los tipoUsuarios 0 y 1  pueden eliminar archivos
-router.delete("/delete/:id", /*authMiddleware, verificarRoles([0, 1]),*/ BibliotecaController.deleteFile as any);
+router.delete("/delete/:id", authMiddleware, verificarRoles([0, 1]), BibliotecaController.deleteFile as any);
 
 
 /**
@@ -141,7 +141,7 @@ router.get("/list/:id", /*authMiddleware, verificarRoles([0, 1]),*/ BibliotecaCo
  *  }
  */
 //solo los tipoUsuarios 0 y 1  pueden crear carpetas
-router.post("/folder", /*authMiddleware, verificarRoles([0, 1]),*/ BibliotecaController.createFolder as any);
+router.post("/folder", authMiddleware, verificarRoles([0, 1]), BibliotecaController.createFolder as any);
 /**
  * Posibles respuestas del endpoint:
  * HTTP 200:
@@ -168,7 +168,7 @@ router.post("/folder", /*authMiddleware, verificarRoles([0, 1]),*/ BibliotecaCon
  *  }
  */
 //solo los tipoUsuarios 0 y 1  pueden eliminar carpetas
-router.route("/folder/:id").delete(/*authMiddleware, verificarRoles([0, 1]),*/ BibliotecaController.deleteFolder as any);
+router.route("/folder/:id").delete(authMiddleware, verificarRoles([0, 1]), BibliotecaController.deleteFolder as any);
 /**
  * Posibles respuestas del endpoint: actualizacion de los metadatos del archivo
  * HTTP 200:
@@ -196,7 +196,7 @@ router.route("/folder/:id").delete(/*authMiddleware, verificarRoles([0, 1]),*/ B
  * 
  */
 //solo los tipoUsuarios 0 y 1  pueden actualizar archivos
-router.put("/edit/:id", /*authMiddleware, verificarRoles([0, 1]),*/ BibliotecaController.updateFile as any);
+router.put("/edit/:id", authMiddleware, verificarRoles([0, 1]), BibliotecaController.updateFile as any);
 
 
 export default router;
